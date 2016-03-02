@@ -19,6 +19,17 @@ def download_from_url(url, download_folder):
     way the user will know what zip file did not finish downloading and
     can then erase the portion of it that has been saved so that the
     whole file can be downloaded again.
+
+    Arguments:
+    url -- The URL string where the annotation file must be downloaded from.
+
+    download_folder -- Path of folder where annotations files will be
+    downloaded to. This is a string.
+
+    Returns:
+    True if file did not already exist and was able to be downloaded.
+    Otherwise, return False.
+
     """
 
     filename = url.split('/')[-1]
@@ -54,9 +65,11 @@ def download_all_files(species_ini_file, download_folder):
     their locations, or URLs) that must be loaded for this species.
 
     Arguments:
-    species_ini_file --
+    species_ini_file -- Path to the particular species INI file. This
+    is a string.
 
-    download_folder --
+    download_folder -- Path of folder where annotations files will be
+    downloaded to. This is a string.
 
     Returns:
     Nothing, just downloads and saves files to download_folder
