@@ -1,7 +1,7 @@
-from os.path import normpath
-import sys
-import argparse
 from ConfigParser import SafeConfigParser
+import os
+import tempfile
+import shutil
 import requests
 
 
@@ -17,8 +17,14 @@ def download_from_url(url, download_folder):
 
     filename = url.split('/')[-1]
     target_filename = download_folder + '/' + filename
+
+    if os.path.exists(target_filename):
+        logger.error('Not downloading file ' + filename + ', as it already'
+                     ' exists in the download_folder specified.')
+        return False
+
     temp = tempfile.NamedTemporaryFile(prefix=filename + '.',
-                                       dir=target_folder)
+                                       dir=download_folder)
 
     download_request = requests.get(url, stream=True)
 
@@ -33,10 +39,22 @@ def download_from_url(url, download_folder):
     target_fh = open(target_filename, 'w+b')
     shutil.copyfileobj(temp, target_fh)
     temp.close()  # This erases the tempfile
+    return True
 
 
 def download_all_files(species_ini_file, download_folder):
     """
+    Reads config INI file for a species, which contains the files (and
+    their locations, or URLs) that must be loaded for this species.
+
+    Arguments:
+    species_ini_file --
+
+    download_folder --
+
+    Returns:
+    Nothing, just downloads and saves files to download_folder
+
     """
 
     species_file = SafeConfigParser()
@@ -53,8 +71,13 @@ def download_all_files(species_ini_file, download_folder):
     if species_file.has_section('KEGG'):
 
         kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
+
         all_urls = [kegg_root_url + x.strip() for x in species_file.get(
                 'KEGG', 'SETS_TO_DOWNLOAD').split(',')]
 
-        for kegg_set in all_urls:
-            download_from_url(kegg_set, download_folder)
+        for kegg_set_url in all_urls:
+            download_from_url(kegg_set_url, download_folder)
+
+    if species_file.has_section('DO'):
+        obo_file = species_file.get('DO', 'DO_OBO_FILE')
+        download_from_url(obo_file, download_folder)
