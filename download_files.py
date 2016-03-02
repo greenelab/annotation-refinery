@@ -4,6 +4,12 @@ import tempfile
 import shutil
 import requests
 
+# Import and set logger
+import logging
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 def download_from_url(url, download_folder):
     """
