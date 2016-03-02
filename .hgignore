@@ -1,0 +1,4 @@
+syntax: glob
+annotenv
+download_files
+*.pyc
