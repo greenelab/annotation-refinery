@@ -14,17 +14,14 @@ logger.setLevel(logging.INFO)
 def download_from_url(url, download_folder):
     """
     In case the downloading process gets interrupted, a dummy tempfile is
-    created in the target_folder for every file that is being downloaded.
-    This tempfile is then erased once the file finishes downloading. This
-    way the user will know what zip file did not finish downloading and
-    can then erase the portion of it that has been saved so that the
-    whole file can be downloaded again.
+    created in the download_folder for every file that is being downloaded.
+    This tempfile is then erased once the file finishes downloading.
 
     Arguments:
     url -- The URL string where the annotation file must be downloaded from.
 
-    download_folder -- Path of folder where annotations files will be
-    downloaded to. This is a string.
+    download_folder -- Path of folder where annotation file from URL will
+    be downloaded to. This is a string.
 
     Returns:
     True if file did not already exist and was able to be downloaded.
@@ -40,23 +37,29 @@ def download_from_url(url, download_folder):
                      ' exists in the download_folder specified.')
         return False
 
-    temp = tempfile.NamedTemporaryFile(prefix=filename + '.',
-                                       dir=download_folder)
+    try:
+        temp = tempfile.NamedTemporaryFile(prefix=filename + '.',
+                                           dir=download_folder)
 
-    download_request = requests.get(url, stream=True)
+        download_request = requests.get(url, stream=True)
 
-    # chunk_size is in bytes
-    for chunk in download_request.iter_content(chunk_size=4096):
-        if chunk:
-            temp.write(chunk)
-            temp.flush()
+        # chunk_size is in bytes
+        for chunk in download_request.iter_content(chunk_size=4096):
+            if chunk:
+                temp.write(chunk)
+                temp.flush()
 
-    # Go back to the beginning of the tempfile and copy it to target folder
-    temp.seek(0)
-    target_fh = open(target_filename, 'w+b')
-    shutil.copyfileobj(temp, target_fh)
-    temp.close()  # This erases the tempfile
-    return True
+        # Go back to the beginning of the tempfile and copy it to target folder
+        temp.seek(0)
+        target_fh = open(target_filename, 'w+b')
+        shutil.copyfileobj(temp, target_fh)
+        temp.close()  # This erases the tempfile
+        return True
+
+    except:
+        logger.error('There was an error when downloading the file "' +
+                     filename + '" - downloading could not be completed.')
+        return False
 
 
 def download_all_files(species_ini_file, download_folder):
