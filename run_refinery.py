@@ -29,16 +29,17 @@ if __name__ == "__main__":
     ini_file_path = args.ini_file_path
     download_folder = args.download_folder
 
-    if not os.path.exists(ini_file_path):
+    if not os.path.isfile(ini_file_path):
         logger.error('Species INI file not found in this path: ' +
                      ini_file_path)
         sys.exit(1)
 
-    logger.info('Creating download folder ' + download_folder)
+    logger.info('Creating download folder ' + download_folder + '...')
 
-    try:
+    if not os.path.exists(download_folder):
         os.mkdir(download_folder)
-    except OSError:
+        logger.info('Download folder created.')
+    else:
         logger.info('Folder ' + download_folder + ' already exists. ' +
                     'Saving downloaded files to this folder.')
 
