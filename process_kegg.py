@@ -38,7 +38,7 @@ def get_kegg_info(kegg_info_file):
 
     for line in kegg_info_fh:
         toks = line.strip().split()
-        kegg_info_dict[toks[0]] = toks[1] + ' entries'
+        kegg_info_dict[toks[0]] = ' '.join(toks[1:])
 
     kegg_info_fh.close()
 
@@ -63,7 +63,7 @@ def get_kegg_sets_members(kegg_sets_file):
     kegg_set_members = defaultdict(set)
 
     for line in kegg_sets_fh:
-        toks = line.strip().split("\t")
+        toks = line.strip().split()
         group = toks[0].split(':')[1]    # group listed first, has prefix
         geneid = toks[1].split(':')[1]  # gene listed second, has prefix
         kegg_set_members[group].add(geneid)
@@ -98,7 +98,7 @@ def get_kegg_set_info(kegg_set_info_file):
     return set_info_dict
 
 
-def assemble_kegg_sets(set_info_dir, kegg_set_members):
+def process_kegg_sets(species_ini_file, kegg_folder):
     """
     Function to put together the dictionaries output by get_kegg_sets_members
     and get_kegg_set_info to assemble KEGG sets.
@@ -112,7 +112,19 @@ def assemble_kegg_sets(set_info_dir, kegg_set_members):
     all_kegg_sets
 
     """
+    species_file = SafeConfigParser()
+    species_file.read(species_ini_file)
+
+    if not species_file.has_section('KEGG'):
+        logger.error('Species INI file has no KEGG section. KEGG sets were '
+                     'not able to be processed.')
+        sys.exit(1)
+
     all_kegg_sets = []
+
+    for kegg_set_id, genes in kegg_set_members.iteritems():
+        download_kegg_info_files()
+
 
     for info_file in glob.glob(set_info_dir + '/*'):
         kegg_set_info = get_kegg_set_info(info_file)
