@@ -3,6 +3,7 @@ import sys
 import argparse
 
 from download_files import download_all_files
+from process_kegg import process_kegg_sets
 
 # Import and set logger
 import logging
@@ -44,3 +45,4 @@ if __name__ == "__main__":
                     'Saving downloaded files to this folder.')
 
     download_all_files(ini_file_path, download_folder)
+    process_kegg_sets(ini_file_path, download_folder + '/KEGG')
