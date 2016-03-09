@@ -83,14 +83,30 @@ def download_all_files(species_ini_file, download_folder):
     species_file.read(species_ini_file)
 
     if species_file.has_section('GO'):
+        go_dir = download_folder + '/GO'
+
+        if not os.path.exists(go_dir):
+            os.mkdir(go_dir)
+            logger.info('GO folder created.')
+        else:
+            logger.info('Folder ' + go_dir + ' already exists. ' +
+                        'Saving downloaded files to this folder.')
 
         obo_file = species_file.get('GO', 'GO_OBO_FILE')
         goa_file = species_file.get('GO', 'ASSOCIATION_FILE')
 
-        download_from_url(obo_file, download_folder)
-        download_from_url(goa_file, download_folder)
+        download_from_url(obo_file, go_dir)
+        download_from_url(goa_file, go_dir)
 
     if species_file.has_section('KEGG'):
+        kegg_dir = download_folder + '/KEGG'
+
+        if not os.path.exists(kegg_dir):
+            os.mkdir(kegg_dir)
+            logger.info('KEGG folder created.')
+        else:
+            logger.info('Folder ' + kegg_dir + ' already exists. ' +
+                        'Saving downloaded files to this folder.')
 
         kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
 
@@ -98,8 +114,36 @@ def download_all_files(species_ini_file, download_folder):
                 'KEGG', 'SETS_TO_DOWNLOAD').split(',')]
 
         for kegg_set_url in all_urls:
-            download_from_url(kegg_set_url, download_folder)
+            download_from_url(kegg_set_url, kegg_dir)
 
     if species_file.has_section('DO'):
+        do_dir = download_folder + '/DO'
+
+        if not os.path.exists(do_dir):
+            os.mkdir(do_dir)
+            logger.info('DO folder created.')
+        else:
+            logger.info('Folder ' + do_dir + ' already exists. ' +
+                        'Saving downloaded files to this folder.')
         obo_file = species_file.get('DO', 'DO_OBO_FILE')
-        download_from_url(obo_file, download_folder)
+        download_from_url(obo_file, do_dir)
+
+
+def download_kegg_info_files(species_ini_file, kegg_sets, download_folder):
+    """
+
+    """
+    species_file = SafeConfigParser()
+    species_file.read(species_ini_file)
+
+    if not species_file.has_section('KEGG'):
+        logger.error('Species INI file has no KEGG section. KEGG URLs are '
+                     'needed to download information files for KEGG sets.')
+        sys.exit(1)
+
+    full_info_url = species_file.get('KEGG', 'KEGG_ROOT_URL') + \
+        species_file.get('KEGG', 'SET_INFO_URL')
+
+    for kegg_set in kegg_sets:
+        kegg_info_file = full_info_url + kegg_set
+        download_from_url(kegg_info_file, download_folder)
