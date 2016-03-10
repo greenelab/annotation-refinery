@@ -24,9 +24,9 @@ def download_from_url(url, download_folder, file_name=None):
     download_folder -- Path of folder where annotation file from URL will
     be downloaded to. This is a string.
 
-    file_name -- Optional string argument for name that file will be saved as
-    in download_folder. If this is None, it will be assigned the last part of
-    the url.
+    file_name -- Optional string argument for the name the downloaded file will
+    will have in download_folder. If this is None, it will be assigned the last
+    part of the url.
 
     Returns:
     True if file did not already exist and was able to be downloaded.
@@ -93,13 +93,7 @@ def download_all_files(species_ini_file, download_folder):
 
     if species_file.has_section('GO'):
         go_dir = download_folder + '/GO'
-
-        if not os.path.exists(go_dir):
-            os.mkdir(go_dir)
-            logger.info('GO folder created.')
-        else:
-            logger.info('Folder ' + go_dir + ' already exists. ' +
-                        'Saving downloaded files to this folder.')
+        check_create_folder(go_dir)
 
         obo_file = species_file.get('GO', 'GO_OBO_FILE')
         goa_file = species_file.get('GO', 'ASSOCIATION_FILE')
@@ -109,15 +103,12 @@ def download_all_files(species_ini_file, download_folder):
 
     if species_file.has_section('KEGG'):
         kegg_dir = download_folder + '/KEGG'
-
-        if not os.path.exists(kegg_dir):
-            os.mkdir(kegg_dir)
-            logger.info('KEGG folder created.')
-        else:
-            logger.info('Folder ' + kegg_dir + ' already exists. ' +
-                        'Saving downloaded files to this folder.')
+        check_create_folder(kegg_dir)
 
         kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
+
+        kegg_info_url = kegg_root_url + species_file.get('KEGG', 'DB_INFO_URL')
+        download_from_url(kegg_info_url, kegg_dir, 'kegg_db_info')
 
         all_urls = [kegg_root_url + x.strip() for x in species_file.get(
                 'KEGG', 'SETS_TO_DOWNLOAD').split(',')]
@@ -127,13 +118,8 @@ def download_all_files(species_ini_file, download_folder):
 
     if species_file.has_section('DO'):
         do_dir = download_folder + '/DO'
+        check_create_folder(do_dir)
 
-        if not os.path.exists(do_dir):
-            os.mkdir(do_dir)
-            logger.info('DO folder created.')
-        else:
-            logger.info('Folder ' + do_dir + ' already exists. ' +
-                        'Saving downloaded files to this folder.')
         obo_file = species_file.get('DO', 'DO_OBO_FILE')
         download_from_url(obo_file, do_dir)
 
@@ -158,6 +144,8 @@ def download_kegg_info_files(species_ini_file, kegg_sets, download_folder):
     Nothing, just downloads and saves files to download_folder
 
     """
+    check_create_folder(download_folder)
+
     species_file = SafeConfigParser()
     species_file.read(species_ini_file)
 
@@ -167,7 +155,7 @@ def download_kegg_info_files(species_ini_file, kegg_sets, download_folder):
         sys.exit(1)
 
     full_info_url = species_file.get('KEGG', 'KEGG_ROOT_URL') + \
-        species_file.get('KEGG', 'SET_INFO_URL')
+        species_file.get('KEGG', 'SET_INFO_DIR')
 
     for kegg_set in kegg_sets:
         kegg_info_file = full_info_url + kegg_set
