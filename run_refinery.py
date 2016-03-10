@@ -4,6 +4,7 @@ import argparse
 
 from download_files import download_all_files
 from process_kegg import process_kegg_sets
+from utils import check_create_folder
 
 # Import and set logger
 import logging
@@ -36,13 +37,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     logger.info('Creating download folder ' + download_folder + '...')
-
-    if not os.path.exists(download_folder):
-        os.mkdir(download_folder)
-        logger.info('Download folder created.')
-    else:
-        logger.info('Folder ' + download_folder + ' already exists. ' +
-                    'Saving downloaded files to this folder.')
+    check_create_folder(download_folder)
 
     download_all_files(ini_file_path, download_folder)
     process_kegg_sets(ini_file_path, download_folder + '/KEGG')
