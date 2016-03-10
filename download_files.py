@@ -3,6 +3,7 @@ import os
 import tempfile
 import shutil
 import requests
+from utils import check_create_folder
 
 # Import and set logger
 import logging
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def download_from_url(url, download_folder):
+def download_from_url(url, download_folder, file_name=None):
     """
     In case the downloading process gets interrupted, a dummy tempfile is
     created in the download_folder for every file that is being downloaded.
@@ -23,13 +24,20 @@ def download_from_url(url, download_folder):
     download_folder -- Path of folder where annotation file from URL will
     be downloaded to. This is a string.
 
+    file_name -- Optional string argument for name that file will be saved as
+    in download_folder. If this is None, it will be assigned the last part of
+    the url.
+
     Returns:
     True if file did not already exist and was able to be downloaded.
     Otherwise, return False.
 
     """
+    if file_name:
+        filename = file_name
+    else:
+        filename = url.split('/')[-1]
 
-    filename = url.split('/')[-1]
     target_filename = download_folder + '/' + filename
 
     if os.path.exists(target_filename):
@@ -65,7 +73,8 @@ def download_from_url(url, download_folder):
 def download_all_files(species_ini_file, download_folder):
     """
     Reads config INI file for a species, which contains the files (and
-    their locations, or URLs) that must be loaded for this species.
+    their locations, or URLs) that must be loaded for this species, and calls
+    the download_from_url function for each of those files.
 
     Arguments:
     species_ini_file -- Path to the particular species INI file. This
@@ -131,6 +140,22 @@ def download_all_files(species_ini_file, download_folder):
 
 def download_kegg_info_files(species_ini_file, kegg_sets, download_folder):
     """
+    This is a KEGG-specific function that downloads the files containing
+    information about the KEGG sets, such as their title, abstract, supporting
+    publications, etc.
+
+    Arguments:
+    species_ini_file -- Path to the particular species INI file. This
+    is a string.
+
+    kegg_sets -- List of kegg set identifiers (e.g. hsa00010) for which files
+    must be downloaded.
+
+    download_folder -- Path of folder where annotation file from URL will
+    be downloaded to. This is a string.
+
+    Returns:
+    Nothing, just downloads and saves files to download_folder
 
     """
     species_file = SafeConfigParser()
