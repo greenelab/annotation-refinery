@@ -1,6 +1,4 @@
 import unittest
-import os
-
 from process_kegg import *
 
 
@@ -55,9 +53,34 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_members_dict, desired_output)
 
     def testGetKeggSetInfo(self):
-        sample_set_info_filename = 'test_files/sample_set_info.csv'
+        kegg_set_info = get_kegg_set_info('test_files/sample_set_info.csv')
 
-    def testAssembleKeggSets(self):
+        desired_output = {
+            'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
+            'abstract':
+                'Glycolysis is the process of converting glucose into pyruvate'
+                ' and generating small amounts of ATP (energy) and NADH '
+                '(reducing power). It is a central pathway that produces '
+                'important precursor metabolites: six-carbon compounds of '
+                'glucose-6P and fructose-6P and three-carbon compounds of '
+                'glycerone-P, glyceraldehyde-3P, glycerate-3P, '
+                'phosphoenolpyruvate, and pyruvate [MD:M00001]. Acetyl-CoA,'
+                ' another important precursor metabolite, is produced by '
+                'oxidative decarboxylation of pyruvate [MD:M00307]. '
+                'When the enzyme genes of this pathway are examined in '
+                'completely sequenced genomes, the reaction steps of '
+                'three-carbon compounds from glycerone-P to pyruvate form'
+                ' a conserved core module [MD:M00002], which is found in '
+                'almost all organisms and which sometimes contains operon'
+                ' structures in bacterial genomes. Gluconeogenesis is a '
+                'synthesis pathway of glucose from noncarbohydrate '
+                'precursors. It is essentially a reversal of glycolysis '
+                'with minor variations of alternative paths [MD:M00003].'
+        }
+
+        self.assertEqual(kegg_set_info, desired_output)
+
+    def testProcessKeggSets(self):
         pass
 
 
