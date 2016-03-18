@@ -1,6 +1,6 @@
 import sys
 import re
-from go.idmap import idmap
+from idmap import idmap
 
 import logging
 logger = logging.getLogger('function-go.go')
@@ -691,21 +691,21 @@ class go:
     get propagated descendents of term
     """
     def get_descendents(self, gterm):
-    if not self.go_terms.has_key(gterm):
-        return set()
-    term = self.go_terms[gterm]
+        if not self.go_terms.has_key(gterm):
+            return set()
+        term = self.go_terms[gterm]
 
-    if len(term.parent_of) == 0:
-        return set()
+        if len(term.parent_of) == 0:
+            return set()
 
-    child_terms = set()
-    for child_term in term.parent_of:
-        if child_term.namespace != term.namespace:
-        continue
-        child_terms.add(child_term.go_id)
-        child_terms = child_terms | self.get_descendents(child_term.go_id)
+        child_terms = set()
+        for child_term in term.parent_of:
+            if child_term.namespace != term.namespace:
+                continue
+            child_terms.add(child_term.go_id)
+            child_terms = child_terms | self.get_descendents(child_term.go_id)
 
-    return child_terms
+        return child_terms
 
     """
     get propagated ancestors of term

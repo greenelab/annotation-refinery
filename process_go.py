@@ -63,7 +63,7 @@ def create_go_term_abstract(go_term, accepted_evcodes):
         if len(evlist) == 1:
             evclause = evclause + evlist[0]
         else:
-            evclause = evclause + ', '.join(evlist[:-1]) + ' or ' evlist[-1]
+            evclause = evclause + ', '.join(evlist[:-1]) + ' or ' + evlist[-1]
         evclause = evclause + ' are included.'
     if go_term.description:
         description = go_term.description + ' Annotations are propagated ' + \
