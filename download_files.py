@@ -1,8 +1,9 @@
-from ConfigParser import SafeConfigParser
 import os
 import tempfile
 import shutil
 import requests
+import urllib
+from ConfigParser import SafeConfigParser
 from utils import check_create_folder
 
 # Import and set logger
@@ -46,23 +47,29 @@ def download_from_url(url, download_folder, file_name=None):
         return False
 
     try:
-        temp = tempfile.NamedTemporaryFile(prefix=filename + '.',
-                                           dir=download_folder)
+        if url.startswith('ftp'):
+            urllib.urlretrieve(url, target_filename)
+            return True
 
-        download_request = requests.get(url, stream=True)
+        else:
+            temp = tempfile.NamedTemporaryFile(prefix=filename + '.',
+                                               dir=download_folder)
 
-        # chunk_size is in bytes
-        for chunk in download_request.iter_content(chunk_size=4096):
-            if chunk:
-                temp.write(chunk)
-                temp.flush()
+            download_request = requests.get(url, stream=True)
 
-        # Go back to the beginning of the tempfile and copy it to target folder
-        temp.seek(0)
-        target_fh = open(target_filename, 'w+b')
-        shutil.copyfileobj(temp, target_fh)
-        temp.close()  # This erases the tempfile
-        return True
+            # chunk_size is in bytes
+            for chunk in download_request.iter_content(chunk_size=4096):
+                if chunk:
+                    temp.write(chunk)
+                    temp.flush()
+
+            # Go back to the beginning of the tempfile and copy it to
+            # target folder
+            temp.seek(0)
+            target_fh = open(target_filename, 'w+b')
+            shutil.copyfileobj(temp, target_fh)
+            temp.close()  # This erases the tempfile
+            return True
 
     except:
         logger.error('There was an error when downloading the file "' +
