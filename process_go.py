@@ -46,6 +46,8 @@ def get_filtered_annotations(assoc_file, accepted_evcodes):
 
 
 def create_go_term_title(go_term):
+    """
+    """
     go_id = go_term.go_id.split(':')[1]
 
     namespace = GO_NAMESPACE_MAP[go_term.get_namespace()]
@@ -55,22 +57,27 @@ def create_go_term_title(go_term):
     return title
 
 
-def create_go_term_abstract(go_term, accepted_evcodes):
+def create_go_term_abstract(go_term, evlist=None):
+    """
+    """
     evclause = ''
+    if evlist is not None:
 
-    if len(accepted_evcodes):
-        ' Only annotations with evidence coded as '
+        evclause = ' Only annotations with evidence coded as '
         if len(evlist) == 1:
             evclause = evclause + evlist[0]
         else:
             evclause = evclause + ', '.join(evlist[:-1]) + ' or ' + evlist[-1]
         evclause = evclause + ' are included.'
+
     if go_term.description:
         description = go_term.description + ' Annotations are propagated ' + \
             'through transitive closure as recommended by the GO ' + \
-            'Consortium. ' + evclause
+            'Consortium.' + evclause
+        return description
     else:
-        logger.info("No description on term %s", term)
+        logger.info("No description on term %s", go_term)
+        return None
 
 
 def process_go_terms(species_ini_file):

@@ -4,6 +4,8 @@ import argparse
 
 from download_files import download_all_files
 from process_kegg import process_kegg_sets
+from process_go import process_go_terms
+from process_do import process_do_terms
 from utils import check_create_folder
 
 # Import and set logger
@@ -41,3 +43,5 @@ if __name__ == "__main__":
 
     download_all_files(ini_file_path, download_folder)
     process_kegg_sets(ini_file_path, download_folder + '/KEGG')
+    process_go_terms(ini_file_path)
+    process_do_terms(ini_file_path)
