@@ -1,5 +1,8 @@
 import unittest
 from process_kegg import *
+from process_go import *
+from process_do import *
+from go import go
 
 
 class KeggTest(unittest.TestCase):
@@ -81,6 +84,130 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_set_info, desired_output)
 
     def testProcessKeggSets(self):
+        pass
+
+
+class GO_Test(unittest.TestCase):
+    """
+    Test case for functions in process_go.py file
+    """
+
+    def setUp(self):
+        """"""
+        self.gene_ontology = go()
+        self.loaded_obo_bool = self.gene_ontology.load_obo(
+                'test_files/test_go_obo_file.csv')
+
+    def tearDown(self):
+        """"""
+        pass
+
+    def testGetFilteredAnnotations(self):
+        assoc_file = 'test_files/test_go_assoc_file.csv'
+        evcodes = 'EXP, IDA, IPI, IMP, IGI, IEP'
+        filtered_annotations = get_filtered_annotations(assoc_file, evcodes)
+        desired_output = [
+            ('UniProtKB', 'A0A024QZP7', 'GO:0000004', 'GO_REF:0000052', '20101115'),
+            ('UniProtKB', 'A0A024QZP7', 'GO:0000003', 'GO_REF:0000052', '20101115'),
+            ('UniProtKB', 'A0A024R1V6', 'GO:0000007', 'GO_REF:0000052', '20141106'),
+            ('UniProtKB', 'A0A024R214', 'GO:0000003', 'GO_REF:0000052', '20141106'),
+            ('UniProtKB', 'A0A024R214', 'GO:0000002', 'GO_REF:0000052', '20141106'),
+            ('UniProtKB', 'A0A024R216', 'GO:0000001', 'GO_REF:0000052', '20110516')]
+
+        self.assertEqual(filtered_annotations, desired_output)
+
+    def testCreateGOTermTitle(self):
+        all_titles = set()
+
+        for (term_id, term) in self.gene_ontology.go_terms.iteritems():
+            title = create_go_term_title(term)
+            all_titles.add(title)
+
+        desired_output = set([
+            'GO-MF-0000005:Premier League', 'GO-BP-0000003:Eibar',
+            'GO-MF-0000006:La Liga', 'GO-BP-0000001:Barcelona',
+            'GO-BP-0000002:Liverpool', 'GO-MF-0000007:European team'])
+
+        self.assertEqual(all_titles, desired_output)
+
+    def testCreateGOTermAbstractNoEvcodes(self):
+        go_terms = self.gene_ontology.go_terms
+        abstract = create_go_term_abstract(go_terms['GO:0000001'])
+        desired_output = 'The distribution of mitochondria, including the ' + \
+            'mitochondrial genome, into daughter cells after mitosis or ' + \
+            'meiosis, mediated by interactions between mitochondria and ' + \
+            'the cytoskeleton. Annotations are propagated through ' + \
+            'transitive closure as recommended by the GO Consortium.'
+
+        self.assertEqual(abstract, desired_output)
+
+    def testCreateGOTermAbstractWithEvcodes(self):
+        go_terms = self.gene_ontology.go_terms
+        abstract = create_go_term_abstract(go_terms['GO:0000001'],
+                                           ['IEP', 'IPI', 'IMP'])
+        desired_output = 'The distribution of mitochondria, including the ' + \
+            'mitochondrial genome, into daughter cells after mitosis or ' + \
+            'meiosis, mediated by interactions between mitochondria and ' + \
+            'the cytoskeleton. Annotations are propagated through ' + \
+            'transitive closure as recommended by the GO Consortium.' + \
+            ' Only annotations with evidence coded as IEP, IPI or IMP' + \
+            ' are included.'
+
+        self.assertEqual(abstract, desired_output)
+
+    def testProcessGOTerms(self):
+        pass
+
+
+class DO_Test(unittest.TestCase):
+    """
+    Test case for functions in process_do.py file
+    """
+
+    def setUp(self):
+        """"""
+
+    def tearDown(self):
+        """"""
+        pass
+
+    def testCreateDOTermTitle(self):
+        pass
+
+    def testCreateDOAbstractTitle(self):
+        pass
+
+    def testBuildOmimDict(self):
+        do_obo_file = 'test_files/test_do_obo_file.csv'
+
+        omim_dict = build_doid_omim_dict(do_obo_file)
+
+        # Only one of the DO terms in the test DO OBO file has an
+        # OMIM xref
+        desired_output = {'DOID:9970': set(['601665'])}
+
+        self.assertEqual(omim_dict, desired_output)
+
+    def testBuildMim2GeneDict(self):
+        mim2gene_file = 'test_files/test_mim2gene.csv'
+
+        mim2gene_dict = build_mim2gene_dict(mim2gene_file)
+
+        desired_output = {'100725': '1145', '100730': '1146', '100720': '1144',
+                          '100740': '43', '616876': '', '616877': '',
+                          '100880': '48', '616872': '56889', '100650': '217',
+                          '100790': '429', '100850': '50', '100660': '218',
+                          '100670': '219', '100710': '1140', '100690': '1134',
+                          '616874': '51643', '100678': '39', '100640': '216'}
+
+        self.assertEqual(mim2gene_dict, desired_output)
+
+    def testBuildGenemapDict(self):
+        genemap_file = ''
+
+        genemap_dict = build_genemap_dict(mim2gene_file)
+
+    def testProcessDOTerms(self):
         pass
 
 

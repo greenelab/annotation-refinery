@@ -1,0 +1,70 @@
+!GOC Validation Date: 03/04/2016 $
+!Submission Date: 2/16/2016
+!
+! The above "Submission Date" is when the annotation project provided
+! this file to the Gene Ontology Consortium (GOC).  The "GOC Validation
+! Date" indicates when this file was last changed as a result of a GOC
+! validation and filtering process.  
+!
+! Note: The contents of this file may differ from that submitted to the
+! GOC. The identifiers and syntax of the file have been checked, rows of
+! data not meeting the standards set by the GOC have been removed. This
+! file may also have annotations removed because the annotations for the
+! listed Taxonomy identifier are only allowed in a file provided by
+! another annotation project.  The original submitted file is available from:
+!  http://www.geneontology.org/gene-associations/submission/
+!
+! For information on which taxon are allowed in which files please see:
+!  http://www.geneontology.org/GO.annotation.shtml#script
+!
+!gaf-version: 2.0
+!Project_name: UniProt GO Annotation program (UniProt-GOA)
+!URL: http://www.ebi.ac.uk/GOA
+!Contact Email: goa@ebi.ac.uk
+!
+!The set of protein accessions included in this file is based on UniProt complete proteomes, which may provide more than one protein per gene.
+!They include all Swiss-Prot entries for the species plus any TrEMBL entries that have an Ensembl DR line. The TrEMBL entries are likely to overlap with the Swiss-Prot entries or their isoforms.
+!If a particular protein accession is not annotated with GO, then it will not appear in this file.
+!
+!Note that the annotation set in this file is filtered in order to reduce redundancy; the full, unfiltered set can be found in
+!ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/UNIPROT/gene_association.goa_uniprot.gz
+!
+!Generated: 2016-02-15 09:32
+!GO-version: http://purl.obolibrary.org/obo/go/releases/2016-02-13/go.owl
+!
+UniProtKB	A0A024QZ42	PDCD6		GO:0000007	GO_REF:0000002	IEA	InterPro:IPR002048	F	HCG1985580, isoform CRA_c	A0A024QZ42_HUMAN|PDCD6|hCG_1985580	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024QZP7	CDK1		GO:0000006	GO_REF:0000002	IEA	InterPro:IPR000719|InterPro:IPR002290|InterPro:IPR008271	F	Cyclin-dependent kinase 1	A0A024QZP7_HUMAN|CDK1	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024QZP7	CDK1		GO:0000005	GO_REF:0000038	IEA	UniProtKB-KW:KW-0067	F	Cyclin-dependent kinase 1	A0A024QZP7_HUMAN|CDK1	protein	taxon:9606	20160213	UniProt		
+UniProtKB	A0A024QZP7	CDK1		GO:0000004	GO_REF:0000052	IDA		C	Cyclin-dependent kinase 1	A0A024QZP7_HUMAN|CDK1	protein	taxon:9606	20101115	HPA		
+UniProtKB	A0A024QZP7	CDK1		GO:0000003	GO_REF:0000052	IDA		C	Cyclin-dependent kinase 1	A0A024QZP7_HUMAN|CDK1	protein	taxon:9606	20101115	HPA		
+UniProtKB	A0A024QZP7	CDK1		GO:0000002	GO_REF:0000002	IEA	InterPro:IPR000719|InterPro:IPR002290|InterPro:IPR008271	P	Cyclin-dependent kinase 1	A0A024QZP7_HUMAN|CDK1	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024QZX5	SERPINB6		GO:0000001	GO_REF:0000002	IEA	InterPro:IPR000215	C	Serpin B6	A0A024QZX5_HUMAN|SERPINB6|hCG_22875	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0T9	APOC2		GO:0000007	GO_REF:0000002	IEA	InterPro:IPR008019	P	Apolipoprotein C-II isoform 1	A0A024R0T9_HUMAN|APOC2|APOC4-APOC2|hCG_20334	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0T9	APOC2		GO:0000006	GO_REF:0000002	IEA	InterPro:IPR008019	P	Apolipoprotein C-II isoform 1	A0A024R0T9_HUMAN|APOC2|APOC4-APOC2|hCG_20334	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0T9	APOC2		GO:0000005	GO_REF:0000002	IEA	InterPro:IPR008019	F	Apolipoprotein C-II isoform 1	A0A024R0T9_HUMAN|APOC2|APOC4-APOC2|hCG_20334	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0T9	APOC2		GO:0000004	GO_REF:0000002	IEA	InterPro:IPR008019	C	Apolipoprotein C-II isoform 1	A0A024R0T9_HUMAN|APOC2|APOC4-APOC2|hCG_20334	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0T9	APOC2		GO:0000003	GO_REF:0000002	IEA	InterPro:IPR008019	P	Apolipoprotein C-II isoform 1	A0A024R0T9_HUMAN|APOC2|APOC4-APOC2|hCG_20334	protein	taxon:9606	20160213	GOC		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000002	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000001	GO_REF:0000002	IEA	InterPro:IPR009057	F	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000007	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	C	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000006	GO_REF:0000002	IEA	InterPro:IPR016827	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000005	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000004	GO_REF:0000002	IEA	InterPro:IPR000433	F	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000003	GO_REF:0000002	IEA	InterPro:IPR016827	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000002	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000001	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000007	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	C	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R0Y4	TADA2L		GO:0000006	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000018795	P	Transcriptional adapter 2-alpha	A0A024R0Y4_HUMAN|TADA2L|TADA2A|hCG_28187	protein	taxon:9606	20160213	Ensembl		
+UniProtKB	A0A024R154	RP11-35N6.1		GO:0000005	GO_REF:0000002	IEA	InterPro:IPR028678	P	Lipid phosphate phosphatase-related protein type 1	A0A024R154_HUMAN|RP11-35N6.1|LPPR1|hCG_29015	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R154	RP11-35N6.1		GO:0000004	GO_REF:0000038	IEA	UniProtKB-KW:KW-0812	C	Lipid phosphate phosphatase-related protein type 1	A0A024R154_HUMAN|RP11-35N6.1|LPPR1|hCG_29015	protein	taxon:9606	20160213	UniProt		
+UniProtKB	A0A024R161	DNAJC25-GNG10		GO:0000003	GO_REF:0000038	IEA	UniProtKB-KW:KW-0807	F	Guanine nucleotide-binding protein subunit gamma	A0A024R161_HUMAN|DNAJC25-GNG10|hCG_1994888	protein	taxon:9606	20160213	UniProt		
+UniProtKB	A0A024R161	DNAJC25-GNG10		GO:0000002	GO_REF:0000002	IEA	InterPro:IPR001770|InterPro:IPR015898	C	Guanine nucleotide-binding protein subunit gamma	A0A024R161_HUMAN|DNAJC25-GNG10|hCG_1994888	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R161	DNAJC25-GNG10		GO:0000001	GO_REF:0000002	IEA	InterPro:IPR001770|InterPro:IPR015898	P	Guanine nucleotide-binding protein subunit gamma	A0A024R161_HUMAN|DNAJC25-GNG10|hCG_1994888	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R1V6	PCGF2		GO:0000007	GO_REF:0000052	IDA		C	Polycomb group RING finger protein 2	A0A024R1V6_HUMAN|PCGF2|hCG_31397	protein	taxon:9606	20141106	HPA		
+UniProtKB	A0A024R1V6	PCGF2		GO:0000006	GO_REF:0000002	IEA	InterPro:IPR001841	F	Polycomb group RING finger protein 2	A0A024R1V6_HUMAN|PCGF2|hCG_31397	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R214	CPEB1		GO:0000005	GO_REF:0000002	IEA	InterPro:IPR012677	F	Cytoplasmic polyadenylation element binding protein 1, isoform CRA_c	A0A024R214_HUMAN|CPEB1|hCG_26948	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R214	CPEB1		GO:0000004	GO_REF:0000002	IEA	InterPro:IPR000504	F	Cytoplasmic polyadenylation element binding protein 1, isoform CRA_c	A0A024R214_HUMAN|CPEB1|hCG_26948	protein	taxon:9606	20160213	InterPro		
+UniProtKB	A0A024R214	CPEB1		GO:0000003	GO_REF:0000052	IDA		C	Cytoplasmic polyadenylation element binding protein 1, isoform CRA_c	A0A024R214_HUMAN|CPEB1|hCG_26948	protein	taxon:9606	20141106	HPA		
+UniProtKB	A0A024R214	CPEB1		GO:0000002	GO_REF:0000052	IDA		C	Cytoplasmic polyadenylation element binding protein 1, isoform CRA_c	A0A024R214_HUMAN|CPEB1|hCG_26948	protein	taxon:9606	20141106	HPA		
+UniProtKB	A0A024R216	HDGFRP3		GO:0000001	GO_REF:0000052	IDA		C	Hepatoma-derived growth factor, related protein 3, isoform CRA_a	A0A024R216_HUMAN|HDGFRP3|hCG_1811535	protein	taxon:9606	20110516	HPA		
+UniProtKB	A0A024R216	HDGFRP3		GO:0000007	GO_REF:0000019	IEA	Ensembl:ENSMUSP00000102926	C	Hepatoma-derived growth factor, related protein 3, isoform CRA_a	A0A024R216_HUMAN|HDGFRP3|hCG_1811535	protein	taxon:9606	20160213	Ensembl		
