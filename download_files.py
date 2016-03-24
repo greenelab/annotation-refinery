@@ -103,9 +103,9 @@ def download_all_files(species_ini_file, download_folder):
         check_create_folder(go_dir)
 
         obo_file = species_file.get('GO', 'GO_OBO_FILE')
-        goa_file = species_file.get('GO', 'ASSOCIATION_FILE')
-
         download_from_url(obo_file, go_dir)
+
+        goa_file = species_file.get('GO', 'ASSOCIATION_FILE')
         download_from_url(goa_file, go_dir)
 
     if species_file.has_section('KEGG'):
@@ -129,6 +129,12 @@ def download_all_files(species_ini_file, download_folder):
 
         obo_file = species_file.get('DO', 'DO_OBO_FILE')
         download_from_url(obo_file, do_dir)
+
+        mim2gene_file = species_file.get('DO', 'MIM2GENE_FILE')
+        download_from_url(mim2gene_file, do_dir)
+
+        genemap_file = species_file.get('DO', 'GENEMAP_FILE')
+        download_from_url(genemap_file, do_dir)
 
 
 def download_kegg_info_files(species_ini_file, kegg_sets, download_folder):
