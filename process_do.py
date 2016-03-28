@@ -121,20 +121,22 @@ def build_doid_omim_dict(obo_file):
     return doid_omim_dict
 
 
-def build_mim2gene_dict(mim2gene_file):
+def build_mim2entrez_dict(mim2gene_file):
     """
     Function to parse mim2gene.txt file and build dictionary of MIM
-    numbers to Entrez IDs
+    numbers to Entrez IDs. The file itself is called mim2gene, and it
+    includes Entrez, Symbol and Ensembl identifiers, but we will use
+    Entrez.
 
     Arguments:
     mim2gene_file -- A string. Location of the mim2gene.txt file to read in.
 
     Returns:
-    mim2gene_dict -- A dictionary mapping MIM IDs to Entrez IDs for MIM
+    mim2entrez_dict -- A dictionary mapping MIM IDs to Entrez IDs for MIM
     Entry Types that pass the TYPE_FILTER. The keys are MIM IDs and the
     values are Entrez IDs.
     """
-    mim2gene_dict = {}
+    mim2entrez_dict = {}
 
     mim2gene_fh = open(mim2gene_file, 'r')
 
@@ -149,19 +151,29 @@ def build_mim2gene_dict(mim2gene_file):
             continue
 
         if mim_type in TYPE_FILTER:
-            if mim in mim2gene_dict:
-                logger.warning("MIM already exists in mim2gene_dict: %s", mim)
-            mim2gene_dict[mim] = entrez_gid
+            if mim in mim2entrez_dict:
+                logger.warning("MIM already exists in mim2entrez_dict: %s", mim)
+            mim2entrez_dict[mim] = entrez_gid
+    return mim2entrez_dict
 
-    return mim2gene_dict
+
+class mim_disease:
+    def __init__(self):
+        self.mimid = ''
+        self.is_susceptibility = 0  # Whether it has {}
+        self.phe_mm = ''  # Phenotype mapping method
+        self.genetuples = []  # (Gene ID, Gene Status)
 
 
-def build_genemap_dict(genemap_file, mim2gene_dict):
+def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
     """
     Function to parse genemap file and build a dictionary of
 
     Arguments:
     genemap_file -- A string. Location of the genemap file to read in.
+
+    mim2entrez_dict -- A dictionary mapping MIM IDs to Entrez IDs. This
+    is the output of the build_mim2entrez_dict() function above.
 
     Returns:
     mim_diseases -- A dictionary mapping
@@ -174,14 +186,28 @@ def build_genemap_dict(genemap_file, mim2gene_dict):
         # The choice of fields relies on info from the genemap.key
         # file from omim
         toks = line.split('\t')
-        confidence = toks[6].strip()
-        mim_geneid = toks[8].strip()
-        disorders = toks[11].strip()
 
+        try:  # This is to catch lines that are not in the format we want.
+            confidence = toks[6].strip()
+            mim_geneid = toks[8].strip()
+            disorders = toks[11].strip()
+        except IndexError:
+            continue
+
+        # Skip line if disorders field is empty, or confidence is
+        # something other than the one(s) in our filter.
         if disorders == '' or confidence not in CONF_FILTER:
             continue
 
-        entrezid = mim2gene_dict[mim_geneid]
+        # A lot of MIM IDs probably will not be in the mim2entrez_dict,
+        # since it did not include MIM IDs that are labelled as 'phenotype'
+        # (see TYPE_FILTER above)
+        if mim_geneid not in mim2entrez_dict:
+            logger.warn('Entrez ID for MIM ID ' + str(mim_geneid) + ' was not '
+                        'found in mim2entrez_dict')
+            continue
+
+        entrezid = mim2entrez_dict[mim_geneid]
         tuple_gid_conf = (entrezid, confidence)
 
         disorders_list = disorders.split(';')
@@ -206,40 +232,60 @@ def build_genemap_dict(genemap_file, mim2gene_dict):
                     continue
 
                 if mim_disease_id not in mim_diseases:
-                    new_mim_disease = {}
-                    new_mim_disease['mimid'] = mim_disease_id
-                    new_mim_disease['phe_mm'] = mim_phetype
-                    mim_diseases[mim_disease_id] = new_mim_disease
+                    mim_diseases[mim_disease_id] = mim_disease()
+                    mim_diseases[mim_disease_id].mmid = mim_disease_id
+                    mim_diseases[mim_disease_id].phe_mm = mim_phetype
 
                 if '{' in disorder:
-                    mim_diseases[mim_disease_id]['is_susceptibility'] = 1
-                if tuple_gid_conf not in mim_diseases[mim_disease_id]['genetuples']:
-                    mim_diseases[mim_disease_id]['genetuples'].append(tuple_gid_conf)
+                    mim_diseases[mim_disease_id].is_susceptibility = 1
+                if tuple_gid_conf not in mim_diseases[mim_disease_id].genetuples:
+                    mim_diseases[mim_disease_id].genetuples.append(tuple_gid_conf)
+
+    return mim_diseases
 
 
-def add_do_term_annotations(doid_omim, disease_ontology, mim_diseases):
+def add_do_term_annotations(doid_omim_dict, disease_ontology, mim_diseases):
     """
+    Function to add annotations to only the disease_ontology terms found in
+    the doid_omim_dict (created by the build_doid_omim_dict() function).
+
+    Arguments:
+    doid_omim_dict -- Dictionary mapping DO IDs to OMIM xref IDs. Only DOIDs
+    with existing OMIM xref IDs are present as keys in this dictionary.
+
+    disease_ontology -- A Disease Ontology that has parsed the DO OBO file.
+    This is actually just a go.go() object (see imports for this file) that
+    has parsed a DO OBO file instead of a GO OBO file.
+
+    mim_diseases -- Dictionary of MIM IDs as the keys and mim_disease
+    objects (defined above) as values.
+
+    Returns:
+    disease_ontology -- 
+
     """
     logger.debug(disease_ontology.go_terms)
-    entrez_gid = {}
-    for doid in doid_omim.keys():
+
+    for doid in doid_omim_dict.keys():
         term = disease_ontology.get_term(doid)
 
         if term is None:
             continue
 
         logger.info("Processing %s", term)
-        omim_list = doid_omim[doid]
-        for o in omim_list:
-            omim_id = o
-            if omim_id in mim_diseases:
-                mim_entry = mim_diseases[omim_id]
-                for g in mim_entry['genetuples']:
-                    entrez = int(g[0])
-                    if entrez in entrez_gid:
-                        term.add_annotation(gid=entrez_gid[entrez], ref=None)
-                    else:
-                        entrez_gid[entrez]
+
+        omim_id_list = doid_omim_dict[doid]
+
+        for omim_id in omim_id_list:
+            # Ignore if omim_id is not present in mim_diseases dictionary
+            if omim_id not in mim_diseases:
+                continue
+
+            mim_entry = mim_diseases[omim_id]
+
+            for gene_tuple in mim_entry['genetuples']:
+                entrez = int(gene_tuple[0])  # The first item is the Entrez ID
+                term.add_annotation(gid=entrez, ref=None)
 
 
 def process_do_terms(species_ini_file):
@@ -255,7 +301,20 @@ def process_do_terms(species_ini_file):
                      ' to run the process_do_terms function.')
         sys.exit(1)
 
-    obo_location = species_file.get('DO', 'DO_OBO_FILE')
+    do_obo_file = species_file.get('DO', 'DO_OBO_FILE')
+    mim2gene_file = species_file.get('DO', 'MIM2GENE_FILE')
+    genemap_file = species_file.get('DO', 'GENEMAP_FILE')
 
     disease_ontology = go()
     loaded_obo = disease_ontology.parse(do_obo_file)
+
+    doid_omim_dict = build_doid_omim_dict(do_obo_file)
+
+    mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
+
+    mim_diseases = build_mim_diseases_dict(genemap_file, mim2entrez_dict)
+
+    add_do_term_annotations(doid_omim_dict, disease_ontology, mim_diseases)
+
+    disease_ontology.populated = True
+    disease_ontology.propagate()

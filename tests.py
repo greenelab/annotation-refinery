@@ -191,7 +191,7 @@ class DO_Test(unittest.TestCase):
     def testBuildMim2GeneDict(self):
         mim2gene_file = 'test_files/test_mim2gene.csv'
 
-        mim2gene_dict = build_mim2gene_dict(mim2gene_file)
+        mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
 
         desired_output = {'100725': '1145', '100730': '1146', '100720': '1144',
                           '100740': '43', '616876': '', '616877': '',
@@ -200,12 +200,13 @@ class DO_Test(unittest.TestCase):
                           '100670': '219', '100710': '1140', '100690': '1134',
                           '616874': '51643', '100678': '39', '100640': '216'}
 
-        self.assertEqual(mim2gene_dict, desired_output)
+        self.assertEqual(mim2entrez_dict, desired_output)
 
-    def testBuildGenemapDict(self):
-        genemap_file = ''
-
-        genemap_dict = build_genemap_dict(mim2gene_file)
+    def testBuildMimDiseasesDict(self):
+        mim2gene_file = 'test_files/test_mim2gene.csv'
+        genemap_file = 'test_files/test_genemap.csv'
+        mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
+        mim_diseases = build_mim_diseases_dict(genemap_file, mim2entrez_dict)
 
     def testProcessDOTerms(self):
         pass
