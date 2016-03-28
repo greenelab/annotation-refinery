@@ -1,0 +1,18 @@
+# Copyright (c) 1966-2016 Johns Hopkins University. Use of this file adheres to the terms specified at http://omim.org/help/agreement.
+# Generated: 2016-03-24
+# See end of file for additional documentation on specific fields
+# Sort	Month	Day	Year	Cyto Location	Gene Symbols	Confidence	Gene Name	MIM Number	Mapping Method	Comments	Phenotypes	Mouse Gene Symbol
+2.756	4	30	15	2q37.1	CHRND, ACHRD, SCCMS, CMS3A, CMS3B, CMS3C	C	Cholinergic receptor, nicotinic, delta polypeptide	100720	H, REa, A, LD, RE	mutation identified in 1 CMS3A patient and 1 CMS3C family	?Myasthenic syndrome, congenital, 3A, slow-channel, 616321 (3); Myasthenic syndrome, congenital, 3B, fast-channel, 616322 (3); ?Myasthenic syndrome, congenital, 3C, associated with acetylcholine receptor deficiency, 616323 (3); Multiple pterygium syndrome, lethal type, 253290 (3)	1(Acrd)
+2.599	4	30	15	2q31.1	CHRNA1, ACHRD, CMS1B, CMS1A	C	Cholinergic receptor, nicotinic, alpha polypeptide-1, muscle	100690	REa, A		Myasthenic syndrome, congenital, 1A, slow-channel, 601462 (3); Myasthenic syndrome, congenital, 1B, fast-channel, 608930 (3); Multiple pterygium syndrome, lethal type, 253290 (3)	2(Acra)
+2.757	4	22	15	2q37.1	CHRNG, ACHRG	C	Cholinergic receptor, nicotinic, gamma polypeptide	100730	H, REa, LD, RE, Fd	tightly linked to CHRND by RE	Escobar syndrome, 265000 (3); Multiple pterygium syndrome, lethal type, 253290 (3)	1(Acrg)
+6.877	9	28	96	6q25.3	ACAT2	P	Acetyl-Coenzyme A acetyltransferase 2 (acetoacetyl Coenzyme A thiolase)	100678	A	encoded on strand opposite TCP1	?ACAT2 deficiency, 614055 (1)	
+7.407	8	28	92	7q22.1	ACHE, YT	C	Acetylcholinesterase (YT blood group)	100740	Psh, A, Fd, REb	blood group YT (112100) = epitope of ACHE	[Blood group, Yt system], 112100 (3)	5(Ache)
+9.141	4	2	01	9p13.1	ALDH1B1, ALDH5	C	Aldehyde dehydrogenase 1 family, member B1	100670	REa, A			
+9.202	1	28	88	9q21.13	ALDH1A1	P	Aldehyde dehydrogenase-1 family, member A1, soluble	100640	REa, A			19(Ahd2)
+9.82	2	20	11	9p21.1	ACO1, IREB1	C	Aconitase, soluble (iron-responsive element-binding protein-1)	100880	S, REc			4(Aco1)
+12.594	1	13	06	12q23.2	ASCL1, ASH1	C	Achaete-scute complex, Drosophila, homolog-like 1	100790	REa, A	distal to PAH and proximal to TRA1	Central hypoventilation syndrome, congenital, 209880 (3); Haddad syndrome, 209880 (3)	
+12.715	7	8	10	12q24.12	ALDH2	C	Aldehyde dehydrogenase 2 family, mitochondrial	100650	REa, A, H		Alcohol sensitivity, acute, 610251 (3); {Hangover, susceptibility to}, 610251 (3); {Sublingual nitroglycerin, susceptibility to poor response to} (3); {Esophageal cancer, alcohol-related, susceptibility to} (3)	4(Aldh2)
+17.175	4	30	15	17p13.2	CHRNE, SCCMS, CMS4A, CMS4B, CMS4C	C	Cholinergic receptor, nicotinic, epsilon polypeptide	100725	Psh, REc		Myasthenic syndrome, congenital, 4A, slow-channel, 605809 (3); Myasthenic syndrome, congenital, 4B, fast-channel, 616324 (3); Myasthenic syndrome, congenital, 4C, associated with acetylcholine receptor deficiency, 608931 (3)	
+17.201	4	30	15	17p13.1	CHRNB1, ACHRB, SCCMS, CMS2A, CMS2C	C	Cholinergic receptor, nicotinic, beta polypeptide-1, muscle	100710	H, REa, A	mutation identified in 1 CMS2C family	Myasthenic syndrome, congenital, 2A, slow-channel, 616313 (3); ?Myasthenic syndrome, congenital, 2C, associated with acetylcholine receptor deficiency, 616314 (3)	11(Acrb)
+17.204	3	27	95	17p11.2	ALDH3A1, ALDH3	C	Aldehyde dehydrogenase 3 family, member A1	100660	S, A			11(Ahd4)
+22.305	11	10	15	22q13.2	ACO2, ICRD, OPA9	C	Aconitase, mitochondrial	100850	S, Ch, REc	distal to Ph1 break; mutation identified in 1 OPA9 family	Infantile cerebellar-retinal degeneration, 614559 (3); ?Optic atrophy 9, 616289 (3)	
