@@ -26,9 +26,9 @@ def build_doid_omim_dict(obo_file):
     obo_file -- A string. Location of the DO OBO file to be read in.
 
     Returns:
-    doid_omim_dict -- A dictionary of the DO terms in the OBO file that
-    have OMIM xrefs. The keys in the dictionary are DOIDs, and the values
-    are sets of OMIM xref IDs.
+    doid_omim_dict -- A dictionary of only the DO terms in the OBO file
+    that have OMIM xrefs. The keys in the dictionary are DOIDs, and the
+    values are sets of OMIM xref IDs.
     """
     obo_fh = open(obo_file, 'r')
     doid_omim_dict = {}
@@ -103,23 +103,27 @@ def build_mim2entrez_dict(mim2gene_file):
 class mim_disease:
     def __init__(self):
         self.mimid = ''
-        self.is_susceptibility = 0  # Whether it has {}
         self.phe_mm = ''  # Phenotype mapping method
-        self.genetuples = []  # (Gene ID, Gene Status)
+        self.genetuples = []  # (Gene ID, Gene confidence)
 
 
 def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
     """
-    Function to parse genemap file and build a dictionary of
+    Function to parse genemap file and build a dictionary of MIM
+    diseases.
 
     Arguments:
     genemap_file -- A string. Location of the genemap file to read in.
 
-    mim2entrez_dict -- A dictionary mapping MIM IDs to Entrez IDs. This
-    is the output of the build_mim2entrez_dict() function above.
+    mim2entrez_dict -- A dictionary mapping MIM gene IDs to Entrez IDs.
+    This is the output of the build_mim2entrez_dict() function above.
 
     Returns:
-    mim_diseases -- A dictionary mapping
+    mim_diseases -- A dictionary. The keys are MIM disease IDs, and the
+    values are mim_disease objects, defined by the class above.
+
+    *N.B. MIM IDs are not all one type of object (unlike Entrez IDs,
+    for example) - they can refer to phenotypes/diseases, genes, etc.
     """
     FIND_MIMID = re.compile('\, [0-9]* \([1-4]\)')
     mim_diseases = {}
@@ -146,8 +150,8 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
         # since it did not include MIM IDs that are labelled as 'phenotype'
         # (see TYPE_FILTER above)
         if mim_geneid not in mim2entrez_dict:
-            logger.warn('Entrez ID for MIM ID ' + str(mim_geneid) + ' was not '
-                        'found in mim2entrez_dict')
+            logger.warn('Entrez ID for MIM gene ID ' + str(mim_geneid) +
+                        ' was not found in mim2entrez_dict')
             continue
 
         entrezid = mim2entrez_dict[mim_geneid]
@@ -166,7 +170,8 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
             if mim_info:
                 split_mim_info = mim_info.group(0).split(' ')
 
-                mim_disease_id = split_mim_info[1].strip()
+                # mim_dis stands for MIM disease ID
+                mim_dis_id = split_mim_info[1].strip()
                 mim_phetype = split_mim_info[2].strip()
 
                 # Check if the mim_phetype number is the one
@@ -174,15 +179,13 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
                 if mim_phetype != PHENO_FILTER:
                     continue
 
-                if mim_disease_id not in mim_diseases:
-                    mim_diseases[mim_disease_id] = mim_disease()
-                    mim_diseases[mim_disease_id].mmid = mim_disease_id
-                    mim_diseases[mim_disease_id].phe_mm = mim_phetype
+                if mim_dis_id not in mim_diseases:
+                    mim_diseases[mim_dis_id] = mim_disease()
+                    mim_diseases[mim_dis_id].mmid = mim_dis_id
+                    mim_diseases[mim_dis_id].phe_mm = mim_phetype
 
-                if '{' in disorder:
-                    mim_diseases[mim_disease_id].is_susceptibility = 1
-                if tuple_gid_conf not in mim_diseases[mim_disease_id].genetuples:
-                    mim_diseases[mim_disease_id].genetuples.append(tuple_gid_conf)
+                if tuple_gid_conf not in mim_diseases[mim_dis_id].genetuples:
+                    mim_diseases[mim_dis_id].genetuples.append(tuple_gid_conf)
 
     return mim_diseases
 
@@ -226,7 +229,7 @@ def add_do_term_annotations(doid_omim_dict, disease_ontology, mim_diseases):
 
             mim_entry = mim_diseases[omim_id]
 
-            for gene_tuple in mim_entry['genetuples']:
+            for gene_tuple in mim_entry.genetuples:
                 entrez = int(gene_tuple[0])  # The first item is the Entrez ID
                 term.add_annotation(gid=entrez, ref=None)
 
@@ -243,14 +246,14 @@ def create_do_term_title(do_term):
     Returns:
     title -- A string of the DO term's title in the desired format.
     """
-    do_id = do_term.go_id.split(':')[1]
-    do_num = doid.split(':')[1]
+    do_id = do_term.go_id
+    do_num = do_id.split(':')[1]
     title = 'DO' + '-' + do_num + ':' + do_term.full_name
 
     return title
 
 
-def create_do_term_abstract(do_term):
+def create_do_term_abstract(do_term, doid_omim_dict):
     """
     Function to create the DO term abstract in the desired
     format.
@@ -263,29 +266,43 @@ def create_do_term_abstract(do_term):
     """
     omim_clause = ''
 
-    omim_list = list(do_term)
+    doid = do_term.go_id
+    omim_list = list(doid_omim_dict[doid])
 
     if len(omim_list):
         omim_clause = ' Annotations directly to this term are provided ' + \
-                        'by the disease ID'  # Is that sentence right?
+                        'by the OMIM disease ID'  # Is that sentence right?
 
+        if len(omim_list) == 1:
+            omim_clause = omim_clause + ' ' + omim_list[0]
+        else:
+            omim_clause = omim_clause + 's ' + ', '.join(omim_list[:-1]) + \
+                ' and ' + omim_list[-1]
+        omim_clause = omim_clause + '.'
+
+        """
+        TODO: Is this part needed?
         evclause = ' Only annotations with evidence coded as '
         if len(evlist) == 1:
             evclause = evclause + evlist[0]
         else:
             evclause = evclause + ', '.join(evlist[:-1]) + ' or ' + evlist[-1]
         evclause = evclause + ' are included.'
+        """
+
+    abstract = ''
 
     if do_term.description:
-        description = do_term.description + ' Annotations from child terms' + \
-            ' in the disease ontology are propagated through transitive' + \
-            ' closure.' + omim_clause
-        return description
+        abstract += do_term.description
+
     else:
-        logger.info("No description on term %s", do_term)
-        # RZ TODO: Do we want no description whatsoever here?
-        # Even the extra couple of clauses we tack on at the end?
-        return None
+        logger.info("No OBO description for term %s", do_term)
+
+    abstract += ' Annotations from child terms in the disease ontology ' + \
+        'are propagated through transitive closure.' + omim_clause
+
+    logger.info(abstract)
+    return abstract
 
 
 def process_do_terms(species_ini_file):

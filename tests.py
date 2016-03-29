@@ -1,8 +1,8 @@
 import unittest
+from go import go
 from process_kegg import *
 from process_go import *
 from process_do import *
-from go import go
 
 
 class KeggTest(unittest.TestCase):
@@ -166,27 +166,24 @@ class DO_Test(unittest.TestCase):
 
     def setUp(self):
         """"""
+        self.disease_ontology = go()
+        self.loaded_obo_bool = self.disease_ontology.load_obo(
+                'test_files/test_do_obo_file.csv')
 
     def tearDown(self):
         """"""
         pass
 
-    def testCreateDOTermTitle(self):
-        pass
-
-    def testCreateDOAbstractTitle(self):
-        pass
-
     def testBuildOmimDict(self):
         do_obo_file = 'test_files/test_do_obo_file.csv'
 
-        omim_dict = build_doid_omim_dict(do_obo_file)
+        doid_omim_dict = build_doid_omim_dict(do_obo_file)
 
         # Only one of the DO terms in the test DO OBO file has an
         # OMIM xref
         desired_output = {'DOID:9970': set(['601665'])}
 
-        self.assertEqual(omim_dict, desired_output)
+        self.assertEqual(doid_omim_dict, desired_output)
 
     def testBuildMim2GeneDict(self):
         mim2gene_file = 'test_files/test_mim2gene.csv'
@@ -207,6 +204,95 @@ class DO_Test(unittest.TestCase):
         genemap_file = 'test_files/test_genemap.csv'
         mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
         mim_diseases = build_mim_diseases_dict(genemap_file, mim2entrez_dict)
+
+        gene_tuples_dict = {}
+        for mimid, mimdisease in mim_diseases.iteritems():
+            gene_tuples_dict[mimid] = mimdisease.genetuples
+
+        desired_gene_tuples = {
+            '265000': [('1146', 'C')], '605809': [('1145', 'C')],
+            '608930': [('1134', 'C')], '608931': [('1145', 'C')],
+            '616324': [('1145', 'C')], '601462': [('1134', 'C')],
+            '616322': [('1144', 'C')], '209880': [('429', 'C')],
+            '253290': [('1144', 'C'), ('1134', 'C'), ('1146', 'C')],
+            '616313': [('1140', 'C')], '614559': [('50', 'C')],
+            '610251': [('217', 'C')]}
+
+        phetypes_dict = {}
+        for mimid, mimdisease in mim_diseases.iteritems():
+            phetypes_dict[mimid] = mimdisease.phe_mm
+
+        desired_phenotypes = {
+            '265000': '(3)', '605809': '(3)', '608930': '(3)', '608931': '(3)',
+            '616324': '(3)', '601462': '(3)', '616322': '(3)', '209880': '(3)',
+            '253290': '(3)', '616313': '(3)', '614559': '(3)', '610251': '(3)'}
+
+        self.assertEqual(gene_tuples_dict, desired_gene_tuples)
+        self.assertEqual(phetypes_dict, desired_phenotypes)
+
+    def testAddDOTermAnnotations(self):
+        do_obo_file = 'test_files/test_do_obo_file.csv'
+        doid_omim_dict = build_doid_omim_dict(do_obo_file)
+
+        # *NOTE: Here we will use an actual downloaded mim2gene.txt file
+        # (instead of a test one), so that it gets all the Entrez IDs we need.
+        mim2gene_file = 'download_files/DO/mim2gene.txt'
+        genemap_file = 'test_files/test_genemap.csv'
+        mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
+        mim_diseases = build_mim_diseases_dict(genemap_file, mim2entrez_dict)
+
+        add_do_term_annotations(doid_omim_dict, self.disease_ontology,
+                                mim_diseases)
+
+        # We know from testBuildOmimDict above that this is the only
+        # one with OMIM xrefs
+        doid = 'DOID:9970'
+        do_term = self.disease_ontology.get_term(doid)
+
+        annotation_set = set()
+
+        for annotation in do_term.annotations:
+            annotation_set.add((annotation.gid, annotation.ref))
+
+        desired_annots = set([(4160, None), (8431, None), (51738, None),
+                              (5443, None), (5468, None), (6492, None)])
+
+        self.assertEqual(annotation_set, desired_annots)
+
+    def testCreateDOTermTitle(self):
+        title_set = set()
+
+        for term_id, term in self.disease_ontology.go_terms.iteritems():
+            term_title = create_do_term_title(term)
+            title_set.add(term_title)
+
+        desired_output = set([
+            'DO-9970:obesity', 'DO-9972:hypervitaminosis A',
+            'DO-0001816:angiosarcoma', 'DO-4:disease', 'DO-1115:sarcoma',
+            'DO-0014667:disease of metabolism', 'DO-374:nutrition disease',
+            'DO-0050687:cell type cancer',
+            'DO-0060158:acquired metabolic disease',
+            'DO-14566:disease of cellular proliferation',
+            'DO-9971:hypervitaminosis D',
+            'DO-654:overnutrition', 'DO-162:cancer'])
+
+        self.assertEqual(title_set, desired_output)
+
+    def testCreateDOAbstractTitle(self):
+        do_obo_file = 'test_files/test_do_obo_file.csv'
+        doid_omim_dict = build_doid_omim_dict(do_obo_file)
+
+        # We know from testBuildOmimDict above that this is the only
+        # one with OMIM xrefs
+        doid = 'DOID:9970'
+        do_term = self.disease_ontology.get_term(doid)
+
+        abstract = create_do_term_abstract(do_term, doid_omim_dict)
+        desired_abstract = ' Annotations from child terms in the disease ' + \
+            'ontology are propagated through transitive closure. ' + \
+            'Annotations directly to this term are provided by the OMIM' + \
+            ' disease ID 601665.'
+        self.assertEqual(abstract, desired_abstract)
 
     def testProcessDOTerms(self):
         pass
