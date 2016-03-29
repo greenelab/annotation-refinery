@@ -2,9 +2,14 @@
 # Generated: 2016-03-24
 # See end of file for additional documentation on specific fields
 # Sort	Month	Day	Year	Cyto Location	Gene Symbols	Confidence	Gene Name	MIM Number	Mapping Method	Comments	Phenotypes	Mouse Gene Symbol
+1.211	3	6	01	1p36.11	NR0B2, SHP	P	Nuclear receptor subfamily 0, group B, member 2	604630	REa, A		Obesity, mild, early-onset, 601665 (3)
 2.756	4	30	15	2q37.1	CHRND, ACHRD, SCCMS, CMS3A, CMS3B, CMS3C	C	Cholinergic receptor, nicotinic, delta polypeptide	100720	H, REa, A, LD, RE	mutation identified in 1 CMS3A patient and 1 CMS3C family	?Myasthenic syndrome, congenital, 3A, slow-channel, 616321 (3); Myasthenic syndrome, congenital, 3B, fast-channel, 616322 (3); ?Myasthenic syndrome, congenital, 3C, associated with acetylcholine receptor deficiency, 616323 (3); Multiple pterygium syndrome, lethal type, 253290 (3)	1(Acrd)
 2.599	4	30	15	2q31.1	CHRNA1, ACHRD, CMS1B, CMS1A	C	Cholinergic receptor, nicotinic, alpha polypeptide-1, muscle	100690	REa, A		Myasthenic syndrome, congenital, 1A, slow-channel, 601462 (3); Myasthenic syndrome, congenital, 1B, fast-channel, 608930 (3); Multiple pterygium syndrome, lethal type, 253290 (3)	2(Acra)
 2.757	4	22	15	2q37.1	CHRNG, ACHRG	C	Cholinergic receptor, nicotinic, gamma polypeptide	100730	H, REa, LD, RE, Fd	tightly linked to CHRND by RE	Escobar syndrome, 265000 (3); Multiple pterygium syndrome, lethal type, 253290 (3)	1(Acrg)
+2.90	1	7	09	2p23.3	POMC	C	Proopiomelanocortin (adrenocorticotropin/beta-lipotropin)	176830	REa, A		Obesity, adrenal insufficiency, and red hair due to POMC deficiency, 609734 (3); {Obesity, early-onset, susceptibility to}, 601665 (3)	12(Pomc1)
+3.26	2	20	03	3p25.3	GHRL	P	Ghrelin	605353	REc		{Obesity, susceptibility to}, 601665 (3)
+3.59	3	27	09	3p25.2	PPARG, PPARG1, PPARG2, CIMT1, GLM1	C	Peroxisome proliferator activated receptor, gamma	601487	REa, Fd, A	PPARG1, PPARG2 from same gene	Obesity, severe, 601665 (3); [Obesity, resistance to] (3); Insulin resistance, severe, digenic, 604367 (3); Lipodystrophy, familial partial, type 3, 604367 (3); Carotid intimal medial thickness 1, 609338 (3); {Diabetes, type 2}, 125853 (3)	
+6.657	4	5	00	6q16.3	SIM1	C	Single-minded, Drosophila, homolog of, 1	603128	A, R, Ch		Obesity, severe, 601665 (3)	10(Sim1)
 6.877	9	28	96	6q25.3	ACAT2	P	Acetyl-Coenzyme A acetyltransferase 2 (acetoacetyl Coenzyme A thiolase)	100678	A	encoded on strand opposite TCP1	?ACAT2 deficiency, 614055 (1)	
 7.407	8	28	92	7q22.1	ACHE, YT	C	Acetylcholinesterase (YT blood group)	100740	Psh, A, Fd, REb	blood group YT (112100) = epitope of ACHE	[Blood group, Yt system], 112100 (3)	5(Ache)
 9.141	4	2	01	9p13.1	ALDH1B1, ALDH5	C	Aldehyde dehydrogenase 1 family, member B1	100670	REa, A			
@@ -15,4 +20,5 @@
 17.175	4	30	15	17p13.2	CHRNE, SCCMS, CMS4A, CMS4B, CMS4C	C	Cholinergic receptor, nicotinic, epsilon polypeptide	100725	Psh, REc		Myasthenic syndrome, congenital, 4A, slow-channel, 605809 (3); Myasthenic syndrome, congenital, 4B, fast-channel, 616324 (3); Myasthenic syndrome, congenital, 4C, associated with acetylcholine receptor deficiency, 608931 (3)	
 17.201	4	30	15	17p13.1	CHRNB1, ACHRB, SCCMS, CMS2A, CMS2C	C	Cholinergic receptor, nicotinic, beta polypeptide-1, muscle	100710	H, REa, A	mutation identified in 1 CMS2C family	Myasthenic syndrome, congenital, 2A, slow-channel, 616313 (3); ?Myasthenic syndrome, congenital, 2C, associated with acetylcholine receptor deficiency, 616314 (3)	11(Acrb)
 17.204	3	27	95	17p11.2	ALDH3A1, ALDH3	C	Aldehyde dehydrogenase 3 family, member A1	100660	S, A			11(Ahd4)
+18.207	11	19	98	18q21.32	MC4R	C	Melanocortin-4 receptor	155541	A, R		Obesity, autosomal dominant, 601665 (3)	
 22.305	11	10	15	22q13.2	ACO2, ICRD, OPA9	C	Aconitase, mitochondrial	100850	S, Ch, REc	distal to Ph1 break; mutation identified in 1 OPA9 family	Infantile cerebellar-retinal degeneration, 614559 (3); ?Optic atrophy 9, 616289 (3)	
