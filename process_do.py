@@ -17,63 +17,6 @@ PHENO_FILTER = '(3)'
 CONF_FILTER = ['C', 'P']
 
 
-def create_do_term_title(do_term):
-    """
-    Small function to create the DO term title in the desired
-    format: DO-<DO integer ID>:<DO term full name>
-    Example: DO-9351:diabetes mellitus
-
-    Arguments:
-    do_term -- This is a go_term object from the go() class (go.go)
-
-    Returns:
-    title -- A string of the DO term's title in the desired format.
-    """
-    do_id = do_term.go_id.split(':')[1]
-    do_num = doid.split(':')[1]
-    title = 'DO' + '-' + do_num + ':' + do_term.full_name
-
-    return title
-
-
-def create_do_term_abstract(do_term):
-    """
-    Function to create the DO term abstract in the desired
-    format.
-
-    Arguments:
-    do_term -- This is a go_term object from the go() class (go.go)
-
-    Returns:
-    abstract -- A string of the DO term's abstract in the desired format.
-    """
-    omim_clause = ''
-
-    omim_list = list(do_term)
-
-    if len(omim_list):
-        omim_clause = ' Annotations directly to this term are provided ' + \
-                        'by the disease ID'  # Is that sentence right?
-
-        evclause = ' Only annotations with evidence coded as '
-        if len(evlist) == 1:
-            evclause = evclause + evlist[0]
-        else:
-            evclause = evclause + ', '.join(evlist[:-1]) + ' or ' + evlist[-1]
-        evclause = evclause + ' are included.'
-
-    if do_term.description:
-        description = do_term.description + ' Annotations from child terms' + \
-            ' in the disease ontology are propagated through transitive' + \
-            ' closure.' + omim_clause
-        return description
-    else:
-        logger.info("No description on term %s", do_term)
-        # RZ TODO: Do we want no description whatsoever here?
-        # Even the extra couple of clauses we tack on at the end?
-        return None
-
-
 def build_doid_omim_dict(obo_file):
     """
     Function to read in DO OBO file and build dictionary of DO terms
@@ -261,7 +204,7 @@ def add_do_term_annotations(doid_omim_dict, disease_ontology, mim_diseases):
     objects (defined above) as values.
 
     Returns:
-    disease_ontology -- 
+    Nothing, only adds annotations to DO terms.
 
     """
     logger.debug(disease_ontology.go_terms)
@@ -286,6 +229,63 @@ def add_do_term_annotations(doid_omim_dict, disease_ontology, mim_diseases):
             for gene_tuple in mim_entry['genetuples']:
                 entrez = int(gene_tuple[0])  # The first item is the Entrez ID
                 term.add_annotation(gid=entrez, ref=None)
+
+
+def create_do_term_title(do_term):
+    """
+    Small function to create the DO term title in the desired
+    format: DO-<DO integer ID>:<DO term full name>
+    Example: DO-9351:diabetes mellitus
+
+    Arguments:
+    do_term -- This is a go_term object from the go() class (go.go)
+
+    Returns:
+    title -- A string of the DO term's title in the desired format.
+    """
+    do_id = do_term.go_id.split(':')[1]
+    do_num = doid.split(':')[1]
+    title = 'DO' + '-' + do_num + ':' + do_term.full_name
+
+    return title
+
+
+def create_do_term_abstract(do_term):
+    """
+    Function to create the DO term abstract in the desired
+    format.
+
+    Arguments:
+    do_term -- This is a go_term object from the go() class (go.go)
+
+    Returns:
+    abstract -- A string of the DO term's abstract in the desired format.
+    """
+    omim_clause = ''
+
+    omim_list = list(do_term)
+
+    if len(omim_list):
+        omim_clause = ' Annotations directly to this term are provided ' + \
+                        'by the disease ID'  # Is that sentence right?
+
+        evclause = ' Only annotations with evidence coded as '
+        if len(evlist) == 1:
+            evclause = evclause + evlist[0]
+        else:
+            evclause = evclause + ', '.join(evlist[:-1]) + ' or ' + evlist[-1]
+        evclause = evclause + ' are included.'
+
+    if do_term.description:
+        description = do_term.description + ' Annotations from child terms' + \
+            ' in the disease ontology are propagated through transitive' + \
+            ' closure.' + omim_clause
+        return description
+    else:
+        logger.info("No description on term %s", do_term)
+        # RZ TODO: Do we want no description whatsoever here?
+        # Even the extra couple of clauses we tack on at the end?
+        return None
 
 
 def process_do_terms(species_ini_file):
@@ -318,3 +318,15 @@ def process_do_terms(species_ini_file):
 
     disease_ontology.populated = True
     disease_ontology.propagate()
+
+    do_terms = []
+
+    for term_id, term in disease_ontology.go_terms.iteritems():
+        do_term = {}
+
+        do_term['title'] = create_do_term_title(term)
+        do_term['abstract'] = create_do_term_abstract(term)
+
+        do_terms.append(do_term)
+
+    return do_terms
