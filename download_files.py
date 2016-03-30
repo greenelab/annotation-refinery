@@ -137,39 +137,32 @@ def download_all_files(species_ini_file, download_folder):
         download_from_url(genemap_file, do_dir)
 
 
-def download_kegg_info_files(species_ini_file, kegg_sets, download_folder):
+def download_kegg_info_files(kegg_set_ids, species_ini_file):
     """
     This is a KEGG-specific function that downloads the files containing
     information about the KEGG sets, such as their title, abstract, supporting
     publications, etc.
 
     Arguments:
-    species_ini_file -- Path to the particular species INI file. This
+    kegg_set_ids -- List of kegg set identifiers (e.g. hsa00010) for which
+    info files will be downloaded.
+
+    species_ini_file -- Path to the species INI config file. This
     is a string.
-
-    kegg_sets -- List of kegg set identifiers (e.g. hsa00010) for which files
-    must be downloaded.
-
-    download_folder -- Path of folder where annotation file from URL will
-    be downloaded to. This is a string.
 
     Returns:
     Nothing, just downloads and saves files to download_folder
 
     """
-    check_create_folder(download_folder)
-
     species_file = SafeConfigParser()
     species_file.read(species_ini_file)
 
-    if not species_file.has_section('KEGG'):
-        logger.error('Species INI file has no KEGG section. KEGG URLs are '
-                     'needed to download information files for KEGG sets.')
-        sys.exit(1)
+    download_folder = species_file.get('KEGG', 'KEGGSET_INFO_FOLDER')
+    check_create_folder(download_folder)
 
     full_info_url = species_file.get('KEGG', 'KEGG_ROOT_URL') + \
         species_file.get('KEGG', 'SET_INFO_DIR')
 
-    for kegg_set in kegg_sets:
-        kegg_info_file = full_info_url + kegg_set
+    for kegg_id in kegg_set_ids:
+        kegg_info_file = full_info_url + kegg_id
         download_from_url(kegg_info_file, download_folder)
