@@ -185,7 +185,7 @@ class DO_Test(unittest.TestCase):
 
         self.assertEqual(doid_omim_dict, desired_output)
 
-    def testBuildMim2GeneDict(self):
+    def testBuildMim2EntrezDict(self):
         mim2gene_file = 'test_files/test_mim2gene.csv'
 
         mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
@@ -296,7 +296,23 @@ class DO_Test(unittest.TestCase):
         self.assertEqual(abstract, desired_abstract)
 
     def testProcessDOTerms(self):
-        pass
+        test_ini_file = 'test_files/test_human.ini'
+
+        do_terms = process_do_terms(test_ini_file)
+
+        desired_output = [
+            {'abstract': ' Annotations from child terms in the disease '
+                'ontology are propagated through transitive closure. '
+                'Annotations directly to this term are provided by the OMIM '
+                'disease ID 601665. Only annotations with confidence labeled C'
+                ' or P by OMIM have been added.',
+             'xrdb': 'Entrez', 'organism': 'Homo sapiens',
+             'annotations': set([(4160, None), (8431, None), (51738, None),
+                                 (5443, None), (5468, None), (6492, None)]),
+             'title': 'DO-9970:obesity'}
+        ]
+
+        self.assertEqual(do_terms, desired_output)
 
 
 if __name__ == '__main__':
