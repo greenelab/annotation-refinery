@@ -282,7 +282,7 @@ def create_do_term_abstract(do_term, doid_omim_dict):
 
     conf_clause = ''
     if CONF_FILTER and len(CONF_FILTER):
-	conf_clause = ' Only annotations with confidence labeled '
+        conf_clause = ' Only annotations with confidence labeled '
         if len(CONF_FILTER ==1):
             conf_clause = conf_clause + CONF_FILTER[0]
         else:
