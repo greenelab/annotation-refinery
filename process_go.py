@@ -29,7 +29,7 @@ def get_filtered_annotations(assoc_file, accepted_evcodes):
             continue
 
         toks = line.strip().split('\t')
-        (xrdb, xrid, details, goid, ref, ev_code, date) = (
+        (xrdb, xrid, details, goid, refstring, ev_code, date) = (
             toks[0], toks[1], toks[3], toks[4], toks[5], toks[6], toks[13])
 
         if details == 'NOT':
@@ -38,7 +38,7 @@ def get_filtered_annotations(assoc_file, accepted_evcodes):
         if accepted_evcodes is not None and (ev_code not in accepted_evcodes):
             continue
 
-        annotation = (xrdb, xrid, goid, ref, date)
+        annotation = (xrdb, xrid, goid, refstring, date)
 
         annotations.append(annotation)
 
@@ -74,10 +74,10 @@ def create_go_term_abstract(go_term, evlist=None):
         description = go_term.description + ' Annotations are propagated ' + \
             'through transitive closure as recommended by the GO ' + \
             'Consortium.' + evclause
-        return description
     else:
         logger.info("No description on term %s", go_term)
-        return None
+
+    return description
 
 
 def process_go_terms(species_ini_file):
@@ -129,10 +129,14 @@ def process_go_terms(species_ini_file):
             continue
 
         go_term = {}
-        go_term['annotations'] = term.annotations
         go_term['title'] = create_go_term_title(term)
         go_term['abstract'] = create_go_term_abstract(term, evcodes)
         go_term['organism'] = organism
+
+        go_term['annotations'] = set()
+
+        for annotation in term.annotations:
+            go_term['annotations'].add((annotation.gid, annotation.ref))
 
         GO_terms.append(go_term)
 
