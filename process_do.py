@@ -1,5 +1,6 @@
 import re
 from go import go
+from ConfigParser import SafeConfigParser
 
 # Import and set logger
 import logging
@@ -283,10 +284,13 @@ def create_do_term_abstract(do_term, doid_omim_dict):
     conf_clause = ''
     if CONF_FILTER and len(CONF_FILTER):
         conf_clause = ' Only annotations with confidence labeled '
+
         if len(CONF_FILTER) == 1:
             conf_clause = conf_clause + CONF_FILTER[0]
         else:
-            conf_clause = conf_clause + ', '.join(CONF_FILTER[:-1]) + ' or ' + CONF_FILTER[-1]
+            conf_clause = conf_clause + ', '.join(CONF_FILTER[:-1]) + \
+                ' or ' + CONF_FILTER[-1]
+
         conf_clause += ' by OMIM have been added.'
 
     abstract = ''
@@ -297,8 +301,8 @@ def create_do_term_abstract(do_term, doid_omim_dict):
     else:
         logger.info("No OBO description for term %s", do_term)
 
-    abstract += ' Annotations from child terms in the disease ontology ' + \
-        'are propagated through transitive closure.' + omim_clause + conf_clause
+    abstract += ' Annotations from child terms in the disease ontology are' + \
+        ' propagated through transitive closure.' + omim_clause + conf_clause
 
     logger.info(abstract)
     return abstract
@@ -322,7 +326,7 @@ def process_do_terms(species_ini_file):
     genemap_file = species_file.get('DO', 'GENEMAP_FILE')
 
     disease_ontology = go()
-    loaded_obo = disease_ontology.parse(do_obo_file)
+    loaded_obo = disease_ontology.load_obo(do_obo_file)
 
     doid_omim_dict = build_doid_omim_dict(do_obo_file)
 
@@ -338,10 +342,21 @@ def process_do_terms(species_ini_file):
     do_terms = []
 
     for term_id, term in disease_ontology.go_terms.iteritems():
+
+        if term_id not in doid_omim_dict:
+            continue
+
         do_term = {}
 
         do_term['title'] = create_do_term_title(term)
-        do_term['abstract'] = create_do_term_abstract(term)
+        do_term['abstract'] = create_do_term_abstract(term, doid_omim_dict)
+        do_term['xrdb'] = 'Entrez'
+        do_term['organism'] = 'Homo sapiens'  # DO only exists for Homo sapiens
+
+        do_term['annotations'] = set()
+
+        for annotation in term.annotations:
+            do_term['annotations'].add((annotation.gid, annotation.ref))
 
         do_terms.append(do_term)
 
