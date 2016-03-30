@@ -1,6 +1,8 @@
 import os
 import glob
 from collections import defaultdict
+from ConfigParser import SafeConfigParser
+from download_files import download_kegg_info_files
 
 # Import and set logger
 import logging
@@ -68,8 +70,6 @@ def get_kegg_sets_members(kegg_sets_file):
     """
     kegg_sets_fh = open(kegg_sets_file, 'r')
 
-    # TODO: Advantage of having a defaultdict here instead of
-    # normal dictionary?
     kegg_set_members = defaultdict(set)
 
     for line in kegg_sets_fh:
@@ -100,6 +100,8 @@ def get_kegg_set_info(kegg_set_info_file):
     set_info_dict = {}
 
     for line in kegg_set_info_fh:
+        if line.startswith('ENTRY'):
+            set_info_dict['kegg_id'] = line.split()[1]
         if line.startswith('NAME'):
             set_info_dict['title'] = ' '.join(line.split()[1:])
         if line.startswith('DESCRIPTION'):
@@ -111,20 +113,52 @@ def get_kegg_set_info(kegg_set_info_file):
     return set_info_dict
 
 
-def process_kegg_sets(set_type, kegg_folder, species_ini_file):
+def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
     """
-    Function to process all KEGG sets **for a given set_type** (e.g. pathway,
-    module, disease, etc.).
+    Function to build all KEGG sets **for a given set type** (e.g. pathway,
+    module, disease, etc.), since members_file will only contain members
+    for KEGG sets of a specific type.
 
     Arguments:
-    set_type -- The type of KEGG sets which will be processed (e.g. 'pathway').
-    This is a string, and it is also the name of the file containing all of
-    the sets and the members/genes in those sets.
+    members_file -- This is a string, and is the name of the file containing
+    all members in all KEGG sets for a specific type of KEGG set (e.g. pathway)
 
-    kegg_folder -- Folder where all KEGG files are saved. This is the folder
-    where the download_all_files() function downloaded the KEGG files
-    to, and should be equal to <download_folder + '/KEGG'> if given a
-    download_folder parameter when calling run_refinery.py.
+    keggset_info_folder -- A string - folder where all KEGG set info files
+    have been saved to. The files were saved to this folder by the
+    download_kegg_info_files() function if running the full annotation-refinery
+
+    Returns:
+    all_kegg_sets -- A list of processed KEGG sets, where each KEGG set is
+    a Python dictionary, containing its title, abstract, and annotations.
+
+    """
+
+    all_kegg_sets = []
+
+    for info_file in glob.glob(keggset_info_folder + '/*'):
+
+        kegg_set_info = get_kegg_set_info(info_file)
+        kegg_set_id = kegg_set_info['kegg_id']
+
+        kegg_set_info['organism'] = organism
+        kegg_set_info['annotations'] = set()
+
+        for member in kegg_sets_members[kegg_set_id]:
+            kegg_set_info['annotations'].add((member, None))
+
+        all_kegg_sets.append(kegg_set_info)
+
+    return all_kegg_sets
+
+
+def process_kegg_sets(species_ini_file):
+    """
+    Function to process all KEGG sets using the build_kegg_sets()
+    function above.
+
+    Arguments:
+    species_ini_file -- Path to the species INI config file. This
+    is a string.
 
     Returns:
     all_kegg_sets -- A list of processed KEGG sets, where each KEGG set is
@@ -132,18 +166,26 @@ def process_kegg_sets(set_type, kegg_folder, species_ini_file):
 
     """
 
-    kegg_db_info = get_kegg_info(kegg_folder + 'kegg_db_info')
+    species_file = SafeConfigParser()
+    species_file.read(species_ini_file)
 
-    all_kegg_set_members = get_kegg_sets_members(kegg_folder + '/' + set_type)
+    if not species_file.has_section('KEGG'):
+        logger.error('Species INI file has no KEGG section, which is needed'
+                     ' to run the process_kegg_terms function.')
+        sys.exit(1)
 
-    download_kegg_info_files(all_kegg_set_members.keys())
+    kegg_info_file = species_file.get('KEGG', 'KEGG_INFO_FILE')
+    kegg_members_files = species_file.get('KEGG', 'KEGG_MEMBERS_FILES')
+    keggset_info_folder = species_file.get('KEGG', 'KEGGSET_INFO_FOLDER')
+    organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
+
+    kegg_db_info = get_kegg_info(kegg_info_file)
 
     all_kegg_sets = []
-
-    for info_file in glob.glob(kegg_folder + '/*'):
-        kegg_set_info = get_kegg_set_info(info_file)
-        kegg_set_id = kegg_set_info['kegg_id']
-        kegg_set_info['genes'] = kegg_set_members[kegg_set_id]
-        all_kegg_sets.append(kegg_set_info)
-
+    for members_file in kegg_members_files.split(','):
+        kegg_sets_members = get_kegg_sets_members(members_file)
+        download_kegg_info_files(kegg_sets_members.keys(), species_ini_file)
+        kegg_sets = build_kegg_sets(kegg_sets_members, keggset_info_folder,
+                                    organism)
+        all_kegg_sets.extend(kegg_sets)
     return all_kegg_sets

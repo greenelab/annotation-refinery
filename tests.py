@@ -56,9 +56,11 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_members_dict, desired_output)
 
     def testGetKeggSetInfo(self):
-        kegg_set_info = get_kegg_set_info('test_files/test_keggset_info.csv')
+        kegg_set_info = get_kegg_set_info(
+            'test_files/test_keggset_info_folder/hsa00010')
 
         desired_output = {
+            'kegg_id': 'hsa00010',
             'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
             'abstract':
                 'Glycolysis is the process of converting glucose into pyruvate'
@@ -83,8 +85,141 @@ class KeggTest(unittest.TestCase):
 
         self.assertEqual(kegg_set_info, desired_output)
 
+    def testBuildKeggSets(self):
+        kegg_sets_members = get_kegg_sets_members('test_files/test_kegg_members.csv')
+        test_keggsets = build_kegg_sets(kegg_sets_members,
+                                        'test_files/test_keggset_info_folder',
+                                        'Homo sapiens')
+
+        desired_keggsets = [
+            {'kegg_id': 'hsa00010',
+             'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
+             'organism': 'Homo sapiens',
+             'abstract':
+                 'Glycolysis is the process of converting glucose into '
+                 'pyruvate and generating small amounts of ATP (energy) and '
+                 'NADH (reducing power). It is a central pathway that produces'
+                 ' important precursor metabolites: six-carbon compounds of '
+                 'glucose-6P and fructose-6P and three-carbon compounds of '
+                 'glycerone-P, glyceraldehyde-3P, glycerate-3P, '
+                 'phosphoenolpyruvate, and pyruvate [MD:M00001]. Acetyl-CoA,'
+                 ' another important precursor metabolite, is produced by '
+                 'oxidative decarboxylation of pyruvate [MD:M00307]. '
+                 'When the enzyme genes of this pathway are examined in '
+                 'completely sequenced genomes, the reaction steps of '
+                 'three-carbon compounds from glycerone-P to pyruvate form'
+                 ' a conserved core module [MD:M00002], which is found in '
+                 'almost all organisms and which sometimes contains operon'
+                 ' structures in bacterial genomes. Gluconeogenesis is a '
+                 'synthesis pathway of glucose from noncarbohydrate '
+                 'precursors. It is essentially a reversal of glycolysis '
+                 'with minor variations of alternative paths [MD:M00003].',
+
+             # These are the only genes in our test_kegg_members.csv file
+             # for this KEGG set
+             'annotations': set([('10327', None), ('124', None), ('125', None),
+                                 ('126', None), ('127', None), ('128', None),
+                                 ('130', None), ('130589', None),
+                                 ('131', None), ('160287', None)])},
+
+            {'kegg_id': 'hsa00020',
+             'title': 'Citrate cycle (TCA cycle) - Homo sapiens (human)',
+             'organism': 'Homo sapiens',
+             'abstract':
+                'The citrate cycle (TCA cycle, Krebs cycle) is an important '
+                'aerobic pathway for the final steps of the oxidation of '
+                'carbohydrates and fatty acids. The cycle starts with '
+                'acetyl-CoA, the activated form of acetate, derived from '
+                'glycolysis and pyruvate oxidation for carbohydrates and from '
+                'beta oxidation of fatty acids. The two-carbon acetyl group in'
+                ' acetyl-CoA is transferred to the four-carbon compound of '
+                'oxaloacetate to form the six-carbon compound of citrate. In a'
+                ' series of reactions two carbons in citrate are oxidized to '
+                'CO2 and the reaction pathway supplies NADH for use in the '
+                'oxidative phosphorylation and other metabolic processes. The '
+                'pathway also supplies important precursor metabolites '
+                'including 2-oxoglutarate. At the end of the cycle the '
+                'remaining four-carbon part is transformed back to '
+                'oxaloacetate. According to the genome sequence data, many '
+                'organisms seem to lack genes for the full cycle [MD:M00009], '
+                'but contain genes for specific segments [MD:M00010 M00011].',
+
+             # These are the only genes in our test_kegg_members.csv file
+             # for this KEGG set
+             'annotations': set([('1431', None), ('1737', None),
+                                 ('1738', None), ('1743', None),
+                                 ('2271', None), ('3417', None),
+                                 ('3418', None), ('3419', None),
+                                 ('3420', None), ('3421', None)])}
+        ]
+
+        self.assertEqual(test_keggsets, desired_keggsets)
+
     def testProcessKeggSets(self):
-        pass
+        all_kegg_sets = process_kegg_sets('test_files/test_human.ini')
+
+        desired_keggsets = [
+            {'kegg_id': 'hsa00010',
+             'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
+             'organism': 'Homo sapiens',
+             'abstract':
+                 'Glycolysis is the process of converting glucose into '
+                 'pyruvate and generating small amounts of ATP (energy) and '
+                 'NADH (reducing power). It is a central pathway that produces'
+                 ' important precursor metabolites: six-carbon compounds of '
+                 'glucose-6P and fructose-6P and three-carbon compounds of '
+                 'glycerone-P, glyceraldehyde-3P, glycerate-3P, '
+                 'phosphoenolpyruvate, and pyruvate [MD:M00001]. Acetyl-CoA,'
+                 ' another important precursor metabolite, is produced by '
+                 'oxidative decarboxylation of pyruvate [MD:M00307]. '
+                 'When the enzyme genes of this pathway are examined in '
+                 'completely sequenced genomes, the reaction steps of '
+                 'three-carbon compounds from glycerone-P to pyruvate form'
+                 ' a conserved core module [MD:M00002], which is found in '
+                 'almost all organisms and which sometimes contains operon'
+                 ' structures in bacterial genomes. Gluconeogenesis is a '
+                 'synthesis pathway of glucose from noncarbohydrate '
+                 'precursors. It is essentially a reversal of glycolysis '
+                 'with minor variations of alternative paths [MD:M00003].',
+
+             # These are the only genes in our test_kegg_members.csv file
+             # for this KEGG set
+             'annotations': set([('10327', None), ('124', None), ('125', None),
+                                 ('126', None), ('127', None), ('128', None),
+                                 ('130', None), ('130589', None),
+                                 ('131', None), ('160287', None)])},
+
+            {'kegg_id': 'hsa00020',
+             'title': 'Citrate cycle (TCA cycle) - Homo sapiens (human)',
+             'organism': 'Homo sapiens',
+             'abstract':
+                'The citrate cycle (TCA cycle, Krebs cycle) is an important '
+                'aerobic pathway for the final steps of the oxidation of '
+                'carbohydrates and fatty acids. The cycle starts with '
+                'acetyl-CoA, the activated form of acetate, derived from '
+                'glycolysis and pyruvate oxidation for carbohydrates and from '
+                'beta oxidation of fatty acids. The two-carbon acetyl group in'
+                ' acetyl-CoA is transferred to the four-carbon compound of '
+                'oxaloacetate to form the six-carbon compound of citrate. In a'
+                ' series of reactions two carbons in citrate are oxidized to '
+                'CO2 and the reaction pathway supplies NADH for use in the '
+                'oxidative phosphorylation and other metabolic processes. The '
+                'pathway also supplies important precursor metabolites '
+                'including 2-oxoglutarate. At the end of the cycle the '
+                'remaining four-carbon part is transformed back to '
+                'oxaloacetate. According to the genome sequence data, many '
+                'organisms seem to lack genes for the full cycle [MD:M00009], '
+                'but contain genes for specific segments [MD:M00010 M00011].',
+
+             # These are the only genes in our test_kegg_members.csv file
+             # for this KEGG set
+             'annotations': set([('1431', None), ('1737', None),
+                                 ('1738', None), ('1743', None),
+                                 ('2271', None), ('3417', None),
+                                 ('3418', None), ('3419', None),
+                                 ('3420', None), ('3421', None)])}
+        ]
+        self.assertEqual(all_kegg_sets, desired_keggsets)
 
 
 class GO_Test(unittest.TestCase):
