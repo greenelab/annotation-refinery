@@ -20,7 +20,7 @@ class KeggTest(unittest.TestCase):
 
     def testGetKeggInfo(self):
         """"""
-        kegg_info = get_kegg_info('test_files/sample_kegg_info.csv')
+        kegg_info = get_kegg_info('test_files/test_keggdb_info.csv')
 
         desired_output = {
             'brite': '148,770 entries',
@@ -56,7 +56,7 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_members_dict, desired_output)
 
     def testGetKeggSetInfo(self):
-        kegg_set_info = get_kegg_set_info('test_files/sample_set_info.csv')
+        kegg_set_info = get_kegg_set_info('test_files/test_keggset_info.csv')
 
         desired_output = {
             'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
