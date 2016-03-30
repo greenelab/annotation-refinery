@@ -280,15 +280,14 @@ def create_do_term_abstract(do_term, doid_omim_dict):
                 ' and ' + omim_list[-1]
         omim_clause = omim_clause + '.'
 
-        """
-        TODO: Is this part needed?
-        evclause = ' Only annotations with evidence coded as '
-        if len(evlist) == 1:
-            evclause = evclause + evlist[0]
+    conf_clause = ''
+    if CONF_FILTER and len(CONF_FILTER):
+	conf_clause = ' Only annotations with confidence labeled '
+        if len(CONF_FILTER ==1):
+            conf_clause = conf_clause + CONF_FILTER[0]
         else:
-            evclause = evclause + ', '.join(evlist[:-1]) + ' or ' + evlist[-1]
-        evclause = evclause + ' are included.'
-        """
+            conf_clause = conf_clause + ', '.join(CONF_FILTER[:-1]) + ' or ' + CONF_FILTER[-1]
+        conf_clause += ' by OMIM have been added.'
 
     abstract = ''
 
@@ -299,7 +298,7 @@ def create_do_term_abstract(do_term, doid_omim_dict):
         logger.info("No OBO description for term %s", do_term)
 
     abstract += ' Annotations from child terms in the disease ontology ' + \
-        'are propagated through transitive closure.' + omim_clause
+        'are propagated through transitive closure.' + omim_clause + conf_clause
 
     logger.info(abstract)
     return abstract
