@@ -291,7 +291,8 @@ class DO_Test(unittest.TestCase):
         desired_abstract = ' Annotations from child terms in the disease ' + \
             'ontology are propagated through transitive closure. ' + \
             'Annotations directly to this term are provided by the OMIM' + \
-            ' disease ID 601665.'
+            ' disease ID 601665. Only annotations with confidence labeled' + \
+            ' C or P by OMIM have been added.'
         self.assertEqual(abstract, desired_abstract)
 
     def testProcessDOTerms(self):
