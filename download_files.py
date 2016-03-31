@@ -99,17 +99,17 @@ def download_all_files(species_ini_file, download_folder):
     species_file.read(species_ini_file)
 
     if species_file.has_section('GO'):
-        go_dir = download_folder + '/GO'
+        go_dir = species_file.get('GO', 'DOWNLOAD_FOLDER')
         check_create_folder(go_dir)
 
-        obo_file = species_file.get('GO', 'GO_OBO_FILE')
+        obo_file = species_file.get('GO', 'GO_OBO_URL')
         download_from_url(obo_file, go_dir)
 
-        goa_file = species_file.get('GO', 'ASSOCIATION_FILE')
+        goa_file = species_file.get('GO', 'ASSOC_FILE_URL')
         download_from_url(goa_file, go_dir)
 
     if species_file.has_section('KEGG'):
-        kegg_dir = download_folder + '/KEGG'
+        kegg_dir = species_file.get('KEGG', 'DOWNLOAD_FOLDER')
         check_create_folder(kegg_dir)
 
         kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
@@ -124,16 +124,16 @@ def download_all_files(species_ini_file, download_folder):
             download_from_url(kegg_set_url, kegg_dir)
 
     if species_file.has_section('DO'):
-        do_dir = download_folder + '/DO'
+        do_dir = species_file.get('DO', 'DOWNLOAD_FOLDER')
         check_create_folder(do_dir)
 
-        obo_file = species_file.get('DO', 'DO_OBO_FILE')
+        obo_file = species_file.get('DO', 'DO_OBO_URL')
         download_from_url(obo_file, do_dir)
 
-        mim2gene_file = species_file.get('DO', 'MIM2GENE_FILE')
+        mim2gene_file = species_file.get('DO', 'MIM2GENE_URL')
         download_from_url(mim2gene_file, do_dir)
 
-        genemap_file = species_file.get('DO', 'GENEMAP_FILE')
+        genemap_file = species_file.get('DO', 'GENEMAP_URL')
         download_from_url(genemap_file, do_dir)
 
 
