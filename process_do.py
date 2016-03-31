@@ -268,7 +268,10 @@ def create_do_term_abstract(do_term, doid_omim_dict):
     omim_clause = ''
 
     doid = do_term.go_id
-    omim_list = list(doid_omim_dict[doid])
+    if doid in doid_omim_dict:
+        omim_list = list(doid_omim_dict[doid])
+    else:
+        omim_list = []
 
     if len(omim_list):
         omim_clause = ' Annotations directly to this term are provided ' + \
@@ -343,9 +346,6 @@ def process_do_terms(species_ini_file):
 
     for term_id, term in disease_ontology.go_terms.iteritems():
 
-        if term_id not in doid_omim_dict:
-            continue
-
         do_term = {}
 
         do_term['title'] = create_do_term_title(term)
@@ -358,6 +358,7 @@ def process_do_terms(species_ini_file):
         for annotation in term.annotations:
             do_term['annotations'].add((annotation.gid, annotation.ref))
 
-        do_terms.append(do_term)
+        if do_term['annotations']:
+            do_terms.append(do_term)
 
     return do_terms
