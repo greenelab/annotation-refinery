@@ -30,24 +30,24 @@ ontology: go
 
 [Term]
 id: GO:0000001
-name: Barcelona
+name: barcelona
 namespace: biological_process
 def: "The distribution of mitochondria, including the mitochondrial genome, into daughter cells after mitosis or meiosis, mediated by interactions between mitochondria and the cytoskeleton." [GOC:mcc, PMID:10873824, PMID:11389764]
 synonym: "mitochondrial inheritance" EXACT []
-is_a: GO:0000006 ! La Liga
-is_a: GO:0000007 ! European team
+is_a: GO:0000006 ! la liga
+is_a: GO:0000007 ! european team
 
 [Term]
 id: GO:0000002
-name: Liverpool
+name: liverpool
 namespace: biological_process
 def: "The maintenance of the structure and integrity of the mitochondrial genome; includes replication and segregation of the mitochondrial chromosome." [GOC:ai, GOC:vw]
-is_a: GO:0000005 ! Premier League
-is_a: GO:0000007 ! European team
+is_a: GO:0000005 ! premier league
+is_a: GO:0000007 ! european team
 
 [Term]
 id: GO:0000003
-name: Eibar
+name: eibar
 namespace: biological_process
 alt_id: GO:0019952
 alt_id: GO:0050876
@@ -59,31 +59,32 @@ subset: goslim_plant
 subset: gosubset_prok
 synonym: "reproductive physiological process" EXACT []
 xref: Wikipedia:Reproduction
-is_a: GO:0000006 ! La Liga
-is_a: GO:0000007 ! European team
+is_a: GO:0000006 ! La liga
+is_a: GO:0000007 ! european team
 
 [Term]
 id: GO:0000005
-name: Premier League
-namespace: molecular_function
+name: premier league
+namespace: biological_process
 def: "RZ - We're making this bogus term not OBSOLETE. Assists in the correct assembly of ribosomes or ribosomal subunits in vivo, but is not a component of the assembled ribosome when performing its normal biological function." [GOC:jl, PMID:12150913]
 comment: This term was made obsolete because it refers to a class of gene products and a biological process rather than a molecular function.
 synonym: "ribosomal chaperone activity" EXACT []
 consider: GO:0042254
 consider: GO:0044183
 consider: GO:0051082
-is_a: GO:0000007 ! European team
-
-[Term]
-id: GO:0000006
-name: La Liga
-namespace: molecular_function
-def: "Enables the transfer of a solute or solutes from one side of a membrane to the other according to the reaction: Zn2+(out) = Zn2+(in), probably powered by proton motive force. In high-affinity transport the transporter is able to bind the solute even if it is only present at very low concentrations." [TC:2.A.5.1.1]
-synonym: "high affinity zinc uptake transmembrane transporter activity" EXACT []
-is_a: GO:0000007 ! European team
+is_a: GO:0000007 ! european team
 
 [Term]
 id: GO:0000007
-name: European team
-namespace: molecular_function
+name: european team
+namespace: biological_process
 def: "Catalysis of the transfer of a solute or solutes from one side of a membrane to the other according to the reaction: Zn2+ = Zn2+, probably powered by proton motive force. In low-affinity transport the transporter is able to bind the solute only if it is present at very high concentrations." [GOC:mtg_transport, ISBN:0815340729]
+
+[Term]
+id: GO:0000006
+name: la liga
+namespace: biological_process
+def: "Enables the transfer of a solute or solutes from one side of a membrane to the other according to the reaction: Zn2+(out) = Zn2+(in), probably powered by proton motive force. In high-affinity transport the transporter is able to bind the solute even if it is only present at very low concentrations." [TC:2.A.5.1.1]
+synonym: "high affinity zinc uptake transmembrane transporter activity" EXACT []
+is_a: GO:0000007 ! european team
+

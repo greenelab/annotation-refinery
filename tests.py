@@ -86,7 +86,8 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_set_info, desired_output)
 
     def testBuildKeggSets(self):
-        kegg_sets_members = get_kegg_sets_members('test_files/test_kegg_members.csv')
+        kegg_sets_members = get_kegg_sets_members(
+            'test_files/test_kegg_members.csv')
         test_keggsets = build_kegg_sets(kegg_sets_members,
                                         'test_files/test_keggset_info_folder',
                                         'Homo sapiens')
@@ -240,7 +241,8 @@ class GO_Test(unittest.TestCase):
     def testGetFilteredAnnotations(self):
         assoc_file = 'test_files/test_go_assoc_file.csv'
         evcodes = 'EXP, IDA, IPI, IMP, IGI, IEP'
-        filtered_annotations = get_filtered_annotations(assoc_file, evcodes)
+        filtered_annotations = get_filtered_annotations(assoc_file,
+                                                        accepted_evcodes=evcodes)
         desired_output = [
             ('UniProtKB', 'A0A024QZP7', 'GO:0000004', 'GO_REF:0000052', '20101115'),
             ('UniProtKB', 'A0A024QZP7', 'GO:0000003', 'GO_REF:0000052', '20101115'),
@@ -259,9 +261,9 @@ class GO_Test(unittest.TestCase):
             all_titles.add(title)
 
         desired_output = set([
-            'GO-MF-0000005:Premier League', 'GO-BP-0000003:Eibar',
-            'GO-MF-0000006:La Liga', 'GO-BP-0000001:Barcelona',
-            'GO-BP-0000002:Liverpool', 'GO-MF-0000007:European team'])
+            'GO-BP-0000005:premier league', 'GO-BP-0000003:eibar',
+            'GO-BP-0000006:la liga', 'GO-BP-0000001:barcelona',
+            'GO-BP-0000002:liverpool', 'GO-BP-0000007:european team'])
 
         self.assertEqual(all_titles, desired_output)
 
@@ -291,7 +293,88 @@ class GO_Test(unittest.TestCase):
         self.assertEqual(abstract, desired_output)
 
     def testProcessGOTerms(self):
-        pass
+        test_ini_file = 'test_files/test_human.ini'
+
+        go_terms = process_go_terms(test_ini_file)
+
+        desired_output = [
+            {'abstract':
+                'Enables the transfer of a solute or solutes from one side of '
+                'a membrane to the other according to the reaction: Zn2+(out) '
+                '= Zn2+(in), probably powered by proton motive force. In '
+                'high-affinity transport the transporter is able to bind the '
+                'solute even if it is only present at very low concentrations.'
+                ' Annotations are propagated through transitive closure as '
+                'recommended by the GO Consortium. Only annotations with '
+                'evidence coded as EXP, IDA, IPI, IMP, IGI or IEP are '
+                'included.',
+             'organism': 'Homo sapiens',
+             'annotations': set([('A0A024QZP7', None), ('A0A024R216', None),
+                                 ('A0A024R214', None)]),
+             'xrdb': 'UniProtKB',
+             'title': 'GO-BP-0000006:la liga'},
+            {'abstract':
+                'Catalysis of the transfer of a solute or solutes '
+                'from one side of a membrane to the other according to the '
+                'reaction: Zn2+ = Zn2+, probably powered by proton motive '
+                'force. In low-affinity transport the transporter is able to '
+                'bind the solute only if it is present at very high '
+                'concentrations. Annotations are propagated through transitive'
+                ' closure as recommended by the GO Consortium. Only '
+                'annotations with evidence coded as EXP, IDA, IPI, IMP, IGI or'
+                ' IEP are included.',
+             'organism': 'Homo sapiens',
+             'annotations': set([('A0A024R1V6', None), ('A0A024R214', None),
+                                 ('A0A024QZP7', None), ('A0A024R216', None)]),
+             'xrdb': 'UniProtKB',
+             'title': 'GO-BP-0000007:european team'},
+            {'abstract':
+                "RZ - We're making this bogus term not OBSOLETE. Assists in "
+                "the correct assembly of ribosomes or ribosomal subunits in "
+                "vivo, but is not a component of the assembled ribosome when "
+                "performing its normal biological function. Annotations are "
+                "propagated through transitive closure as recommended by the "
+                "GO Consortium. Only annotations with evidence coded as EXP, "
+                "IDA, IPI, IMP, IGI or IEP are included.",
+             'organism': 'Homo sapiens',
+             'annotations': set([('A0A024R214', None)]),
+             'xrdb': 'UniProtKB',
+             'title': 'GO-BP-0000005:premier league'},
+            {'abstract':
+                'The maintenance of the structure and integrity of the '
+                'mitochondrial genome; includes replication and segregation of'
+                ' the mitochondrial chromosome. Annotations are propagated '
+                'through transitive closure as recommended by the GO '
+                'Consortium. Only annotations with evidence coded as EXP, '
+                'IDA, IPI, IMP, IGI or IEP are included.',
+             'organism': 'Homo sapiens',
+             'annotations': set([('A0A024R214', None)]),
+             'xrdb': 'UniProtKB',
+             'title': 'GO-BP-0000002:liverpool'},
+            {'abstract':
+                'The production of new individuals that contain some portion '
+                'of genetic material inherited from one or more parent '
+                'organisms. Annotations are propagated through transitive '
+                'closure as recommended by the GO Consortium. Only '
+                'annotations with evidence coded as EXP, IDA, IPI, IMP, IGI '
+                'or IEP are included.',
+             'organism': 'Homo sapiens',
+             'annotations': set([('A0A024QZP7', None), ('A0A024R214', None)]),
+             'xrdb': 'UniProtKB',
+             'title': 'GO-BP-0000003:eibar'},
+            {'abstract':
+                'The distribution of mitochondria, including the '
+                'mitochondrial genome, into daughter cells after mitosis or '
+                'meiosis, mediated by interactions between mitochondria and '
+                'the cytoskeleton. Annotations are propagated through '
+                'transitive closure as recommended by the GO Consortium. Only'
+                ' annotations with evidence coded as EXP, IDA, IPI, IMP, IGI '
+                'or IEP are included.',
+             'organism': 'Homo sapiens',
+             'annotations': set([('A0A024R216', None)]),
+             'xrdb': 'UniProtKB',
+             'title': 'GO-BP-0000001:barcelona'}]
+        self.assertEqual(go_terms, desired_output)
 
 
 class DO_Test(unittest.TestCase):
@@ -436,6 +519,47 @@ class DO_Test(unittest.TestCase):
         do_terms = process_do_terms(test_ini_file)
 
         desired_output = [
+            {'abstract':
+                'An acquired metabolic disease that is characterized by an '
+                'insufficient intake of food or of certain nutrients, by an '
+                'inability of the body to absorb and use nutrients, or by '
+                'overconsumption of certain foods. Annotations from child '
+                'terms in the disease ontology are propagated through '
+                'transitive closure. Only annotations with confidence '
+                'labeled C or P by OMIM have been added.',
+             'xrdb': 'Entrez', 'organism': 'Homo sapiens',
+             'annotations': set([(4160, None), (8431, None), (51738, None),
+                                 (5443, None), (5468, None), (6492, None)]),
+             'title': 'DO-374:nutrition disease'},
+            {'abstract':
+                'A disease that involving errors in metabolic processes of '
+                'building or degradation of molecules. Annotations from child'
+                ' terms in the disease ontology are propagated through '
+                'transitive closure. Only annotations with confidence labeled'
+                ' C or P by OMIM have been added.',
+             'xrdb': 'Entrez', 'organism': 'Homo sapiens',
+             'annotations': set([(4160, None), (8431, None), (51738, None),
+                                 (5443, None), (5468, None), (6492, None)]),
+             'title': 'DO-0014667:disease of metabolism'},
+            {'abstract': ' Annotations from child terms in the disease '
+                'ontology are propagated through transitive closure. Only '
+                'annotations with confidence labeled C or P by OMIM have been'
+                ' added.',
+             'xrdb': 'Entrez', 'organism': 'Homo sapiens',
+             'annotations': set([(4160, None), (8431, None), (51738, None),
+                                (5443, None), (6492, None), (5468, None)]),
+             'title': 'DO-654:overnutrition'},
+            {'abstract':
+                'A disease is a disposition (i) to undergo pathological '
+                'processes that (ii) exists in an organism because of one or'
+                ' more disorders in that organism. Annotations from child '
+                'terms in the disease ontology are propagated through '
+                'transitive closure. Only annotations with confidence labeled'
+                ' C or P by OMIM have been added.',
+             'xrdb': 'Entrez', 'organism': 'Homo sapiens',
+             'annotations': set([(4160, None), (8431, None), (51738, None),
+                                 (5443, None), (5468, None), (6492, None)]),
+             'title': 'DO-4:disease'},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. '
                 'Annotations directly to this term are provided by the OMIM '
@@ -444,7 +568,20 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': set([(4160, None), (8431, None), (51738, None),
                                  (5443, None), (5468, None), (6492, None)]),
-             'title': 'DO-9970:obesity'}
+             'title': 'DO-9970:obesity'},
+            {'abstract':
+                'A disease of metabolism that has _material_basis_in enzyme'
+                ' deficiency or accumulation of enzymes or toxins which '
+                'interfere with normal function due to an endocrine organ '
+                'disease, organ malfunction, inadequate intake, dietary '
+                'deficiency, or malabsorption. Annotations from child terms '
+                'in the disease ontology are propagated through transitive '
+                'closure. Only annotations with confidence labeled C or P by'
+                ' OMIM have been added.',
+             'xrdb': 'Entrez', 'organism': 'Homo sapiens',
+             'annotations': set([(4160, None), (8431, None), (51738, None),
+                                 (5443, None), (6492, None), (5468, None)]),
+             'title': 'DO-0060158:acquired metabolic disease'}
         ]
 
         self.assertEqual(do_terms, desired_output)
