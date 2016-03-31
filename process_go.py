@@ -9,16 +9,27 @@ logger.setLevel(logging.INFO)
 
 
 GO_NAMESPACE_MAP = {
-        'biological_process': 'BP',
-        'molecular_function': 'MF',
-        'cellular_component': 'CC',
+    'biological_process': 'BP',
+    'molecular_function': 'MF',
+    'cellular_component': 'CC',
 }
 
 
-def get_filtered_annotations(assoc_file, accepted_evcodes):
+def get_filtered_annotations(assoc_file, accepted_evcodes=None):
     """
     This function reads in the association file and returns a list of
-    only the annotations that have evidence codes in 'accepted_evcodes'
+    annotations. Only annotations that have evidence codes in
+    'accepted_evcodes' (if accepted_evcodes is not None) and annotations
+    that do not have details == 'NOT' will be included in this list.
+
+    Arguments:
+    assoc_file -- A string. Location of the GO association file to be
+    read in.
+
+    Returns:
+    annotations -- A list of all the annotations that meet the desired
+    criteria. Each annotation in the list will be a tuple, which will
+    contain: (<crossrefDB>, <crossrefID>, <goid>, <refstring>, <date>)
     """
 
     annotations = []
@@ -47,6 +58,15 @@ def get_filtered_annotations(assoc_file, accepted_evcodes):
 
 def create_go_term_title(go_term):
     """
+    Small function to create the GO term title in the desired
+    format: GO-<GO_NAMESPACE>-<GO integer ID>:<GO term full name>
+    Example: GO-BP-0000280:nuclear division
+
+    Arguments:
+    go_term -- This is a go_term object from the go() class (go.go)
+
+    Returns:
+    title -- A string of the GO term's title in the desired format.
     """
     go_id = go_term.go_id.split(':')[1]
 
@@ -59,6 +79,14 @@ def create_go_term_title(go_term):
 
 def create_go_term_abstract(go_term, evlist=None):
     """
+    Function to create the GO term abstract in the desired
+    format.
+
+    Arguments:
+    go_term -- This is a go_term object from the go() class (go.go)
+
+    Returns:
+    abstract -- A string of the GO term's abstract in the desired format.
     """
     evclause = ''
     if evlist is not None:
@@ -76,6 +104,7 @@ def create_go_term_abstract(go_term, evlist=None):
             'Consortium.' + evclause
     else:
         logger.info("No description on term %s", go_term)
+        # TODO: What do we put as description if go_term.description == None?
 
     return description
 
@@ -94,9 +123,11 @@ def process_go_terms(species_ini_file):
         sys.exit(1)
 
     evcodes = species_file.get('GO', 'EVIDENCE_CODES')
-    assoc_file = species_file.get('GO', 'ASSOCIATION_FILE')
-    obo_location = species_file.get('GO', 'GO_OBO_FILE')
+    assoc_file = species_file.get('GO', 'ASSOC_FILE')
+    obo_location = species_file.get('GO', 'OBO_FILE')
     organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
+
+    evcodes = evcodes.replace(' ', '').split(',')
 
     annotations = get_filtered_annotations(assoc_file, evcodes)
 
@@ -116,7 +147,7 @@ def process_go_terms(species_ini_file):
                 pub = ref.split(':')[1]
 
         gene_ontology.add_annotation(go_id=goid, gid=xrid, ref=pub,
-                                     date=date, direct=True)
+                                     date=date, xdb=xrdb, direct=True)
 
     gene_ontology.populated = True
     gene_ontology.propagate()
@@ -135,9 +166,21 @@ def process_go_terms(species_ini_file):
 
         go_term['annotations'] = set()
 
+        go_term_xrdb = None
         for annotation in term.annotations:
             go_term['annotations'].add((annotation.gid, annotation.ref))
 
-        GO_terms.append(go_term)
+            if annotation.xdb is not None:
+                if go_term_xrdb and go_term_xrdb != annotation.xdb:
+                    logger.error("There is more than one xrdb for annotations "
+                                 "in this GO term. Only one of these will be "
+                                 "saved in this GO term's 'xrdb' field.")
+                else:
+                    go_term_xrdb = annotation.xdb
+
+        go_term['xrdb'] = go_term_xrdb
+
+        if go_term['annotations']:
+            GO_terms.append(go_term)
 
     return GO_terms
