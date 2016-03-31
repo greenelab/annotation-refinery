@@ -16,23 +16,23 @@ class go:
     # populate this field if you want to mark this GO as organism specific
     go_organism_tax_id = None
 
-    """
-    Initialize data structures for storing the tree.
-    """
     def __init__(self):
+        """
+        Initialize data structures for storing the tree.
+        """
         self.heads = []
         self.go_terms = {}
         self.alt_id2std_id = {}
         self.populated = False
         self.s_orgs = []
 
-    """
-    Load obo from the defined location. If remote_location = True; open with
-    urllib2 with at most tries attempts and allowing timeout seconds for
-    the server to respond.
-    Returns "False" if failed to open path.
-    """
     def load_obo(self, path, tries=3, timeout=5, remote_location=False):
+        """
+        Load obo from the defined location. If remote_location = True; open
+        with urllib2 with at most tries attempts and allowing timeout seconds
+        for the server to respond.
+        Returns "False" if failed to open path.
+        """
         obo_fh = None
         if remote_location:
             import urllib2
@@ -44,13 +44,15 @@ class go:
                     obo_fh = urllib2.urlopen(path, timeout=timeout)
                 except (urllib2.URLError, ssl.SSLError):
                     n += 1
-                    logger.warning('Request for %s timed out, try %s of %s', url, n, tries)
+                    logger.warning('Request for %s timed out, try %s of %s',
+                                   url, n, tries)
                     continue
         else:
             try:
                 obo_fh = open(path)
             except IOError:
-                logger.error('Could not open %s on the local filesystem.', path)
+                logger.error('Could not open %s on the local filesystem.',
+                             path)
 
         if obo_fh is None:
             logger.error('Could not open %s.', path)
@@ -59,11 +61,10 @@ class go:
         self.parse(obo_fh)
         return True
 
-    """
-    Parse the passed obo handle.
-    """
     def parse(self, obo_fh):
-
+        """
+        Parse the passed obo handle.
+        """
         inside = False
         gterm = None
         for line in obo_fh:
@@ -83,13 +84,13 @@ class go:
                 inside = False
 
             elif inside and fields[0] == 'id:':
-                #print fields[1]
-                if self.go_terms.has_key(fields[1]):
+                if fields[1] in self.go_terms:
+                    logger.debug("Term %s exists in go()", fields[1])
                     gterm = self.go_terms[fields[1]]
                 else:
+                    logger.debug("Adding term %s to go()", fields[1])
                     gterm = GOTerm(fields[1])
-                    self.go_terms[ gterm.get_id() ] = gterm
-                #print self.go_terms[fields[1]]
+                    self.go_terms[gterm.get_id()] = gterm
             elif inside and fields[0] == 'def:':
                 desc = ' '.join(fields[1:])
                 desc = desc.split('"')[1]
@@ -109,10 +110,11 @@ class go:
                 gterm.alt_id.append(fields[1])
                 self.alt_id2std_id[fields[1]] = gterm.get_id()
             elif inside and fields[0] == 'is_a:':
+                logger.debug("Making term.head for term %s = False", gterm)
                 gterm.head = False
                 fields.pop(0)
                 pgo_id = fields.pop(0)
-                if not self.go_terms.has_key(pgo_id):
+                if pgo_id not in self.go_terms:
                     self.go_terms[pgo_id] = GOTerm(pgo_id)
 
                 gterm.is_a.append(self.go_terms[pgo_id])
@@ -120,30 +122,40 @@ class go:
                 gterm.child_of.add(self.go_terms[pgo_id])
             elif inside and fields[0] == 'relationship:':
                 if fields[1].find('has_part') != -1:
-                    #has part is not a parental relationship -- it is actually for children.
+                    # Has part is not a parental relationship --
+                    # it is actually for children.
                     continue
+                logger.debug("Making term.head for term %s = False", gterm)
                 gterm.head = False
                 pgo_id = fields[2]
-                if not self.go_terms.has_key(pgo_id):
+                if pgo_id not in self.go_terms:
                     self.go_terms[pgo_id] = GOTerm(pgo_id)
                 # Check which relationship you are with this parent go term
-                if fields[1] == 'regulates' or fields[1] == 'positively_regulates' or fields[1] == 'negatively_regulates':
+                if (fields[1] == 'regulates' or
+                        fields[1] == 'positively_regulates' or
+                        fields[1] == 'negatively_regulates'):
                     gterm.relationship_regulates.append(self.go_terms[pgo_id])
                 elif fields[1] == 'part_of':
                     gterm.relationship_part_of.append(self.go_terms[pgo_id])
                 else:
-                    logger.info("Unkown relationship %s", self.go_terms[pgo_id].name)
+                    logger.info("Unkown relationship %s",
+                                self.go_terms[pgo_id].name)
+
                 self.go_terms[pgo_id].parent_of.add(gterm)
                 gterm.child_of.add(self.go_terms[pgo_id])
             elif inside and fields[0] == 'is_obsolete:':
+                logger.debug("Making term.head for term %s = False", gterm)
                 gterm.head = False
                 del self.go_terms[gterm.get_id()]
 
-    """
-    propagate all gene annotations
-    """
+        logger.debug("Terms that are heads: %s", self.heads)
+
     def propagate(self):
+        """
+        propagate all gene annotations
+        """
         logger.info("Propagate gene annotations")
+        logger.debug("Head term(s) = %s", self.heads)
         for head_gterm in self.heads:
             logger.info("Propagating %s", head_gterm.name)
             self.propagate_recurse(head_gterm)
@@ -162,26 +174,30 @@ class go:
 
             for annotation in child_term.annotations:
                 copied_annotation = None
-                # if this relation with child is a regulates(and its sub class) filter annotations
+                # If this relation with child is a regulates(and its sub class)
+                # filter annotations
                 if regulates_relation:
-                    # only add annotations that didn't come from a part of or regulates relationship
+                    # only add annotations that didn't come from a part of or
+                    # regulates relationship
                     if annotation.ready_regulates_cutoff:
                         continue
                     else:
-                        copied_annotation = annotation.prop_copy(ready_regulates_cutoff=True)
+                        copied_annotation = annotation.prop_copy(
+                            ready_regulates_cutoff=True)
                 elif part_of_relation:
-                    copied_annotation = annotation.prop_copy(ready_regulates_cutoff=True)
+                    copied_annotation = annotation.prop_copy(
+                        ready_regulates_cutoff=True)
                 else:
                     copied_annotation = annotation.prop_copy()
 
                 new_annotations.add(copied_annotation)
             gterm.annotations = gterm.annotations | new_annotations
 
-    """
-    summarize gene annotations for an organism (i.e. to load multiple organisms
-    for output of annotation numbers to json)
-    """
     def summarize(self, org):
+        """
+        summarize gene annotations for an organism (i.e. to load multiple
+        organisms for output of annotation numbers to json)
+        """
         self.s_orgs.append(org)
         for (name, term) in self.go_terms.iteritems():
             tgenes = set()
@@ -198,10 +214,10 @@ class go:
             term.summary['nparents'] = len(term.child_of)
             term.summary['go_id'] = term.go_id
 
-    """
-    add "sstr" to summary for term based on whether the term is in sset
-    """
     def summarize_flag(self, sset, sstr):
+        """
+        add "sstr" to summary for term based on whether the term is in sset
+        """
         for item in sset:
             try:
                 tid = self.alt_id2std_id[item]
@@ -214,17 +230,17 @@ class go:
                 import sys
                 sys.stderr.write(tid + '\n')
 
-    """
-    tally votes (i.e. size of each goterm's.vote set)
-    """
     def summarize_votes(self):
+        """
+        tally votes (i.e. size of each goterm's.vote set)
+        """
         for (tid, term) in self.go_terms.iteritems():
             term.summary['votes'] = len(term.votes)
 
-    """
-    add a vote from a slim file to the votes set with name vstr
-    """
     def vote(self, vset, vstr):
+        """
+        add a vote from a slim file to the votes set with name vstr
+        """
         for item in vset:
             try:
                 tid = self.alt_id2std_id[item]
@@ -238,18 +254,19 @@ class go:
                 continue
             self.vote_recurse(term, vstr)
 
-    """
-    apply votes to a node and its children
-    """
     def vote_recurse(self, term, vstr):
+        """
+        apply votes to a node and its children
+        """
         for child in term.parent_of:
             self.vote_recurse(child, vstr)
         term.votes.add(vstr)
 
-    """
-    write slim starting from a dfs at the term with the id root  with nvotes to ofile
-    """
     def write_slim(self, head, nvotes, ofile):
+        """
+        write slim starting from a dfs at the term with the id root
+        with nvotes to ofile
+        """
         root = self.go_terms[head]
         written = set([])
         pruned = set([])
@@ -260,10 +277,11 @@ class go:
 
         for term in written:
             ofile.write(term.name + '\t' + term.go_id + '\n')
-    """
-    recurse for write_slim
-    """
+
     def vote_write(self, term, nvotes, ofile, written, pruned):
+        """
+        recurse for write_slim
+        """
         if term in written or term in pruned:
             return
         if len(term.votes) >= nvotes:
@@ -274,19 +292,19 @@ class go:
             for child in term.parent_of:
                 self.vote_write(child, nvotes, ofile, written, pruned)
 
-    """
-    recurse for pruned terms
-    """
     def pruned(self, term, pruned):
+        """
+        recurse for pruned terms
+        """
         for child in term.parent_of:
             pruned.add(child)
             self.pruned(child, pruned)
 
-    """
-    prune all gene annotations, if nstr is passed, instead of pruning, add a
-    flag to summary of "namestr" if the node meets these criteria.
-    """
     def prune(self, eval_str, nstr=None):
+        """
+        prune all gene annotations, if nstr is passed, instead of pruning, add
+        a flag to summary of "namestr" if the node meets these criteria.
+        """
         dterms = set()
         heads = set(self.heads)
         for (name, term) in self.go_terms.iteritems():
@@ -327,7 +345,9 @@ class go:
                         sstatus = term.summary['slim']
                         if sstatus:
                             import sys
-                            sys.stderr.write("Pruned slim term: (" + term.go_id + ") " + term.name + "\t" + str(term.summary) + "\n")
+                            sys.stderr.write("Pruned slim term: (" +
+                                             term.go_id + ") " + term.name +
+                                             "\t" + str(term.summary) + "\n")
                     except KeyError:
                         pass
                 for pterm in term.child_of:
@@ -339,12 +359,12 @@ class go:
                 dterms.add(name)
         for name in dterms:
             del self.go_terms[name]
-        #remove connections to root if there are other parents
+        # remove connections to root if there are other parents
         for (name, term) in self.go_terms.iteritems():
-            #if there is something in the intersection
+            # if there is something in the intersection
             intersection = term.child_of & heads
             if (intersection):
-                #if the intersection isn't the only thing it's a child of
+                # if the intersection isn't the only thing it's a child of
                 if (term.child_of - heads):
                     term.child_of -= intersection
                     for hterm in intersection:
@@ -381,22 +401,27 @@ class go:
         tlist = self.get_termobject_list(terms=terms, p_namespace=p_namespace)
         reterms = []
         for obo_term in tlist:
-            reterms.append({'oboid':obo_term.go_id, 'name':obo_term.name})
+            reterms.append({'oboid': obo_term.go_id, 'name': obo_term.name})
         return reterms
 
     def print_terms(self, out_dir, terms=None, p_namespace=None):
         logger.info('print_terms')
         tlist = self.get_termobject_list(terms=terms, p_namespace=p_namespace)
-        #print terms
+
         for term in tlist:
-            id_set = set()  # put things into a set to avoid duplicate entries (possible multiple annotations with single ID)
+            # put things into a set to avoid duplicate entries
+            # (possible multiple annotations with single ID)
+            id_set = set()
             for annotation in term.annotations:
                 id_set.add(annotation.gid)
             output_fh = open(out_dir + '/' + term.name, 'w')
-            output_fh.write('\n'.join(id_set) + '\n')#keep previous behavior w/ newline at end
+            # keep previous behavior w/ newline at end
+            output_fh.write('\n'.join(id_set) + '\n')
             output_fh.close()
 
-    def print_to_single_file(self, out_file, terms=None, p_namespace=None, gene_asso_format=False):
+    def print_to_single_file(self, out_file, terms=None, p_namespace=None,
+                             gene_asso_format=False):
+
         logger.info('print_to_single_file')
         tlist = self.get_termobject_list(terms=terms, p_namespace=p_namespace)
         tlist.sort()
@@ -406,31 +431,46 @@ class go:
                 if gene_asso_format:
                     to_print = [annotation.xdb if annotation.xdb else '',
                                 annotation.gid if annotation.gid else '',
-                                '', '', #Gene Symbol, NOT/''
+                                '', '',  # Gene Symbol, NOT/''
                                 term.go_id if term.go_id else '',
                                 annotation.ref if annotation.ref else '',
                                 annotation.evidence if annotation.evidence else '',
                                 annotation.date if annotation.date else '',
-                                str(annotation.direct), #Direct is added in to indicate prop status
-                                str(annotation.cross_annotated), #cross annotated is added in to indicate cross status
-                annotation.origin if annotation.cross_annotated else '', #if cross annotated, where the annotation is from
-                                str(annotation.ortho_evidence) if annotation.ortho_evidence else '', '', ''] #if cross annotated, then the evidence of the cross_annotation (e.g. bootstrap value, p-value)
+
+                                # Direct is added in to indicate prop status
+                                str(annotation.direct),
+
+                                # cross annotated is added in to indicate
+                                # cross status
+                                str(annotation.cross_annotated),
+
+                                # if cross annotated, where annotation is from
+                                annotation.origin if annotation.cross_annotated else '',
+
+                                # if cross annotated, then the evidence of
+                                # the cross_annotation (e.g. bootstrap value,
+                                # p-value)
+                                str(annotation.ortho_evidence) if annotation.ortho_evidence else '',
+                                '', '']
                     print >> f, '\t'.join([str(x) for x in to_print])
                 else:
                     print >> f, term.go_id + '\t' + annotation.gid
         f.close()
 
-    # print each term ref IDs to a standard out
     def print_refids(self, terms=None, p_namespace=None):
+        # print each term ref IDs to a standard out
         logger.info('print_refids')
         tlist = self.get_termobject_list(terms=terms, p_namespace=p_namespace)
         tlist.sort()
         for term in tlist:
             for annotation in term.annotations:
-                print term.go_id + '\t' + annotation.ref + '\t' + annotation.gid
+                print (term.go_id + '\t' + annotation.ref + '\t' +
+                       annotation.gid)
 
-    # be aware this is added only to be used with python script  cross_annotate_single_file_only_crossed.py
-    def print_to_single_file_cross_annotated(self, out_file, terms=None, p_namespace=None):
+    def print_to_single_file_cross_annotated(self, out_file, terms=None,
+                                             p_namespace=None):
+        # Be aware this is added only to be used with python script
+        # cross_annotate_single_file_only_crossed.py
         logger.info('print_to_single_file_cross_annotated')
         tlist = self.get_termobject_list(terms=terms, p_namespace=p_namespace)
         tlist.sort()
@@ -481,16 +521,19 @@ class go:
         for go_term in self.go_terms.itervalues():
             go_term.map_genes(id_name)
 
-    def add_annotation(self, go_id=None, xdb=None, gid=None, ref=None, evidence=None, date=None, direct=None):
+    def add_annotation(self, go_id=None, xdb=None, gid=None, ref=None,
+                       evidence=None, date=None, direct=None):
         go_term = self.get_term(go_id)
         if go_term is None:
             logger.info("Couldn't get go_term for id %s.", go_id)
             return False
         logger.debug('Added gene %s and term %s', gid, go_term.go_id)
-        annotation = Annotation(xdb=xdb, gid=gid, ref=ref, evidence=evidence, date=date, direct=direct)
+        annotation = Annotation(xdb=xdb, gid=gid, ref=ref, evidence=evidence,
+                                date=date, direct=direct)
         go_term.annotations.add(annotation)
 
-    def populate_annotations(self, annotation_file, xdb_col=0, gene_col=None, term_col=None, ref_col=5, ev_col=6, date_col=13):
+    def populate_annotations(self, annotation_file, xdb_col=0, gene_col=None,
+                             term_col=None, ref_col=5, ev_col=6, date_col=13):
         logger.info('Populate gene annotations: %s', annotation_file)
         details_col = 3
         f = open(annotation_file, 'r')
@@ -527,17 +570,21 @@ class go:
                     continue
             except IndexError:
                 pass
-            self.add_annotation(go_id=go_id, xdb=xdb, gid=gene, ref=ref, evidence=ev, date=date, direct=True)
+            self.add_annotation(go_id=go_id, xdb=xdb, gid=gene, ref=ref,
+                                evidence=ev, date=date, direct=True)
 
         f.close()
         self.populated = True
 
-    def populate_additional_taxon_specificity(self, ncbi_tax_obj, taxon_specificity_add_file, tag_tax_id):
+    def populate_additional_taxon_specificity(self, ncbi_tax_obj,
+                                              taxon_specificity_add_file,
+                                              tag_tax_id):
+
         logger.info("Populate GO specificity: %s", taxon_specificity_add_file)
 
         f = open(taxon_specificity_add_file, 'r')
 
-        if ncbi_tax_obj.id2species.has_key(tag_tax_id):
+        if tag_tax_id in ncbi_tax_obj.id2species:
             self.go_organism_tax_id = tag_tax_id
         else:
             logger.error("NCBI tax ID %s does not exist", tag_tax_id)
@@ -555,14 +602,17 @@ class go:
             relationship = fields[1]
             org = fields[2]
             # now go label your go tree
-            self.propagate_taxon_specificity([org], gid, relationship, ncbi_tax_obj)
+            self.propagate_taxon_specificity([org], gid, relationship,
+                                             ncbi_tax_obj)
 
         f.close()
 
-    def populate_taxon_specificity(self, ncbi_tax_obj, taxon_specificity_obo_file, tag_tax_id):
+    def populate_taxon_specificity(self, ncbi_tax_obj,
+                                   taxon_specificity_obo_file, tag_tax_id):
+
         logger.info("Populate GO specificity: %s", taxon_specificity_obo_file)
         f = open(taxon_specificity_obo_file, 'r')
-        if ncbi_tax_obj.id2species.has_key(tag_tax_id):
+        if tag_tax_id in ncbi_tax_obj.id2species:
             self.go_organism_tax_id = tag_tax_id
         else:
             logger.error("NCBI tax ID %s does not exist", tag_tax_id)
@@ -596,14 +646,16 @@ class go:
                         if not (i > 3 and fl != 'or'):
                             continue
 
-                        if ncbi_tax_obj.species2id.has_key(fl):
+                        if fl in ncbi_tax_obj.species2id:
                             final_tax_ids.append(ncbi_tax_obj.species2id[fl])
-                        elif ncbi_tax_obj.in_part.has_key(fl):
-                            [final_tax_ids.append(in_part_id) for in_part_id in ncbi_tax_obj.in_part[fl] ]
+                        elif fl in ncbi_tax_obj.in_part:
+                            [final_tax_ids.append(in_part_id) for in_part_id in
+                             ncbi_tax_obj.in_part[fl]]
                         else:
                             logger.error("Missing NCBI tax ID: %s", fl)
                 # now go label your go tree
-                self.propagate_taxon_specificity(final_tax_ids, gid, relationship, ncbi_tax_obj)
+                self.propagate_taxon_specificity(final_tax_ids, gid,
+                                                 relationship, ncbi_tax_obj)
 
                 # ok now collected all info
                 inside = False
@@ -613,7 +665,8 @@ class go:
 
         f.close()
 
-    def propagate_taxon_specificity(self, tax_ids, term_id, relationship, ncbi_tax_obj):
+    def propagate_taxon_specificity(self, tax_ids, term_id, relationship,
+                                    ncbi_tax_obj):
         current_gterm = self.get_term(term_id)
         if current_gterm is None:
             return
@@ -642,8 +695,8 @@ class go:
         for child_term in go_term.parent_of:
             self.propagate_taxon_set_false(child_term.get_id())
 
-    # check if slim terms forms a true fringe in the obo structure
     def check_fringe(self, slim_file, namespace=None):
+        # check if slim terms forms a true fringe in the obo structure
         leaf_tids = []
         slim_tids = []
 
@@ -651,7 +704,7 @@ class go:
         for tid in self.go_terms.keys():
             leaf_term = self.go_terms[tid]
             if len(leaf_term.parent_of) == 0:
-                if namespace != None and leaf_term.namespace != namespace:
+                if namespace is not None and leaf_term.namespace != namespace:
                     continue
                 leaf_term.annotations.add(Annotation(gid=tid))
                 leaf_tids.append(tid)
@@ -667,13 +720,16 @@ class go:
             stids.append(fields[1])
         f.close()
 
-        # now go colect the GO leaf term ids that have been propagated to the slim terms
+        # now go collect the GO leaf term ids that have been propagated to the
+        # slim terms
         for tid in stids:
             slim_term = self.get_term(tid)
             if slim_term is None:
-                logger.error('Slim term name does not exist (potentially obsolete term): %s', gid)
+                logger.error('Slim term name does not exist (potentially '
+                             'obsolete term): %s', gid)
                 continue
-            slim_tids.extend([annotation.gid for annotation in slim_term.annotations])
+            slim_tids.extend([annotation.gid for annotation in
+                              slim_term.annotations])
 
         # now compare two sets
         leaf_tids.sort()
@@ -687,11 +743,11 @@ class go:
                     logger.warning("Missing leaf terms: %s", lgoterm)
             return False
 
-    """
-    get propagated descendents of term
-    """
     def get_descendents(self, gterm):
-        if not self.go_terms.has_key(gterm):
+        """
+        get propagated descendents of term
+        """
+        if gterm not in self.go_terms:
             return set()
         term = self.go_terms[gterm]
 
@@ -707,12 +763,13 @@ class go:
 
         return child_terms
 
-    """
-    get propagated ancestors of term
-    """
     def get_ancestors(self, gterm):
-        if self.go_terms.has_key(gterm) is False:
+        """
+        get propagated ancestors of term
+        """
+        if gterm not in self.go_terms:
             return set()
+
         term = self.go_terms[gterm]
 
         if len(term.child_of) == 0:
@@ -727,20 +784,23 @@ class go:
 
         return parent_terms
 
-    """
-    Return a set of leaf terms in ontology
-    """
     def get_leaves(self, namespace='biological_process', min_annot=10):
+        """
+        Return a set of leaf terms in ontology
+        """
         leaves = set()
         bottom = set()
         for term in self.go_terms.values():
-            if len(term.parent_of) == 0 and term.namespace == namespace and len(term.annotations) >= min_annot:
+            if (len(term.parent_of) == 0 and term.namespace == namespace and
+                    len(term.annotations) >= min_annot):
                 leaves.add(term)
         return leaves
 
 
 class Annotation(object):
-    def __init__(self, xdb=None, gid=None, ref=None, evidence=None, date=None, direct=False, cross_annotated=False, origin=None, ortho_evidence=None, ready_regulates_cutoff=False):
+    def __init__(self, xdb=None, gid=None, ref=None, evidence=None, date=None,
+                 direct=False, cross_annotated=False, origin=None,
+                 ortho_evidence=None, ready_regulates_cutoff=False):
         super(Annotation, self).__setattr__('xdb', xdb)
         super(Annotation, self).__setattr__('gid', gid)
         super(Annotation, self).__setattr__('ref', ref)
@@ -750,15 +810,18 @@ class Annotation(object):
         super(Annotation, self).__setattr__('cross_annotated', cross_annotated)
         super(Annotation, self).__setattr__('origin', origin)
         super(Annotation, self).__setattr__('ortho_evidence', ortho_evidence)
-        super(Annotation, self).__setattr__('ready_regulates_cutoff', ready_regulates_cutoff)
+        super(Annotation, self).__setattr__('ready_regulates_cutoff',
+                                            ready_regulates_cutoff)
 
     def prop_copy(self, ready_regulates_cutoff=None):
-        if ready_regulates_cutoff == None:
+        if ready_regulates_cutoff is None:
             ready_regulates_cutoff = self.ready_regulates_cutoff
 
         return Annotation(xdb=self.xdb, gid=self.gid, ref=self.ref,
-                          evidence=self.evidence, date=self.date, direct=False, cross_annotated=False,
-                          ortho_evidence=self.ortho_evidence, ready_regulates_cutoff=ready_regulates_cutoff)
+                          evidence=self.evidence, date=self.date, direct=False,
+                          cross_annotated=False,
+                          ortho_evidence=self.ortho_evidence,
+                          ready_regulates_cutoff=ready_regulates_cutoff)
 
     def __hash__(self):
         return hash((self.xdb, self.gid, self.ref, self.evidence, self.date,
@@ -768,10 +831,11 @@ class Annotation(object):
     def __eq__(self, other):
         return (self.xdb, self.gid, self.ref, self.evidence, self.date,
                 self.direct, self.cross_annotated, self.ortho_evidence,
-                self.ready_regulates_cutoff, self.origin).__eq__((other.xdb,
-                    other.gid, other.ref, other.evidence, other.date,
-                    other.direct, other.cross_annotated, other.ortho_evidence,
-                    other.ready_regulates_cutoff, other.origin))
+                self.ready_regulates_cutoff, self.origin).__eq__((
+                    other.xdb, other.gid, other.ref, other.evidence,
+                    other.date, other.direct, other.cross_annotated,
+                    other.ortho_evidence, other.ready_regulates_cutoff,
+                    other.origin))
 
     def __setattr__(self, *args):
         raise TypeError("Attempt to modify immutable object.")
@@ -837,16 +901,16 @@ class GOTerm:
         mapped_annotations_set = set([])
         for annotation in self.annotations:
             mapped_genes = id_name.get(annotation.gid)
-            if mapped_genes == None:
+            if mapped_genes is None:
                 logger.warning('No matching gene id: %s', annotation.gid)
                 continue
             for mgene in mapped_genes:
-                mapped_annotations_set.add(Annotation(xdb=None, gid=mgene,
-                                                      direct=annotation.direct,
-                                                      ref=annotation.ref,
-                                                      evidence=annotation.evidence,
-                                                      date=annotation.date,
-                                                      cross_annotated=annotation.cross_annotated))
+                mapped_annotations_set.add(
+                    Annotation(xdb=None, gid=mgene, direct=annotation.direct,
+                               ref=annotation.ref,
+                               evidence=annotation.evidence,
+                               date=annotation.date,
+                               cross_annotated=annotation.cross_annotated))
         self.annotations = mapped_annotations_set
 
     def get_annotated_genes(self, include_cross_annotated=True):
@@ -857,12 +921,16 @@ class GOTerm:
             genes.append(annotation.gid)
         return genes
 
-    def add_annotation(self, gid, ref=None, cross_annotated=False, allow_duplicate_gid=True, origin=None, ortho_evidence=None):
+    def add_annotation(self, gid, ref=None, cross_annotated=False,
+                       allow_duplicate_gid=True, origin=None,
+                       ortho_evidence=None):
         if not allow_duplicate_gid:
             for annotated in self.annotations:
                 if annotated.gid == gid:
                     return
-        self.annotations.add(Annotation(gid=gid, ref=ref, cross_annotated=cross_annotated, origin=origin, ortho_evidence=ortho_evidence))
+        self.annotations.add(
+            Annotation(gid=gid, ref=ref, cross_annotated=cross_annotated,
+                       origin=origin, ortho_evidence=ortho_evidence))
 
     def get_annotation_size(self):
         return len(self.annotations)
@@ -875,22 +943,53 @@ if __name__ == '__main__':
 
     usage = "usage: %prog [options]"
     parser = OptionParser(usage, version="%prog dev-unreleased")
-    parser.add_option("-o", "--obo-file", dest="obo", help="obo file", metavar="FILE")
-    parser.add_option("-a", "--association-file", dest="ass", help="gene association file", metavar="FILE")
-    parser.add_option("-b", dest="term_col", type="int", help="What column of the annotations file contains the term identifiers?", default=4)
-    parser.add_option("-g", dest="gcol", type="int", help="What column of the annotations file contains the desired identifiers?", default=1)
-    parser.add_option("-d", "--output-prefix", dest="opref", help="prefix for output files", metavar="string")
-    parser.add_option("-f", "--output-filename", dest="ofile", help="If given outputs all go term/gene annotation pairs to this file, file is created in the output prefix directory.", metavar="string")
-    parser.add_option("-i", "--id-file", dest="idfile", help="file to map excisting gene ids to the desired identifiers in the format <gene id>\\t<desired id>\\n", metavar="FILE")
-    parser.add_option("-p", action="store_true", dest="progagate", help="Should we progagate gene annotations?")
-    parser.add_option("-P", "--prune", dest="prune", help="A python string that will be evaled to decide if a node should be pruned.  Available variables are 'total' and 'direct' which are the total number of annotations and the number of direct annotations.")
-    parser.add_option("-t", "--slim-file", dest="slim", help="GO slim file contains GO terms to output, if not given outputs all GO terms", metavar="FILE")
-    parser.add_option("-n", "--namespace", dest="nspace", help="limit the GO term output to the input namespace: (biological_process, cellular_component, molecular_function)", metavar="STRING")
-    parser.add_option("-r", dest="refids", action="store_true", help="If given keeps track of ref IDs (e.g. PMIDs) for each go term and prints to standard out")
-    parser.add_option("-c", dest="check_fringe", action="store_true", help="Is the given slim file a true fringe in the given obo file?  Prints the result and exits.")
-    parser.add_option("-j", "--json-file", dest="json", help="file to output ontology (as json) to.")
-    parser.add_option("-A", dest="assoc_format", action="store_true", help="If we are printing to a file (-f), pass this to get a full association file back.")
-    parser.add_option("-l", dest="desc", action="store_true", help="Get descendents of terms")
+    parser.add_option("-o", "--obo-file", dest="obo", help="obo file",
+                      metavar="FILE")
+    parser.add_option("-a", "--association-file", dest="ass",
+                      help="gene association file", metavar="FILE")
+    parser.add_option("-b", dest="term_col", type="int",
+                      help="What column of the annotations file contains" +
+                      " the term identifiers?", default=4)
+    parser.add_option("-g", dest="gcol", type="int",
+                      help="What column of the annotations file contains" +
+                      " the desired identifiers?", default=1)
+    parser.add_option("-d", "--output-prefix", dest="opref",
+                      help="prefix for output files", metavar="string")
+    parser.add_option("-f", "--output-filename", dest="ofile",
+                      help="If given outputs all go term/gene annotation " +
+                      "pairs to this file, file is created in the output" +
+                      " prefix directory.", metavar="string")
+    parser.add_option("-i", "--id-file", dest="idfile", help="file to map" +
+                      " existing gene ids to the desired identifiers in " +
+                      "the format <gene id>\\t<desired id>\\n", metavar="FILE")
+    parser.add_option("-p", action="store_true", dest="progagate",
+                      help="Should we progagate gene annotations?")
+    parser.add_option("-P", "--prune", dest="prune",
+                      help="A python string that will be evaled to decide if" +
+                      " a node should be pruned.  Available variables are" +
+                      " 'total' and 'direct' which are the total number of" +
+                      " annotations and the number of direct annotations.")
+    parser.add_option("-t", "--slim-file", dest="slim",
+                      help="GO slim file contains GO terms to output, if " +
+                      "not given outputs all GO terms", metavar="FILE")
+    parser.add_option("-n", "--namespace", dest="nspace",
+                      help="limit the GO term output to the input " +
+                      "namespace: (biological_process, cellular_component," +
+                      " molecular_function)", metavar="STRING")
+    parser.add_option("-r", dest="refids", action="store_true",
+                      help="If given keeps track of ref IDs (e.g. PMIDs) for" +
+                      " each go term and prints to standard out")
+    parser.add_option("-c", dest="check_fringe", action="store_true",
+                      help="Is the given slim file a true fringe in the " +
+                      "given obo file?  Prints the result and exits.")
+    parser.add_option("-j", "--json-file", dest="json",
+                      help="file to output ontology (as json) to.")
+    parser.add_option("-A", dest="assoc_format", action="store_true",
+                      help="If we are printing to a file (-f), pass this to " +
+                      "get a full association file back.")
+    parser.add_option("-l", dest="desc", action="store_true",
+                      help="Get descendents of terms")
+
     (options, args) = parser.parse_args()
 
     if options.obo is None:
@@ -899,7 +998,8 @@ if __name__ == '__main__':
     if options.check_fringe is None and options.ass is None:
         sys.stderr.write("--association file is required.\n")
         sys.exit()
-    if options.desc is None and options.check_fringe is None and options.opref is None and not options.refids:
+    if (options.desc is None and options.check_fringe is None and
+            options.opref is None and not options.refids):
         sys.stderr.write("--prefix is required.\n")
         sys.exit()
     if options.check_fringe and options.slim is None:
@@ -922,7 +1022,8 @@ if __name__ == '__main__':
         # now exit
         sys.exit(0)
 
-    gene_ontology.populate_annotations(options.ass, gene_col=options.gcol, term_col=options.term_col)
+    gene_ontology.populate_annotations(options.ass, gene_col=options.gcol,
+                                       term_col=options.term_col)
 
     if options.idfile is not None:
         gene_ontology.map_genes(id_name)
@@ -962,13 +1063,19 @@ if __name__ == '__main__':
         if options.refids:
             gene_ontology.print_refids(gterms, options.nspace)
         elif options.ofile:
-            gene_ontology.print_to_single_file(options.opref + '/' + options.ofile, gterms, options.nspace, options.assoc_format)
+            gene_ontology.print_to_single_file(options.opref + '/' +
+                                               options.ofile, gterms,
+                                               options.nspace,
+                                               options.assoc_format)
         else:
             gene_ontology.print_terms(options.opref, gterms, options.nspace)
     else:
         if options.refids:
             gene_ontology.print_refids(None, options.nspace)
         elif options.ofile:
-            gene_ontology.print_to_single_file(options.opref + '/' + options.ofile, None, options.nspace, options.assoc_format)
+            gene_ontology.print_to_single_file(options.opref + '/' +
+                                               options.ofile, None,
+                                               options.nspace,
+                                               options.assoc_format)
         else:
             gene_ontology.print_terms(options.opref, None, options.nspace)

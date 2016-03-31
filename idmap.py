@@ -27,10 +27,10 @@ class idmap:
         else:
             return self.key_val.keys()
 
-    """
-    Returns None if no file was loaded or if the key does not exist.
-    """
     def get(self, id=None):
+        """
+        Returns None if no file was loaded or if the key does not exist.
+        """
         upper_id = None
         if id is not None:
             upper_id = id.upper()
@@ -49,10 +49,14 @@ if __name__ == '__main__':
     from optparse import OptionParser
     usage = "usage: %prog [options]"
     parser = OptionParser(usage, version="%prog dev-unreleased")
-    parser.add_option("-i", "--input-file", dest="input", help="input file", metavar="FILE")
-    parser.add_option("-m", "--mappings-file", dest="mapping", help="mappings file", metavar="FILE")
+    parser.add_option("-i", "--input-file", dest="input",
+                      help="input file", metavar="FILE")
+    parser.add_option("-m", "--mappings-file", dest="mapping",
+                      help="mappings file", metavar="FILE")
     parser.add_option("-c", "--col", dest="col", help="column to remap")
-    parser.add_option("-s", "--skip", dest="skip", help="lines to skip (i.e. just print the first S lines)", default = 0)
+    parser.add_option("-s", "--skip", dest="skip",
+                      help="lines to skip (i.e. just print the first S lines)",
+                      default=0)
     (options, args) = parser.parse_args()
 
     if options.input is None:
