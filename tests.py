@@ -380,6 +380,7 @@ class GO_Test(unittest.TestCase):
         gene_ontology2 = go()
         loaded_obo_bool = gene_ontology2.load_obo(
                 'test_files/test_go_obo_head_term.csv')
+        self.assertEqual(loaded_obo_bool, True)
         self.assertEqual(gene_ontology2.heads, self.gene_ontology.heads)
 
 
