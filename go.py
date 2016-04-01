@@ -148,6 +148,14 @@ class go:
                 gterm.head = False
                 del self.go_terms[gterm.get_id()]
 
+        # This loop checks that all terms that have been marked as head=True
+        # have been added to self.heads
+        for term_id, term in self.go_terms.iteritems():
+            if term.head:
+                if term not in self.heads:
+                    logger.debug("Term %s not in self.heads, adding now", term)
+                    self.heads.append(term)
+
         logger.debug("Terms that are heads: %s", self.heads)
 
     def propagate(self):
