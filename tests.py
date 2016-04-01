@@ -232,7 +232,7 @@ class GO_Test(unittest.TestCase):
         """"""
         self.gene_ontology = go()
         self.loaded_obo_bool = self.gene_ontology.load_obo(
-                'test_files/test_go_obo_file.csv')
+                'test_files/test_go_obo_file.obo')
 
     def tearDown(self):
         """"""
@@ -379,7 +379,7 @@ class GO_Test(unittest.TestCase):
     def testHeadTermOBOFile(self):
         gene_ontology2 = go()
         loaded_obo_bool = gene_ontology2.load_obo(
-                'test_files/test_go_obo_head_term.csv')
+                'test_files/test_go_obo_head_term.obo')
         self.assertEqual(loaded_obo_bool, True)
         self.assertEqual(gene_ontology2.heads, self.gene_ontology.heads)
 
@@ -393,14 +393,14 @@ class DO_Test(unittest.TestCase):
         """"""
         self.disease_ontology = go()
         self.loaded_obo_bool = self.disease_ontology.load_obo(
-                'test_files/test_do_obo_file.csv')
+                'test_files/test_do_obo_file.obo')
 
     def tearDown(self):
         """"""
         pass
 
     def testBuildOmimDict(self):
-        do_obo_file = 'test_files/test_do_obo_file.csv'
+        do_obo_file = 'test_files/test_do_obo_file.obo'
 
         doid_omim_dict = build_doid_omim_dict(do_obo_file)
 
@@ -456,7 +456,7 @@ class DO_Test(unittest.TestCase):
         self.assertEqual(phetypes_dict, desired_phenotypes)
 
     def testAddDOTermAnnotations(self):
-        do_obo_file = 'test_files/test_do_obo_file.csv'
+        do_obo_file = 'test_files/test_do_obo_file.obo'
         doid_omim_dict = build_doid_omim_dict(do_obo_file)
 
         # *NOTE: Here we will use an actual downloaded mim2gene.txt file
@@ -504,7 +504,7 @@ class DO_Test(unittest.TestCase):
         self.assertEqual(title_set, desired_output)
 
     def testCreateDOAbstractTitle(self):
-        do_obo_file = 'test_files/test_do_obo_file.csv'
+        do_obo_file = 'test_files/test_do_obo_file.obo'
         doid_omim_dict = build_doid_omim_dict(do_obo_file)
 
         # We know from testBuildOmimDict above that this is the only
