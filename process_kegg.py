@@ -1,4 +1,4 @@
-import os
+import sys
 import glob
 from collections import defaultdict
 from ConfigParser import SafeConfigParser
