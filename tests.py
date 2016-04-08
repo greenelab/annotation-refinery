@@ -51,7 +51,7 @@ class KeggTest(unittest.TestCase):
                              '131', '130589', '160287']),
             'hsa00020': set(['1431', '1737', '1738', '1743', '2271', '3417',
                              '3418', '3419', '3420', '3421'])
-            }
+        }
 
         self.assertEqual(kegg_members_dict, desired_output)
 
