@@ -1,4 +1,5 @@
 import re
+import sys
 from go import go
 from ConfigParser import SafeConfigParser
 
