@@ -3,7 +3,8 @@ import re
 from idmap import idmap
 
 import logging
-logger = logging.getLogger('function-go.go')
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 class go:
@@ -45,7 +46,7 @@ class go:
                 except (urllib2.URLError, ssl.SSLError):
                     n += 1
                     logger.warning('Request for %s timed out, try %s of %s',
-                                   url, n, tries)
+                                   path, n, tries)
                     continue
         else:
             try:
@@ -319,6 +320,9 @@ class go:
 
             total = len(term.annotations)
             direct = 0
+            # Note: nparents is not called explicitly by any part of the code
+            # as it is, but could be called by the eval() function and eval_str
+            # further down in this function.
             nparents = len(term.child_of)
             for annotation in term.annotations:
                 if annotation.direct:
@@ -326,6 +330,9 @@ class go:
 
             dmax = direct
             tmax = total
+            # Note: Like nparents, num_children is not called explicitly by any
+            # part of the code as it is, but could be called by the eval()
+            # function and eval_str further down in this function.
             num_children = len(term.parent_of)
             if term.summary:
                 if self.s_orgs:
@@ -734,7 +741,7 @@ class go:
             slim_term = self.get_term(tid)
             if slim_term is None:
                 logger.error('Slim term name does not exist (potentially '
-                             'obsolete term): %s', gid)
+                             'obsolete term): %s', tid)
                 continue
             slim_tids.extend([annotation.gid for annotation in
                               slim_term.annotations])
@@ -947,6 +954,12 @@ class GOTerm:
         return self.namespace
 
 if __name__ == '__main__':
+
+    # Logging level can be input as an argument to logging.basicConfig()
+    # function to get more logging output (e.g. level=logging.INFO)
+    # The default level is logging.WARNING
+    logging.basicConfig()
+
     from optparse import OptionParser
 
     usage = "usage: %prog [options]"
