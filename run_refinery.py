@@ -10,12 +10,17 @@ from utils import check_create_folder
 
 # Import and set logger
 import logging
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.addHandler(logging.NullHandler())
 
 
 if __name__ == "__main__":
+
+    # Logging level can be input as an argument to logging.basicConfig()
+    # function to get more logging output (e.g. level=logging.INFO)
+    # The default level is logging.WARNING
+    logging.basicConfig()
+
     parser = argparse.ArgumentParser(
         description='Package to download and process knowledge in annotations '
         'databases and convert to JSON.')
