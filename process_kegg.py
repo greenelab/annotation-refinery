@@ -6,9 +6,8 @@ from download_files import download_kegg_info_files
 
 # Import and set logger
 import logging
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.addHandler(logging.NullHandler())
 
 
 def get_kegg_info(kegg_info_file):
@@ -180,6 +179,8 @@ def process_kegg_sets(species_ini_file):
     organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
 
     kegg_db_info = get_kegg_info(kegg_info_file)
+    logger.info('Working with KEGG release %s.', kegg_db_info['release'])
+    logger.info('KEGG Database info: %s.', kegg_db_info)
 
     all_kegg_sets = []
     for members_file in kegg_members_files.split(','):
