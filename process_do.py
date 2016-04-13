@@ -5,9 +5,8 @@ from ConfigParser import SafeConfigParser
 
 # Import and set logger
 import logging
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.addHandler(logging.NullHandler())
 
 # Type of OMIM term filter
 TYPE_FILTER = set(['gene', 'gene/phenotype'])
@@ -330,7 +329,10 @@ def process_do_terms(species_ini_file):
     genemap_file = species_file.get('DO', 'GENEMAP_FILE')
 
     disease_ontology = go()
-    loaded_obo = disease_ontology.load_obo(do_obo_file)
+    loaded_obo_bool = disease_ontology.load_obo(do_obo_file)
+
+    if loaded_obo_bool is False:
+        logger.error('DO OBO file could not be loaded.')
 
     doid_omim_dict = build_doid_omim_dict(do_obo_file)
 
