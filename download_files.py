@@ -1,8 +1,3 @@
-import os
-import tempfile
-import shutil
-import requests
-import urllib
 from ConfigParser import SafeConfigParser
 from utils import check_create_folder, download_from_url
 
