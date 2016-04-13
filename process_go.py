@@ -4,9 +4,8 @@ from ConfigParser import SafeConfigParser
 
 # Import and set logger
 import logging
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.addHandler(logging.NullHandler())
 
 
 GO_NAMESPACE_MAP = {
@@ -134,6 +133,8 @@ def process_go_terms(species_ini_file):
 
     gene_ontology = go()
     loaded_obo_bool = gene_ontology.load_obo(obo_location)
+    if loaded_obo_bool is False:
+        logger.error('GO OBO file could not be loaded.')
 
     for annotation in annotations:
         (xrdb, xrid, goid, refstring, date) = annotation
