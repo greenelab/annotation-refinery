@@ -1,6 +1,8 @@
 import sys
+
 import logging
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 class idmap:
@@ -46,6 +48,12 @@ class idmap:
 
 
 if __name__ == '__main__':
+
+    # Logging level can be input as an argument to logging.basicConfig()
+    # function to get more logging output (e.g. level=logging.INFO)
+    # The default level is logging.WARNING
+    logging.basicConfig()
+
     from optparse import OptionParser
     usage = "usage: %prog [options]"
     parser = OptionParser(usage, version="%prog dev-unreleased")

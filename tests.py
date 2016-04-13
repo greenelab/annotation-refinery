@@ -4,6 +4,11 @@ from process_kegg import *
 from process_go import *
 from process_do import *
 
+# Import and set logger
+import logging
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
+
 
 class KeggTest(unittest.TestCase):
     """
@@ -595,4 +600,10 @@ class DO_Test(unittest.TestCase):
 
 
 if __name__ == '__main__':
+
+    # Logging level can be input as an argument to logging.basicConfig()
+    # function to get more logging output (e.g. level=logging.INFO)
+    # The default level is logging.WARNING
+    logging.basicConfig(level=logging.INFO)
+
     unittest.main()
