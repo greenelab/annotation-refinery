@@ -101,7 +101,7 @@ def build_mim2entrez_dict(mim2gene_file):
     return mim2entrez_dict
 
 
-class mim_disease:
+class MIMdisease:
     def __init__(self):
         self.mimid = ''
         self.phe_mm = ''  # Phenotype mapping method
@@ -121,7 +121,7 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
 
     Returns:
     mim_diseases -- A dictionary. The keys are MIM disease IDs, and the
-    values are mim_disease objects, defined by the class above.
+    values are MIMdisease objects, defined by the class above.
 
     *N.B. MIM IDs are not all one type of object (unlike Entrez IDs,
     for example) - they can refer to phenotypes/diseases, genes, etc.
@@ -181,7 +181,7 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
                     continue
 
                 if mim_dis_id not in mim_diseases:
-                    mim_diseases[mim_dis_id] = mim_disease()
+                    mim_diseases[mim_dis_id] = MIMdisease()
                     mim_diseases[mim_dis_id].mmid = mim_dis_id
                     mim_diseases[mim_dis_id].phe_mm = mim_phetype
 
@@ -204,7 +204,7 @@ def add_do_term_annotations(doid_omim_dict, disease_ontology, mim_diseases):
     This is actually just a go.go() object (see imports for this file) that
     has parsed a DO OBO file instead of a GO OBO file.
 
-    mim_diseases -- Dictionary of MIM IDs as the keys and mim_disease
+    mim_diseases -- Dictionary of MIM IDs as the keys and MIMdisease
     objects (defined above) as values.
 
     Returns:
