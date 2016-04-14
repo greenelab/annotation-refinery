@@ -1,13 +1,14 @@
 import unittest
 from go import go
-from process_kegg import *
-from process_go import *
-from process_do import *
+from process_kegg import get_kegg_info, get_kegg_sets_members, \
+    get_kegg_set_info, build_kegg_sets, process_kegg_sets
+from process_go import get_filtered_annotations, create_go_term_title, \
+    create_go_term_abstract, process_go_terms
+from process_do import build_doid_omim_dict, build_mim2entrez_dict, \
+    build_mim_diseases_dict, add_do_term_annotations, create_do_term_title, \
+    create_do_term_abstract, process_do_terms
 
-# Import and set logger
 import logging
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 class KeggTest(unittest.TestCase):
@@ -604,6 +605,6 @@ if __name__ == '__main__':
     # Logging level can be input as an argument to logging.basicConfig()
     # function to get more logging output (e.g. level=logging.INFO)
     # The default level is logging.WARNING
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig()
 
     unittest.main()
