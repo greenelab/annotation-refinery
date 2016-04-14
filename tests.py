@@ -1,12 +1,8 @@
 import unittest
 from go import go
-from process_kegg import get_kegg_info, get_kegg_sets_members, \
-    get_kegg_set_info, build_kegg_sets, process_kegg_sets
-from process_go import get_filtered_annotations, create_go_term_title, \
-    create_go_term_abstract, process_go_terms
-from process_do import build_doid_omim_dict, build_mim2entrez_dict, \
-    build_mim_diseases_dict, add_do_term_annotations, create_do_term_title, \
-    create_do_term_abstract, process_do_terms
+import process_kegg
+import process_go
+import process_do
 
 import logging
 
@@ -26,7 +22,8 @@ class KeggTest(unittest.TestCase):
 
     def testGetKeggInfo(self):
         """"""
-        kegg_info = get_kegg_info('test_files/test_keggdb_info.csv')
+        kegg_info = process_kegg.get_kegg_info(
+            'test_files/test_keggdb_info.csv')
 
         desired_output = {
             'brite': '148,770 entries',
@@ -49,8 +46,8 @@ class KeggTest(unittest.TestCase):
     def testGetMembersInKeggSets(self):
         """"""
 
-        kegg_members_dict = get_kegg_sets_members(
-                'test_files/test_kegg_members.csv')
+        kegg_members_dict = process_kegg.get_kegg_sets_members(
+            'test_files/test_kegg_members.csv')
 
         desired_output = {
             'hsa00010': set(['10327', '124', '125', '126', '127', '128', '130',
@@ -62,7 +59,7 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_members_dict, desired_output)
 
     def testGetKeggSetInfo(self):
-        kegg_set_info = get_kegg_set_info(
+        kegg_set_info = process_kegg.get_kegg_set_info(
             'test_files/test_keggset_info_folder/hsa00010')
 
         desired_output = {
@@ -92,11 +89,11 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(kegg_set_info, desired_output)
 
     def testBuildKeggSets(self):
-        kegg_sets_members = get_kegg_sets_members(
+        kegg_sets_members = process_kegg.get_kegg_sets_members(
             'test_files/test_kegg_members.csv')
-        test_keggsets = build_kegg_sets(kegg_sets_members,
-                                        'test_files/test_keggset_info_folder',
-                                        'Homo sapiens')
+        test_keggsets = process_kegg.build_kegg_sets(
+            kegg_sets_members, 'test_files/test_keggset_info_folder',
+            'Homo sapiens')
 
         desired_keggsets = [
             {'kegg_id': 'hsa00010',
@@ -163,7 +160,8 @@ class KeggTest(unittest.TestCase):
         self.assertEqual(test_keggsets, desired_keggsets)
 
     def testProcessKeggSets(self):
-        all_kegg_sets = process_kegg_sets('test_files/test_human.ini')
+        all_kegg_sets = process_kegg.process_kegg_sets(
+            'test_files/test_human.ini')
 
         desired_keggsets = [
             {'kegg_id': 'hsa00010',
@@ -247,8 +245,10 @@ class GO_Test(unittest.TestCase):
     def testGetFilteredAnnotations(self):
         assoc_file = 'test_files/test_go_assoc_file.csv'
         evcodes = 'EXP, IDA, IPI, IMP, IGI, IEP'
-        filtered_annotations = get_filtered_annotations(assoc_file,
-                                                        accepted_evcodes=evcodes)
+
+        filtered_annotations = process_go.get_filtered_annotations(
+            assoc_file, accepted_evcodes=evcodes)
+
         desired_output = [
             ('UniProtKB', 'A0A024QZP7', 'GO:0000004', 'GO_REF:0000052', '20101115'),
             ('UniProtKB', 'A0A024QZP7', 'GO:0000003', 'GO_REF:0000052', '20101115'),
@@ -263,7 +263,7 @@ class GO_Test(unittest.TestCase):
         all_titles = set()
 
         for (term_id, term) in self.gene_ontology.go_terms.iteritems():
-            title = create_go_term_title(term)
+            title = process_go.create_go_term_title(term)
             all_titles.add(title)
 
         desired_output = set([
@@ -275,7 +275,7 @@ class GO_Test(unittest.TestCase):
 
     def testCreateGOTermAbstractNoEvcodes(self):
         go_terms = self.gene_ontology.go_terms
-        abstract = create_go_term_abstract(go_terms['GO:0000001'])
+        abstract = process_go.create_go_term_abstract(go_terms['GO:0000001'])
         desired_output = 'The distribution of mitochondria, including the ' + \
             'mitochondrial genome, into daughter cells after mitosis or ' + \
             'meiosis, mediated by interactions between mitochondria and ' + \
@@ -286,8 +286,9 @@ class GO_Test(unittest.TestCase):
 
     def testCreateGOTermAbstractWithEvcodes(self):
         go_terms = self.gene_ontology.go_terms
-        abstract = create_go_term_abstract(go_terms['GO:0000001'],
-                                           ['IEP', 'IPI', 'IMP'])
+        abstract = process_go.create_go_term_abstract(
+            go_terms['GO:0000001'], ['IEP', 'IPI', 'IMP'])
+
         desired_output = 'The distribution of mitochondria, including the ' + \
             'mitochondrial genome, into daughter cells after mitosis or ' + \
             'meiosis, mediated by interactions between mitochondria and ' + \
@@ -301,7 +302,7 @@ class GO_Test(unittest.TestCase):
     def testProcessGOTerms(self):
         test_ini_file = 'test_files/test_human.ini'
 
-        go_terms = process_go_terms(test_ini_file)
+        go_terms = process_go.process_go_terms(test_ini_file)
 
         desired_output = [
             {'abstract':
@@ -408,7 +409,7 @@ class DO_Test(unittest.TestCase):
     def testBuildOmimDict(self):
         do_obo_file = 'test_files/test_do_obo_file.obo'
 
-        doid_omim_dict = build_doid_omim_dict(do_obo_file)
+        doid_omim_dict = process_do.build_doid_omim_dict(do_obo_file)
 
         # Only one of the DO terms in the test DO OBO file has an
         # OMIM xref
@@ -419,7 +420,7 @@ class DO_Test(unittest.TestCase):
     def testBuildMim2EntrezDict(self):
         mim2gene_file = 'test_files/test_mim2gene.csv'
 
-        mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
+        mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
 
         desired_output = {'100725': '1145', '100730': '1146', '100720': '1144',
                           '100740': '43', '616876': '', '616877': '',
@@ -433,8 +434,9 @@ class DO_Test(unittest.TestCase):
     def testBuildMimDiseasesDict(self):
         mim2gene_file = 'test_files/test_mim2gene.csv'
         genemap_file = 'test_files/test_genemap.csv'
-        mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
-        mim_diseases = build_mim_diseases_dict(genemap_file, mim2entrez_dict)
+        mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
+        mim_diseases = process_do.build_mim_diseases_dict(genemap_file,
+                                                          mim2entrez_dict)
 
         gene_tuples_dict = {}
         for mimid, mimdisease in mim_diseases.iteritems():
@@ -463,17 +465,18 @@ class DO_Test(unittest.TestCase):
 
     def testAddDOTermAnnotations(self):
         do_obo_file = 'test_files/test_do_obo_file.obo'
-        doid_omim_dict = build_doid_omim_dict(do_obo_file)
+        doid_omim_dict = process_do.build_doid_omim_dict(do_obo_file)
 
         # *NOTE: Here we will use an actual downloaded mim2gene.txt file
         # (instead of a test one), so that it gets all the Entrez IDs we need.
         mim2gene_file = 'download_files/DO/mim2gene.txt'
         genemap_file = 'test_files/test_genemap.csv'
-        mim2entrez_dict = build_mim2entrez_dict(mim2gene_file)
-        mim_diseases = build_mim_diseases_dict(genemap_file, mim2entrez_dict)
+        mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
+        mim_diseases = process_do.build_mim_diseases_dict(genemap_file,
+                                                          mim2entrez_dict)
 
-        add_do_term_annotations(doid_omim_dict, self.disease_ontology,
-                                mim_diseases)
+        process_do.add_do_term_annotations(
+            doid_omim_dict, self.disease_ontology, mim_diseases)
 
         # We know from testBuildOmimDict above that this is the only
         # one with OMIM xrefs
@@ -494,7 +497,7 @@ class DO_Test(unittest.TestCase):
         title_set = set()
 
         for term_id, term in self.disease_ontology.go_terms.iteritems():
-            term_title = create_do_term_title(term)
+            term_title = process_do.create_do_term_title(term)
             title_set.add(term_title)
 
         desired_output = set([
@@ -511,14 +514,14 @@ class DO_Test(unittest.TestCase):
 
     def testCreateDOAbstractTitle(self):
         do_obo_file = 'test_files/test_do_obo_file.obo'
-        doid_omim_dict = build_doid_omim_dict(do_obo_file)
+        doid_omim_dict = process_do.build_doid_omim_dict(do_obo_file)
 
         # We know from testBuildOmimDict above that this is the only
         # one with OMIM xrefs
         doid = 'DOID:9970'
         do_term = self.disease_ontology.get_term(doid)
 
-        abstract = create_do_term_abstract(do_term, doid_omim_dict)
+        abstract = process_do.create_do_term_abstract(do_term, doid_omim_dict)
         desired_abstract = ' Annotations from child terms in the disease ' + \
             'ontology are propagated through transitive closure. ' + \
             'Annotations directly to this term are provided by the OMIM' + \
@@ -529,7 +532,7 @@ class DO_Test(unittest.TestCase):
     def testProcessDOTerms(self):
         test_ini_file = 'test_files/test_human.ini'
 
-        do_terms = process_do_terms(test_ini_file)
+        do_terms = process_do.process_do_terms(test_ini_file)
 
         desired_output = [
             {'abstract':
