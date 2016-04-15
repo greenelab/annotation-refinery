@@ -638,8 +638,6 @@ class go:
         relationship = None
         tax_id = None
 
-        only_in_taxon = set([])
-        never_in_taxon = set([])
         for line in f:
             fields = line.rstrip('\n').split()
             if len(fields) == 0:
@@ -804,7 +802,6 @@ class go:
         Return a set of leaf terms in ontology
         """
         leaves = set()
-        bottom = set()
         for term in self.go_terms.values():
             if (len(term.parent_of) == 0 and term.namespace == namespace and
                     len(term.annotations) >= min_annot):
