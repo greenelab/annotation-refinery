@@ -1,5 +1,6 @@
 syntax: glob
 annotenv
 download_files
+secrets.ini
 *.pyc
 *~
