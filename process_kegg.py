@@ -98,15 +98,29 @@ def get_kegg_set_info(kegg_set_info_file):
     kegg_set_info_fh = open(kegg_set_info_file, 'r')
     set_info_dict = {}
 
+    kegg_set_type = None
+    kegg_id = None
+    ks_title = None
+
     for line in kegg_set_info_fh:
         if line.startswith('ENTRY'):
-            set_info_dict['kegg_id'] = line.split()[1]
+            toks = line.split()
+            set_info_dict['kegg_id'] = toks[1]
+            kegg_set_type = toks[2]
         if line.startswith('NAME'):
-            set_info_dict['title'] = ' '.join(line.split()[1:])
+            ks_title = ' '.join(line.split()[1:])
         if line.startswith('DESCRIPTION'):
             set_info_dict['abstract'] = ' '.join(line.split()[1:])
 
-    if 'title' in set_info_dict:
+    if ks_title:
+        if kegg_set_type == 'Module':
+            # Modules are prefixed with species_
+            set_info_dict['kegg_id'] = set_info_dict['kegg_id'].split('_').pop()
+
+        # Make KEGG set title more search-friendly
+        set_info_dict['title'] = 'KEGG-' + kegg_set_type + '-' + \
+            set_info_dict['kegg_id'] + ': ' + ks_title
+
         if 'abstract' not in set_info_dict:
             set_info_dict['abstract'] = ''
     return set_info_dict
