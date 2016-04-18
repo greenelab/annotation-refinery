@@ -65,7 +65,8 @@ class KeggTest(unittest.TestCase):
 
         desired_output = {
             'kegg_id': 'hsa00010',
-            'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
+            'title': 'KEGG-Pathway-hsa00010: Glycolysis / Gluconeogenesis'
+                     ' - Homo sapiens (human)',
             'abstract':
                 'Glycolysis is the process of converting glucose into pyruvate'
                 ' and generating small amounts of ATP (energy) and NADH '
@@ -98,7 +99,8 @@ class KeggTest(unittest.TestCase):
 
         desired_keggsets = [
             {'kegg_id': 'hsa00010',
-             'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
+             'title': 'KEGG-Pathway-hsa00010: Glycolysis / Gluconeogenesis'
+                      ' - Homo sapiens (human)',
              'organism': 'Homo sapiens',
              'abstract':
                  'Glycolysis is the process of converting glucose into '
@@ -127,7 +129,8 @@ class KeggTest(unittest.TestCase):
                              '131': [], '160287': []}},
 
             {'kegg_id': 'hsa00020',
-             'title': 'Citrate cycle (TCA cycle) - Homo sapiens (human)',
+             'title': 'KEGG-Pathway-hsa00020: Citrate cycle (TCA cycle)'
+                      ' - Homo sapiens (human)',
              'organism': 'Homo sapiens',
              'abstract':
                 'The citrate cycle (TCA cycle, Krebs cycle) is an important '
@@ -163,7 +166,8 @@ class KeggTest(unittest.TestCase):
 
         desired_keggsets = [
             {'kegg_id': 'hsa00010',
-             'title': 'Glycolysis / Gluconeogenesis - Homo sapiens (human)',
+             'title': 'KEGG-Pathway-hsa00010: Glycolysis / Gluconeogenesis'
+                      ' - Homo sapiens (human)',
              'organism': 'Homo sapiens',
              'abstract':
                  'Glycolysis is the process of converting glucose into '
@@ -192,7 +196,8 @@ class KeggTest(unittest.TestCase):
                              '131': [], '160287': []}},
 
             {'kegg_id': 'hsa00020',
-             'title': 'Citrate cycle (TCA cycle) - Homo sapiens (human)',
+             'title': 'KEGG-Pathway-hsa00020: Citrate cycle (TCA cycle)'
+                      ' - Homo sapiens (human)',
              'organism': 'Homo sapiens',
              'abstract':
                 'The citrate cycle (TCA cycle, Krebs cycle) is an important '
