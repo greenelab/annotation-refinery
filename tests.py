@@ -606,6 +606,47 @@ class DO_Test(unittest.TestCase):
         self.assertEqual(do_terms, desired_output)
 
 
+class LoaderTest(unittest.TestCase):
+    """
+    Test case for functions that load output from processed files into
+    json and send them to Tribe
+    """
+
+    def setUp(self):
+        """"""
+        pass
+
+    def tearDown(self):
+        """"""
+        pass
+
+    def testLoadKEGGToTribe(self):
+        test_ini_file = 'test_files/test_human.ini'
+        kegg_sets = process_kegg.process_kegg_sets(test_ini_file)
+        geneset_response = loader.load_to_tribe(test_ini_file, kegg_sets[0])
+
+        self.assertEqual(
+            geneset_response['title'], 'KEGG-Pathway-hsa00010: Glycolysis / '
+                                       'Gluconeogenesis - Homo sapiens (human)')
+        self.assertEqual(geneset_response['tip_item_count'], 10)
+
+    def testLoadGOToTribe(self):
+        test_ini_file = 'test_files/test_human.ini'
+        go_terms = process_go.process_go_terms(test_ini_file)
+        geneset_response = loader.load_to_tribe(test_ini_file, go_terms[0])
+
+        self.assertEqual(geneset_response['title'], 'GO-BP-0000006:la liga')
+        self.assertEqual(geneset_response['tip_item_count'], 3)
+
+    def testLoadDOToTribe(self):
+        test_ini_file = 'test_files/test_human.ini'
+        do_terms = process_do.process_do_terms(test_ini_file)
+        geneset_response = loader.load_to_tribe(test_ini_file, do_terms[0])
+
+        self.assertEqual(geneset_response['title'], 'DO-374:nutrition disease')
+        self.assertEqual(geneset_response['tip_item_count'], 6)
+
+
 if __name__ == '__main__':
 
     # Logging level can be input as an argument to logging.basicConfig()
