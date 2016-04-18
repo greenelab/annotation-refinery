@@ -262,6 +262,9 @@ def create_do_term_abstract(do_term, doid_omim_dict):
     Arguments:
     do_term -- This is a go_term object from the go() class (go.go)
 
+    doid_omim_dict -- A dictionary of DO terms mapping to sets of OMIM xrefs.
+    This is returned by the build_doid_omim_dict() function above.
+
     Returns:
     abstract -- A string of the DO term's abstract in the desired format.
     """
@@ -356,10 +359,13 @@ def process_do_terms(species_ini_file):
         do_term['xrdb'] = 'Entrez'
         do_term['organism'] = 'Homo sapiens'  # DO only exists for Homo sapiens
 
-        do_term['annotations'] = set()
+        do_term['annotations'] = {}
 
         for annotation in term.annotations:
-            do_term['annotations'].add((annotation.gid, annotation.ref))
+            if annotation.gid not in do_term['annotations']:
+                do_term['annotations'][annotation.gid] = []
+            else:
+                do_term['annotations'][annotation.gid].append(annotation.ref)
 
         if do_term['annotations']:
             do_terms.append(do_term)

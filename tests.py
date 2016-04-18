@@ -3,6 +3,7 @@ from go import go
 import process_kegg
 import process_go
 import process_do
+import loader
 
 import logging
 
@@ -121,10 +122,9 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': set([('10327', None), ('124', None), ('125', None),
-                                 ('126', None), ('127', None), ('128', None),
-                                 ('130', None), ('130589', None),
-                                 ('131', None), ('160287', None)])},
+             'annotations': {'10327': [], '124': [], '125': [], '126': [],
+                             '127': [], '128': [], '130': [], '130589': [],
+                             '131': [], '160287': []}},
 
             {'kegg_id': 'hsa00020',
              'title': 'Citrate cycle (TCA cycle) - Homo sapiens (human)',
@@ -150,11 +150,9 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': set([('1431', None), ('1737', None),
-                                 ('1738', None), ('1743', None),
-                                 ('2271', None), ('3417', None),
-                                 ('3418', None), ('3419', None),
-                                 ('3420', None), ('3421', None)])}
+             'annotations': {'1431': [], '1737': [], '1738': [], '1743': [],
+                             '2271': [], '3417': [], '3418': [], '3419': [],
+                             '3420': [], '3421': []}}
         ]
 
         self.assertEqual(test_keggsets, desired_keggsets)
@@ -189,10 +187,9 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': set([('10327', None), ('124', None), ('125', None),
-                                 ('126', None), ('127', None), ('128', None),
-                                 ('130', None), ('130589', None),
-                                 ('131', None), ('160287', None)])},
+             'annotations': {'10327': [], '124': [], '125': [], '126': [],
+                             '127': [], '128': [], '130': [], '130589': [],
+                             '131': [], '160287': []}},
 
             {'kegg_id': 'hsa00020',
              'title': 'Citrate cycle (TCA cycle) - Homo sapiens (human)',
@@ -218,11 +215,9 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': set([('1431', None), ('1737', None),
-                                 ('1738', None), ('1743', None),
-                                 ('2271', None), ('3417', None),
-                                 ('3418', None), ('3419', None),
-                                 ('3420', None), ('3421', None)])}
+             'annotations': {'1431': [], '1737': [], '1738': [], '1743': [],
+                             '2271': [], '3417': [], '3418': [], '3419': [],
+                             '3420': [], '3421': []}}
         ]
         self.assertEqual(all_kegg_sets, desired_keggsets)
 
@@ -316,8 +311,8 @@ class GO_Test(unittest.TestCase):
                 'evidence coded as EXP, IDA, IPI, IMP, IGI or IEP are '
                 'included.',
              'organism': 'Homo sapiens',
-             'annotations': set([('A0A024QZP7', None), ('A0A024R216', None),
-                                 ('A0A024R214', None)]),
+             'annotations': {'A0A024QZP7': [], 'A0A024R216': [],
+                             'A0A024R214': []},
              'xrdb': 'UniProtKB',
              'title': 'GO-BP-0000006:la liga'},
             {'abstract':
@@ -331,8 +326,8 @@ class GO_Test(unittest.TestCase):
                 'annotations with evidence coded as EXP, IDA, IPI, IMP, IGI or'
                 ' IEP are included.',
              'organism': 'Homo sapiens',
-             'annotations': set([('A0A024R1V6', None), ('A0A024R214', None),
-                                 ('A0A024QZP7', None), ('A0A024R216', None)]),
+             'annotations': {'A0A024R1V6': [], 'A0A024R214': [],
+                             'A0A024QZP7': [], 'A0A024R216': []},
              'xrdb': 'UniProtKB',
              'title': 'GO-BP-0000007:european team'},
             {'abstract':
@@ -344,7 +339,7 @@ class GO_Test(unittest.TestCase):
                 "GO Consortium. Only annotations with evidence coded as EXP, "
                 "IDA, IPI, IMP, IGI or IEP are included.",
              'organism': 'Homo sapiens',
-             'annotations': set([('A0A024R214', None)]),
+             'annotations': {'A0A024R214': []},
              'xrdb': 'UniProtKB',
              'title': 'GO-BP-0000005:premier league'},
             {'abstract':
@@ -355,7 +350,7 @@ class GO_Test(unittest.TestCase):
                 'Consortium. Only annotations with evidence coded as EXP, '
                 'IDA, IPI, IMP, IGI or IEP are included.',
              'organism': 'Homo sapiens',
-             'annotations': set([('A0A024R214', None)]),
+             'annotations': {'A0A024R214': []},
              'xrdb': 'UniProtKB',
              'title': 'GO-BP-0000002:liverpool'},
             {'abstract':
@@ -366,7 +361,7 @@ class GO_Test(unittest.TestCase):
                 'annotations with evidence coded as EXP, IDA, IPI, IMP, IGI '
                 'or IEP are included.',
              'organism': 'Homo sapiens',
-             'annotations': set([('A0A024QZP7', None), ('A0A024R214', None)]),
+             'annotations': {'A0A024QZP7': [], 'A0A024R214': []},
              'xrdb': 'UniProtKB',
              'title': 'GO-BP-0000003:eibar'},
             {'abstract':
@@ -378,7 +373,7 @@ class GO_Test(unittest.TestCase):
                 ' annotations with evidence coded as EXP, IDA, IPI, IMP, IGI '
                 'or IEP are included.',
              'organism': 'Homo sapiens',
-             'annotations': set([('A0A024R216', None)]),
+             'annotations': {'A0A024R216': []},
              'xrdb': 'UniProtKB',
              'title': 'GO-BP-0000001:barcelona'}]
         self.assertEqual(go_terms, desired_output)
@@ -483,15 +478,18 @@ class DO_Test(unittest.TestCase):
         doid = 'DOID:9970'
         do_term = self.disease_ontology.get_term(doid)
 
-        annotation_set = set()
+        annot_dict = {}
 
         for annotation in do_term.annotations:
-            annotation_set.add((annotation.gid, annotation.ref))
+            if annotation.gid not in annot_dict:
+                annot_dict[annotation.gid] = []
+            else:
+                annot_dict[annotation.gid].append(annotation.ref)
 
-        desired_annots = set([(4160, None), (8431, None), (51738, None),
-                              (5443, None), (5468, None), (6492, None)])
+        desired_annots = {4160: [], 8431: [], 51738: [], 5443: [],
+                          5468: [], 6492: []}
 
-        self.assertEqual(annotation_set, desired_annots)
+        self.assertEqual(annot_dict, desired_annots)
 
     def testCreateDOTermTitle(self):
         title_set = set()
@@ -544,8 +542,8 @@ class DO_Test(unittest.TestCase):
                 'transitive closure. Only annotations with confidence '
                 'labeled C or P by OMIM have been added.',
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
-             'annotations': set([(4160, None), (8431, None), (51738, None),
-                                 (5443, None), (5468, None), (6492, None)]),
+             'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
+                             5468: [], 6492: []},
              'title': 'DO-374:nutrition disease'},
             {'abstract':
                 'A disease that involving errors in metabolic processes of '
@@ -554,16 +552,16 @@ class DO_Test(unittest.TestCase):
                 'transitive closure. Only annotations with confidence labeled'
                 ' C or P by OMIM have been added.',
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
-             'annotations': set([(4160, None), (8431, None), (51738, None),
-                                 (5443, None), (5468, None), (6492, None)]),
+             'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
+                             5468: [], 6492: []},
              'title': 'DO-0014667:disease of metabolism'},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. Only '
                 'annotations with confidence labeled C or P by OMIM have been'
                 ' added.',
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
-             'annotations': set([(4160, None), (8431, None), (51738, None),
-                                (5443, None), (6492, None), (5468, None)]),
+             'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
+                             5468: [], 6492: []},
              'title': 'DO-654:overnutrition'},
             {'abstract':
                 'A disease is a disposition (i) to undergo pathological '
@@ -573,8 +571,8 @@ class DO_Test(unittest.TestCase):
                 'transitive closure. Only annotations with confidence labeled'
                 ' C or P by OMIM have been added.',
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
-             'annotations': set([(4160, None), (8431, None), (51738, None),
-                                 (5443, None), (5468, None), (6492, None)]),
+             'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
+                             5468: [], 6492: []},
              'title': 'DO-4:disease'},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. '
@@ -582,8 +580,8 @@ class DO_Test(unittest.TestCase):
                 'disease ID 601665. Only annotations with confidence labeled C'
                 ' or P by OMIM have been added.',
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
-             'annotations': set([(4160, None), (8431, None), (51738, None),
-                                 (5443, None), (5468, None), (6492, None)]),
+             'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
+                             5468: [], 6492: []},
              'title': 'DO-9970:obesity'},
             {'abstract':
                 'A disease of metabolism that has _material_basis_in enzyme'
@@ -595,8 +593,8 @@ class DO_Test(unittest.TestCase):
                 'closure. Only annotations with confidence labeled C or P by'
                 ' OMIM have been added.',
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
-             'annotations': set([(4160, None), (8431, None), (51738, None),
-                                 (5443, None), (6492, None), (5468, None)]),
+             'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
+                             5468: [], 6492: []},
              'title': 'DO-0060158:acquired metabolic disease'}
         ]
 

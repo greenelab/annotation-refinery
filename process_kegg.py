@@ -126,6 +126,9 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
     have been saved to. The files were saved to this folder by the
     download_kegg_info_files() function if running the full annotation-refinery
 
+    organims -- A string of the scientific name for our desired organism
+    (e.g. 'Homo sapiens')
+
     Returns:
     all_kegg_sets -- A list of processed KEGG sets, where each KEGG set is
     a Python dictionary, containing its title, abstract, and annotations.
@@ -140,10 +143,10 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
         kegg_set_id = kegg_set_info['kegg_id']
 
         kegg_set_info['organism'] = organism
-        kegg_set_info['annotations'] = set()
+        kegg_set_info['annotations'] = {}
 
         for member in kegg_sets_members[kegg_set_id]:
-            kegg_set_info['annotations'].add((member, None))
+            kegg_set_info['annotations'][member] = []
 
         all_kegg_sets.append(kegg_set_info)
 
