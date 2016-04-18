@@ -85,6 +85,8 @@ def create_go_term_abstract(go_term, evlist=None):
     Arguments:
     go_term -- This is a go_term object from the go() class (go.go)
 
+    evlist -- A list of evidence codes we will use to filter the annotations
+
     Returns:
     abstract -- A string of the GO term's abstract in the desired format.
     """
@@ -166,11 +168,14 @@ def process_go_terms(species_ini_file):
         go_term['abstract'] = create_go_term_abstract(term, evcodes)
         go_term['organism'] = organism
 
-        go_term['annotations'] = set()
-
+        go_term['annotations'] = {}
         go_term_xrdb = None
+
         for annotation in term.annotations:
-            go_term['annotations'].add((annotation.gid, annotation.ref))
+            if annotation.gid not in go_term['annotations']:
+                go_term['annotations'][annotation.gid] = []
+            else:
+                go_term['annotations'][annotation.gid].append(annotation.ref)
 
             if annotation.xdb is not None:
                 if go_term_xrdb and go_term_xrdb != annotation.xdb:
