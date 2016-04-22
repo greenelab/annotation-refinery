@@ -74,6 +74,11 @@ def get_kegg_sets_members(kegg_sets_file):
     for line in kegg_sets_fh:
         toks = line.strip().split()
         group = toks[0].split(':')[1]    # group listed first, has prefix
+
+        if toks[0].split(':')[0] == 'md':
+            # Modules are prefixed with species and underscore
+            group = group.split('_').pop()
+
         geneid = toks[1].split(':')[1]  # gene listed second, has prefix
         kegg_set_members[group].add(geneid)
 
@@ -106,17 +111,13 @@ def get_kegg_set_info(kegg_set_info_file):
         if line.startswith('ENTRY'):
             toks = line.split()
             set_info_dict['kegg_id'] = toks[1]
-            kegg_set_type = toks[2]
+            kegg_set_type = toks[-1]
         if line.startswith('NAME'):
             ks_title = ' '.join(line.split()[1:])
         if line.startswith('DESCRIPTION'):
             set_info_dict['abstract'] = ' '.join(line.split()[1:])
 
     if ks_title:
-        if kegg_set_type == 'Module':
-            # Modules are prefixed with species_
-            set_info_dict['kegg_id'] = set_info_dict['kegg_id'].split('_').pop()
-
         # Make KEGG set title more search-friendly
         set_info_dict['title'] = 'KEGG-' + kegg_set_type + '-' + \
             set_info_dict['kegg_id'] + ': ' + ks_title
@@ -200,7 +201,7 @@ def process_kegg_sets(species_ini_file):
     logger.info('KEGG Database info: %s.', kegg_db_info)
 
     all_kegg_sets = []
-    for members_file in kegg_members_files.split(','):
+    for members_file in kegg_members_files.replace(' ', '').split(','):
         kegg_sets_members = get_kegg_sets_members(members_file)
         download_kegg_info_files(kegg_sets_members.keys(), species_ini_file)
         kegg_sets = build_kegg_sets(kegg_sets_members, keggset_info_folder,
