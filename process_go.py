@@ -1,6 +1,8 @@
 import sys
-from go import go
+import gzip
 from ConfigParser import SafeConfigParser
+
+from go import go
 
 # Import and set logger
 import logging
@@ -33,7 +35,7 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None):
     """
 
     annotations = []
-    assoc_fh = open(assoc_file, 'r')
+    assoc_fh = gzip.open(assoc_file, 'r')
 
     for line in assoc_fh:
         if line.startswith('!'):
@@ -179,9 +181,10 @@ def process_go_terms(species_ini_file):
 
             if annotation.xdb is not None:
                 if go_term_xrdb and go_term_xrdb != annotation.xdb:
-                    logger.error("There is more than one xrdb for annotations "
-                                 "in this GO term. Only one of these will be "
-                                 "saved in this GO term's 'xrdb' field.")
+                    logger.info("There is more than one xrdb for annotations "
+                                "in this GO term (%s and %s). Only the first "
+                                "one will be saved in this GO term's 'xrdb' "
+                                "field.", go_term_xrdb, annotation.xdb)
                 else:
                     go_term_xrdb = annotation.xdb
 
