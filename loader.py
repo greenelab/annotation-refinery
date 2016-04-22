@@ -60,3 +60,8 @@ def load_to_tribe(species_ini_file, geneset_info):
                                              tribe_url)
 
     return geneset_response
+
+
+def return_as_json(geneset_info):
+    geneset_json = json.dumps(geneset_info)
+    return geneset_json
