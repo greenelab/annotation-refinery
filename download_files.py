@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def download_all_files(species_ini_file, download_folder):
+def download_all_files(species_ini_file):
     """
     Reads config INI file for a species, which contains the files (and
     their locations, or URLs) that must be loaded for this species, and calls
@@ -16,9 +16,6 @@ def download_all_files(species_ini_file, download_folder):
     Arguments:
     species_ini_file -- Path to the particular species INI file. This
     is a string.
-
-    download_folder -- Path of folder where annotations files will be
-    downloaded to. This is a string.
 
     Returns:
     Nothing, just downloads and saves files to download_folder
@@ -29,42 +26,46 @@ def download_all_files(species_ini_file, download_folder):
     species_file.read(species_ini_file)
 
     if species_file.has_section('GO'):
-        go_dir = species_file.get('GO', 'DOWNLOAD_FOLDER')
-        check_create_folder(go_dir)
+        if species_file.getboolean('GO', 'DOWNLOAD') is True:
+            go_dir = species_file.get('GO', 'DOWNLOAD_FOLDER')
+            check_create_folder(go_dir)
 
-        obo_file = species_file.get('GO', 'GO_OBO_URL')
-        download_from_url(obo_file, go_dir)
+            obo_file = species_file.get('GO', 'GO_OBO_URL')
+            download_from_url(obo_file, go_dir)
 
-        goa_file = species_file.get('GO', 'ASSOC_FILE_URL')
-        download_from_url(goa_file, go_dir)
+            goa_file = species_file.get('GO', 'ASSOC_FILE_URL')
+            download_from_url(goa_file, go_dir)
 
     if species_file.has_section('KEGG'):
-        kegg_dir = species_file.get('KEGG', 'DOWNLOAD_FOLDER')
-        check_create_folder(kegg_dir)
+        if species_file.getboolean('KEGG', 'DOWNLOAD') is True:
 
-        kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
+            kegg_dir = species_file.get('KEGG', 'DOWNLOAD_FOLDER')
+            check_create_folder(kegg_dir)
 
-        kegg_info_url = kegg_root_url + species_file.get('KEGG', 'DB_INFO_URL')
-        download_from_url(kegg_info_url, kegg_dir, 'kegg_db_info')
+            kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
 
-        all_urls = [kegg_root_url + x.strip() for x in species_file.get(
-                'KEGG', 'SETS_TO_DOWNLOAD').split(',')]
+            kegg_info_url = kegg_root_url + species_file.get('KEGG', 'DB_INFO_URL')
+            download_from_url(kegg_info_url, kegg_dir, 'kegg_db_info')
 
-        for kegg_set_url in all_urls:
-            download_from_url(kegg_set_url, kegg_dir)
+            all_set_urls = [kegg_root_url + x.strip() for x in species_file.get(
+                    'KEGG', 'SETS_TO_DOWNLOAD').split(',')]
+
+            for kegg_set_url in all_set_urls:
+                download_from_url(kegg_set_url, kegg_dir)
 
     if species_file.has_section('DO'):
-        do_dir = species_file.get('DO', 'DOWNLOAD_FOLDER')
-        check_create_folder(do_dir)
+        if species_file.getboolean('DO', 'DOWNLOAD') is True:
+            do_dir = species_file.get('DO', 'DOWNLOAD_FOLDER')
+            check_create_folder(do_dir)
 
-        obo_file = species_file.get('DO', 'DO_OBO_URL')
-        download_from_url(obo_file, do_dir)
+            obo_file = species_file.get('DO', 'DO_OBO_URL')
+            download_from_url(obo_file, do_dir)
 
-        mim2gene_file = species_file.get('DO', 'MIM2GENE_URL')
-        download_from_url(mim2gene_file, do_dir)
+            mim2gene_file = species_file.get('DO', 'MIM2GENE_URL')
+            download_from_url(mim2gene_file, do_dir)
 
-        genemap_file = species_file.get('DO', 'GENEMAP_URL')
-        download_from_url(genemap_file, do_dir)
+            genemap_file = species_file.get('DO', 'GENEMAP_URL')
+            download_from_url(genemap_file, do_dir)
 
 
 def download_kegg_info_files(kegg_set_ids, species_ini_file):
