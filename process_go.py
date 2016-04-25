@@ -34,8 +34,12 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None):
     contain: (<crossrefDB>, <crossrefID>, <goid>, <refstring>, <date>)
     """
 
+    if assoc_file.endswith('.gz'):
+        assoc_fh = gzip.open(assoc_file, 'r')
+    else:
+        assoc_fh = open(assoc_file, 'r')
+
     annotations = []
-    assoc_fh = gzip.open(assoc_file, 'r')
 
     for line in assoc_fh:
         if line.startswith('!'):
