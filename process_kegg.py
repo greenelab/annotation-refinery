@@ -134,8 +134,8 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
     for KEGG sets of a specific type.
 
     Arguments:
-    members_file -- This is a string, and is the name of the file containing
-    all members in all KEGG sets for a specific type of KEGG set (e.g. pathway)
+    kegg_sets_members -- This is a dictionary of each KEGG set ID as a key
+    and the members in that set as the value.
 
     keggset_info_folder -- A string - folder where all KEGG set info files
     have been saved to. The files were saved to this folder by the
@@ -152,15 +152,17 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
 
     all_kegg_sets = []
 
-    for info_file in glob.glob(keggset_info_folder + '/*'):
-
+    for kegg_id in kegg_sets_members.keys():
+        info_file = keggset_info_folder + '/' + kegg_id
         kegg_set_info = get_kegg_set_info(info_file)
-        kegg_set_id = kegg_set_info['kegg_id']
 
         kegg_set_info['organism'] = organism
         kegg_set_info['annotations'] = {}
 
-        for member in kegg_sets_members[kegg_set_id]:
+        # This following loop fills out annotations. Since KEGG sets do not
+        # have publications associated with their genes, each gene will have
+        # an empty list as a value in the set's annotations.
+        for member in kegg_sets_members[kegg_id]:
             kegg_set_info['annotations'][member] = []
 
         all_kegg_sets.append(kegg_set_info)
