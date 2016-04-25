@@ -8,6 +8,7 @@ from process_kegg import process_kegg_sets
 from process_go import process_go_terms
 from process_do import process_do_terms
 from utils import check_create_folder
+from loader import load_to_tribe
 
 # Import and set logger
 import logging
@@ -20,7 +21,7 @@ if __name__ == "__main__":
     # Logging level can be input as an argument to logging.basicConfig()
     # function to get more logging output (e.g. level=logging.INFO)
     # The default level is logging.WARNING
-    logging.basicConfig()  # )level=logging.INFO)
+    logging.basicConfig()
 
     parser = argparse.ArgumentParser(
         description='Package to download and process knowledge in annotations '
@@ -48,7 +49,8 @@ if __name__ == "__main__":
                      ' of annotation.')
         sys.exit(1)
 
-    download_folder = species_file.get('download_folder', 'BASE_DOWNLOAD_FOLDER')
+    download_folder = species_file.get('download_folder',
+                                       'BASE_DOWNLOAD_FOLDER')
     check_create_folder(download_folder)
 
     download_all_files(ini_file_path)
@@ -56,3 +58,12 @@ if __name__ == "__main__":
     all_kegg_sets = process_kegg_sets(ini_file_path)
     all_go_terms = process_go_terms(ini_file_path)
     all_do_terms = process_do_terms(ini_file_path)
+
+    for term in all_kegg_sets:
+        load_to_tribe(ini_file_path, term)
+
+    for term in all_go_terms:
+        load_to_tribe(ini_file_path, term)
+
+    for term in all_do_terms:
+        load_to_tribe(ini_file_path, term)
