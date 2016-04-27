@@ -3,6 +3,7 @@ import gzip
 from ConfigParser import SafeConfigParser
 
 from go import go
+from utils import build_tags_dictionary
 
 # Import and set logger
 import logging
@@ -164,6 +165,17 @@ def process_go_terms(species_ini_file):
 
     GO_terms = []
 
+    tags_dictionary = None
+    if species_file.has_option('GO', 'TAG_MAPPING_FILE'):
+        tag_mapping_file = species_file.get('GO', 'TAG_MAPPING_FILE')
+        go_id_column = species_file.getint('GO', 'GO_ID_COLUMN')
+        go_name_column = species_file.getint('GO', 'GO_NAME_COLUMN')
+        tag_column = species_file.getint('GO', 'TAG_COLUMN')
+        header = species_file.getboolean('GO', 'TAG_FILE_HEADER')
+
+        tags_dictionary = build_tags_dictionary(
+            tag_mapping_file, go_id_column, go_name_column, tag_column, header)
+
     for (term_id, term) in gene_ontology.go_terms.iteritems():
 
         if not term.annotations:
@@ -195,6 +207,9 @@ def process_go_terms(species_ini_file):
         go_term['xrdb'] = go_term_xrdb
 
         if go_term['annotations']:
+            if tags_dictionary:
+                if term_id in tags_dictionary:
+                    go_term['tags'] = tags_dictionary[term_id]
             GO_terms.append(go_term)
 
     return GO_terms
