@@ -3,6 +3,7 @@ import tempfile
 import shutil
 import requests
 import urllib
+from ConfigParser import SafeConfigParser
 
 import logging
 logger = logging.getLogger(__name__)
@@ -86,3 +87,29 @@ def download_from_url(url, download_folder, file_name=None):
         logger.error('There was an error when downloading the file "' +
                      filename + '" - downloading could not be completed.')
         return False
+
+
+def build_tags_dictionary(tag_mapping_file, geneset_id_column,
+                          geneset_name_column, tag_column, header):
+
+    tags_dict = {}
+    tag_file_fh = open(tag_mapping_file, 'r')
+
+    if header:
+        tag_file_fh.next()
+
+    for line in tag_file_fh:
+        toks = line.strip().split('\t')
+        gs_id = toks[geneset_id_column]
+        gs_name = toks[geneset_name_column]
+        # Underscores may be used in files in place of spaces
+        gs_name = gs_name.replace('_', ' ')
+        gs_tag = toks[tag_column]
+
+        if gs_id not in tags_dict:
+            tags_dict[gs_id] = {'gs_name': gs_name, 'gs_tags': [gs_tag]}
+        else:
+            tags_dict[gs_id]['gs_tags'].append(gs_tag)
+
+    tag_file_fh.close()
+    return tags_dict
