@@ -1,0 +1,19 @@
+#tissue.id	Term	go.id	go.term
+BTO:0000040	alpha	GO:0000001	barcelona
+BTO:0000040	beta	GO:0000001	barcelona
+BTO:0000040	gamma	GO:0000001	barcelona
+BTO:0000040	delta	GO:0000002	liverpool
+BTO:0000040	epsilon	GO:0000002	liverpool
+BTO:0000040	zeta	GO:0000002	liverpool
+BTO:0000040	eta	GO:0000003	eibar
+BTO:0000040	theta	GO:0000003	eibar
+BTO:0000040	iota	GO:0000003	eibar
+BTO:0000040	kappa	GO:0000004	bayern munich
+BTO:0000040	lambda	GO:0000005	premier league
+BTO:0001487	mu	GO:0000005	premier league
+BTO:0001487	nu	GO:0000005	premier league
+BTO:0000379	xi	GO:0000006	la liga
+BTO:0000379	omicron	GO:0000006	la liga
+BTO:0000379	pi	GO:0000006	la liga
+BTO:0000379	rho	GO:0000007	european team
+BTO:0000379	sigma	GO:0000007	european team
