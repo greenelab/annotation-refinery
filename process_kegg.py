@@ -2,7 +2,10 @@ import sys
 import glob
 from collections import defaultdict
 from ConfigParser import SafeConfigParser
+
 from download_files import download_kegg_info_files
+from utils import build_tags_dictionary
+from go import go
 
 # Import and set logger
 import logging
@@ -127,7 +130,8 @@ def get_kegg_set_info(kegg_set_info_file):
     return set_info_dict
 
 
-def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
+def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism,
+                    tags_dictionary=None):
     """
     Function to build all KEGG sets **for a given set type** (e.g. pathway,
     module, disease, etc.), since members_file will only contain members
@@ -143,6 +147,9 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
 
     organims -- A string of the scientific name for our desired organism
     (e.g. 'Homo sapiens')
+
+    tags_dictionary -- A dictionary of tags to be added to the KEGG sets,
+    made by the utils.build_tags_dictionary() function
 
     Returns:
     all_kegg_sets -- A list of processed KEGG sets, where each KEGG set is
@@ -164,6 +171,10 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
         # an empty list as a value in the set's annotations.
         for member in kegg_sets_members[kegg_id]:
             kegg_set_info['annotations'][member] = []
+
+        if tags_dictionary:
+            if kegg_id in tags_dictionary:
+                kegg_set_info['tags'] = tags_dictionary[kegg_id]['gs_tags']
 
         all_kegg_sets.append(kegg_set_info)
 
@@ -202,11 +213,24 @@ def process_kegg_sets(species_ini_file):
     logger.info('Working with KEGG release %s.', kegg_db_info['release'])
     logger.info('KEGG Database info: %s.', kegg_db_info)
 
+    tags_dictionary = None
+    if species_file.has_option('KEGG', 'TAG_MAPPING_FILE'):
+        tag_mapping_file = species_file.get('KEGG', 'TAG_MAPPING_FILE')
+        kegg_id_column = species_file.getint('KEGG', 'KEGG_ID_COLUMN')
+        kegg_name_column = species_file.getint('KEGG', 'KEGG_NAME_COLUMN')
+        tag_column = species_file.getint('KEGG', 'TAG_COLUMN')
+        header = species_file.getboolean('KEGG', 'TAG_FILE_HEADER')
+
+        tags_dictionary = build_tags_dictionary(tag_mapping_file,
+                                                kegg_id_column,
+                                                kegg_name_column, tag_column,
+                                                header)
+
     all_kegg_sets = []
     for members_file in kegg_members_files.replace(' ', '').split(','):
         kegg_sets_members = get_kegg_sets_members(members_file)
         download_kegg_info_files(kegg_sets_members.keys(), species_ini_file)
         kegg_sets = build_kegg_sets(kegg_sets_members, keggset_info_folder,
-                                    organism)
+                                    organism, tags_dictionary)
         all_kegg_sets.extend(kegg_sets)
     return all_kegg_sets
