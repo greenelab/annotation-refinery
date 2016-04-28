@@ -28,7 +28,7 @@ def load_to_tribe(species_ini_file, geneset_info):
 
     tribe_url = species_file.get('Tribe parameters', 'TRIBE_URL')
 
-    secrets_location = species_file.get('Tribe parameters', 'SECRETS_FILE')
+    secrets_location = species_file.get('species_info', 'SECRETS_FILE')
     secrets_file = SafeConfigParser()
     secrets_file.read(secrets_location)
 
