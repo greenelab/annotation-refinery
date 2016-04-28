@@ -1,0 +1,10 @@
+#Tis.ID	Tis.Name	Dis.ID	Dis.Name
+BTO:0000887	alpha	hsa00010	Glycolysis / Gluconeogenesis - Homo sapiens (human)
+BTO:0000199	beta	hsa00010	Glycolysis / Gluconeogenesis - Homo sapiens (human)
+BTO:0001539	gamma	hsa00010	Glycolysis / Gluconeogenesis - Homo sapiens (human)
+BTO:0000562	delta	hsa00010	Glycolysis / Gluconeogenesis - Homo sapiens (human)
+BTO:0000478	epsilon	hsa00020	Citrate cycle (TCA cycle) - Homo sapiens (human)
+BTO:0001484	zeta	hsa00020	Citrate cycle (TCA cycle) - Homo sapiens (human)
+BTO:0000239	eta	hsa00020	Citrate cycle (TCA cycle) - Homo sapiens (human)
+BTO:0000227	theta	hsa00020	Citrate cycle (TCA cycle) - Homo sapiens (human)
+BTO:0000235	iota	hsa00020	Citrate cycle (TCA cycle) - Homo sapiens (human)

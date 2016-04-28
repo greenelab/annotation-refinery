@@ -193,7 +193,9 @@ class KeggTest(unittest.TestCase):
              # for this KEGG set
              'annotations': {'10327': [], '124': [], '125': [], '126': [],
                              '127': [], '128': [], '130': [], '130589': [],
-                             '131': [], '160287': []}},
+                             '131': [], '160287': []},
+             # Tags added from test_KEGG_tags.txt mapping file
+             'tags': ['alpha', 'beta', 'gamma', 'delta']},
 
             {'kegg_id': 'hsa00020',
              'title': 'KEGG-Pathway-hsa00020: Citrate cycle (TCA cycle)'
@@ -222,7 +224,10 @@ class KeggTest(unittest.TestCase):
              # for this KEGG set
              'annotations': {'1431': [], '1737': [], '1738': [], '1743': [],
                              '2271': [], '3417': [], '3418': [], '3419': [],
-                             '3420': [], '3421': []}}
+                             '3420': [], '3421': []},
+             # Tags added from test_KEGG_tags.txt mapping file
+             'tags': ['epsilon', 'zeta', 'eta', 'theta', 'iota']
+             }
         ]
         self.assertEqual(all_kegg_sets, desired_keggsets)
 
@@ -319,7 +324,8 @@ class GO_Test(unittest.TestCase):
              'annotations': {'A0A024QZP7': [], 'A0A024R216': [],
                              'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000006:la liga'},
+             'title': 'GO-BP-0000006:la liga',
+             'tags': ['xi', 'omicron', 'pi']},
             {'abstract':
                 'Catalysis of the transfer of a solute or solutes '
                 'from one side of a membrane to the other according to the '
@@ -334,7 +340,8 @@ class GO_Test(unittest.TestCase):
              'annotations': {'A0A024R1V6': [], 'A0A024R214': [],
                              'A0A024QZP7': [], 'A0A024R216': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000007:european team'},
+             'title': 'GO-BP-0000007:european team',
+             'tags': ['rho', 'sigma']},
             {'abstract':
                 "RZ - We're making this bogus term not OBSOLETE. Assists in "
                 "the correct assembly of ribosomes or ribosomal subunits in "
@@ -346,7 +353,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000005:premier league'},
+             'title': 'GO-BP-0000005:premier league',
+             'tags': ['lambda', 'mu', 'nu']},
             {'abstract':
                 'The maintenance of the structure and integrity of the '
                 'mitochondrial genome; includes replication and segregation of'
@@ -357,7 +365,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000002:liverpool'},
+             'title': 'GO-BP-0000002:liverpool',
+             'tags': ['delta', 'epsilon', 'zeta']},
             {'abstract':
                 'The production of new individuals that contain some portion '
                 'of genetic material inherited from one or more parent '
@@ -368,7 +377,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024QZP7': [], 'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000003:eibar'},
+             'title': 'GO-BP-0000003:eibar',
+             'tags': ['eta', 'theta', 'iota']},
             {'abstract':
                 'The distribution of mitochondria, including the '
                 'mitochondrial genome, into daughter cells after mitosis or '
@@ -380,7 +390,10 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024R216': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000001:barcelona'}]
+             'title': 'GO-BP-0000001:barcelona',
+             'tags': ['alpha', 'beta', 'gamma']}
+        ]
+
         self.assertEqual(go_terms, desired_output)
 
     def testHeadTermOBOFile(self):
@@ -549,7 +562,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-374:nutrition disease'},
+             'title': 'DO-374:nutrition disease',
+             'tags': ['epsilon', 'zeta', 'eta', 'theta']},
             {'abstract':
                 'A disease that involving errors in metabolic processes of '
                 'building or degradation of molecules. Annotations from child'
@@ -559,7 +573,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-0014667:disease of metabolism'},
+             'title': 'DO-0014667:disease of metabolism',
+             'tags': ['alpha', 'beta', 'gamma', 'delta']},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. Only '
                 'annotations with confidence labeled C or P by OMIM have been'
@@ -567,7 +582,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-654:overnutrition'},
+             'title': 'DO-654:overnutrition',
+             'tags': ['nu', 'xi', 'omicron', 'omega']},
             {'abstract':
                 'A disease is a disposition (i) to undergo pathological '
                 'processes that (ii) exists in an organism because of one or'
@@ -578,7 +594,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-4:disease'},
+             'title': 'DO-4:disease',
+             'tags': ['iota', 'kappa', 'lambda', 'mu']},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. '
                 'Annotations directly to this term are provided by the OMIM '
@@ -587,7 +604,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-9970:obesity'},
+             'title': 'DO-9970:obesity',
+             'tags': ['upsilon', 'phi', 'chi', 'psi']},
             {'abstract':
                 'A disease of metabolism that has _material_basis_in enzyme'
                 ' deficiency or accumulation of enzymes or toxins which '
@@ -600,7 +618,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-0060158:acquired metabolic disease'}
+             'title': 'DO-0060158:acquired metabolic disease',
+             'tags': ['pi', 'rho', 'sigma', 'tau']}
         ]
 
         self.assertEqual(do_terms, desired_output)
