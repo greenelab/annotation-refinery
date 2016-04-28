@@ -26,25 +26,26 @@ def download_all_files(species_ini_file):
     species_file.read(species_ini_file)
 
     if species_file.has_section('GO'):
-        if species_file.getboolean('GO', 'DOWNLOAD') is True:
+        if species_file.getboolean('GO', 'DOWNLOAD'):
             go_dir = species_file.get('GO', 'DOWNLOAD_FOLDER')
             check_create_folder(go_dir)
 
-            obo_file = species_file.get('GO', 'GO_OBO_URL')
-            download_from_url(obo_file, go_dir)
+            obo_url = species_file.get('GO', 'GO_OBO_URL')
+            download_from_url(obo_url, go_dir)
 
-            goa_file = species_file.get('GO', 'ASSOC_FILE_URL')
-            download_from_url(goa_file, go_dir)
+            goa_url = species_file.get('GO', 'ASSOC_FILE_URL')
+            download_from_url(goa_url, go_dir)
 
     if species_file.has_section('KEGG'):
-        if species_file.getboolean('KEGG', 'DOWNLOAD') is True:
+        if species_file.getboolean('KEGG', 'DOWNLOAD'):
 
             kegg_dir = species_file.get('KEGG', 'DOWNLOAD_FOLDER')
             check_create_folder(kegg_dir)
 
             kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
 
-            kegg_info_url = kegg_root_url + species_file.get('KEGG', 'DB_INFO_URL')
+            kegg_info_url = kegg_root_url + species_file.get('KEGG',
+                                                             'DB_INFO_URL')
             download_from_url(kegg_info_url, kegg_dir, 'kegg_db_info')
 
             all_set_urls = [kegg_root_url + x.strip() for x in species_file.get(
@@ -54,18 +55,36 @@ def download_all_files(species_ini_file):
                 download_from_url(kegg_set_url, kegg_dir)
 
     if species_file.has_section('DO'):
-        if species_file.getboolean('DO', 'DOWNLOAD') is True:
+        if species_file.getboolean('DO', 'DOWNLOAD'):
             do_dir = species_file.get('DO', 'DOWNLOAD_FOLDER')
             check_create_folder(do_dir)
 
-            obo_file = species_file.get('DO', 'DO_OBO_URL')
-            download_from_url(obo_file, do_dir)
+            obo_url = species_file.get('DO', 'DO_OBO_URL')
+            download_from_url(obo_url, do_dir)
 
-            mim2gene_file = species_file.get('DO', 'MIM2GENE_URL')
-            download_from_url(mim2gene_file, do_dir)
+            mim2gene_url = species_file.get('DO', 'MIM2GENE_URL')
+            download_from_url(mim2gene_url, do_dir)
 
-            genemap_file = species_file.get('DO', 'GENEMAP_URL')
-            download_from_url(genemap_file, do_dir)
+            # The genemap_file needs a special Secret Key, which must be
+            # retrieved from the secrets file if the user wishes to download
+            # the genemap_file
+            genemap_url = species_file.get('DO', 'GENEMAP_URL')
+
+            secrets_location = species_file.get('species_info', 'SECRETS_FILE')
+            secrets_file = SafeConfigParser()
+            secrets_file.read(secrets_location)
+
+            if not secrets_file.has_section('OMIM API secrets'):
+                logger.error('Secrets file has no "OMIM API secrets" section,'
+                             'which is required to download the genemap file '
+                             ' to process Disease Ontology.')
+                sys.exit(1)
+
+            omim_secret_key = secrets_file.get('OMIM API secrets',
+                                               'SECRET_KEY')
+            genemap_url = genemap_url.replace('<SecretKey>', omim_secret_key)
+
+            download_from_url(genemap_url, do_dir)
 
 
 def download_kegg_info_files(kegg_set_ids, species_ini_file):
