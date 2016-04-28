@@ -1,7 +1,9 @@
 import re
 import sys
-from go import go
 from ConfigParser import SafeConfigParser
+
+from go import go
+from utils import build_tags_dictionary
 
 # Import and set logger
 import logging
@@ -348,6 +350,17 @@ def process_do_terms(species_ini_file):
     disease_ontology.populated = True
     disease_ontology.propagate()
 
+    tags_dictionary = None
+    if species_file.has_option('DO', 'TAG_MAPPING_FILE'):
+        tag_mapping_file = species_file.get('DO', 'TAG_MAPPING_FILE')
+        do_id_column = species_file.getint('DO', 'DO_ID_COLUMN')
+        do_name_column = species_file.getint('DO', 'DO_NAME_COLUMN')
+        tag_column = species_file.getint('DO', 'TAG_COLUMN')
+        header = species_file.getboolean('DO', 'TAG_FILE_HEADER')
+
+        tags_dictionary = build_tags_dictionary(
+            tag_mapping_file, do_id_column, do_name_column, tag_column, header)
+
     do_terms = []
 
     for term_id, term in disease_ontology.go_terms.iteritems():
@@ -368,6 +381,9 @@ def process_do_terms(species_ini_file):
                 do_term['annotations'][annotation.gid].append(annotation.ref)
 
         if do_term['annotations']:
+            if tags_dictionary:
+                if term_id in tags_dictionary:
+                    do_term['tags'] = tags_dictionary[term_id]['gs_tags']
             do_terms.append(do_term)
 
     return do_terms
