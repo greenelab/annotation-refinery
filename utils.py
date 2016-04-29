@@ -53,8 +53,8 @@ def download_from_url(url, download_folder, file_name=None):
     target_filename = download_folder + '/' + filename
 
     if os.path.exists(target_filename):
-        logger.error('Not downloading file ' + filename + ', as it already'
-                     ' exists in the download_folder specified.')
+        logger.warning('Not downloading file ' + filename + ', as it already'
+                       ' exists in the download_folder specified.')
         return False
 
     try:
