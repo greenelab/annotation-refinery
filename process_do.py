@@ -94,6 +94,9 @@ def build_mim2entrez_dict(mim2gene_file):
         except IndexError:
             continue
 
+        if entrez_gid == '':
+            continue
+
         if mim_type in TYPE_FILTER:
             if mim in mim2entrez_dict:
                 logger.warning("MIM already exists in mim2entrez_dict: %s", mim)
@@ -182,7 +185,7 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
 
                 if mim_dis_id not in mim_diseases:
                     mim_diseases[mim_dis_id] = MIMdisease()
-                    mim_diseases[mim_dis_id].mmid = mim_dis_id
+                    mim_diseases[mim_dis_id].mimid = mim_dis_id
                     mim_diseases[mim_dis_id].phe_mm = mim_phetype
 
                 if tuple_gid_conf not in mim_diseases[mim_dis_id].genetuples:
