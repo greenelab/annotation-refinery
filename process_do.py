@@ -94,10 +94,11 @@ def build_mim2entrez_dict(mim2gene_file):
         except IndexError:
             continue
 
-        if entrez_gid == '':
-            continue
-
         if mim_type in TYPE_FILTER:
+            if entrez_gid == '':
+                logger.warning("Gene Entrez ID was blank for MIM ID '%s' in %s"
+                               " mim-to-gene mapping file", mim, mim2gene_file)
+                continue
             if mim in mim2entrez_dict:
                 logger.warning("MIM already exists in mim2entrez_dict: %s", mim)
             mim2entrez_dict[mim] = entrez_gid
