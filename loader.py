@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def load_to_tribe(species_ini_file, geneset_info):
+def load_to_tribe(main_config_file, geneset_info):
     try:
         from tribe_client.utils import obtain_token_using_credentials, \
             create_remote_geneset
@@ -18,17 +18,17 @@ def load_to_tribe(species_ini_file, geneset_info):
                      ' proceed.')
         sys.exit(1)
 
-    species_file = SafeConfigParser()
-    species_file.read(species_ini_file)
+    mc_file = SafeConfigParser()
+    mc_file.read(main_config_file)
 
-    if not species_file.has_section('Tribe parameters'):
-        logger.error('Species INI file has no "Tribe parameters" section, '
-                     'which is needed to run the load_to_Tribe function.')
+    if not mc_file.has_section('Tribe parameters'):
+        logger.error('Main INI config file has no "Tribe parameters" section, '
+                     'which is needed to run the load_to_tribe function.')
         sys.exit(1)
 
-    tribe_url = species_file.get('Tribe parameters', 'TRIBE_URL')
+    tribe_url = mc_file.get('Tribe parameters', 'TRIBE_URL')
 
-    secrets_location = species_file.get('species_info', 'SECRETS_FILE')
+    secrets_location = mc_file.get('main', 'SECRETS_FILE')
     secrets_file = SafeConfigParser()
     secrets_file.read(secrets_location)
 
