@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def download_all_files(species_ini_file):
+def download_all_files(species_ini_file, secrets_location=None):
     """
     Reads config INI file for a species, which contains the files (and
     their locations, or URLs) that must be loaded for this species, and calls
@@ -70,7 +70,14 @@ def download_all_files(species_ini_file):
             # the genemap_file
             genemap_url = species_file.get('DO', 'GENEMAP_URL')
 
-            secrets_location = species_file.get('species_info', 'SECRETS_FILE')
+            if not secrets_location:
+                logger.error('Secrets file was not passed to '
+                             'download_all_files() function. A secrets file '
+                             'containing an OMIM API secret key is required to'
+                             ' download the genemap file to process Disease '
+                             'Ontology.')
+                sys.exit(1)
+
             secrets_file = SafeConfigParser()
             secrets_file.read(secrets_location)
 
