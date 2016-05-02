@@ -29,41 +29,61 @@ if __name__ == "__main__":
 
     parser.add_argument(
         '-i', '--INI_file', required=True, dest='ini_file_path',
-        help='INI config file with locations of desired files.')
+        help='Main INI configuration file containing settings to run refinery.'
+        ' Please consult our README for additional documentation.')
 
     args = parser.parse_args()
     ini_file_path = args.ini_file_path
 
     if not os.path.isfile(ini_file_path):
-        logger.error('Species INI file not found in this path: ' +
+        logger.error('Main INI configuration file not found in this path: ' +
                      ini_file_path)
         sys.exit(1)
 
-    species_file = SafeConfigParser()
-    species_file.read(ini_file_path)
+    main_config_file = SafeConfigParser()
+    main_config_file.read(ini_file_path)
 
-    if not species_file.has_option('download_folder', 'BASE_DOWNLOAD_FOLDER'):
-        logger.error('Species INI file must have a "download_folder" section, '
-                     'which must contain a "BASE_DOWNLOAD_FOLDER" parameter'
-                     ' where download folders will be created for each type'
-                     ' of annotation.')
+    if not main_config_file.has_option('download_folder',
+                                       'BASE_DOWNLOAD_FOLDER'):
+        logger.error('Main configuration file must have a "download_folder" '
+                     'section, which must contain a "BASE_DOWNLOAD_FOLDER" '
+                     'parameter where download folders will be created for '
+                     'each type of annotation.')
         sys.exit(1)
 
-    download_folder = species_file.get('download_folder',
-                                       'BASE_DOWNLOAD_FOLDER')
+    download_folder = main_config_file.get('download_folder',
+                                           'BASE_DOWNLOAD_FOLDER')
     check_create_folder(download_folder)
 
-    download_all_files(ini_file_path)
+    species_files = main_config_file.get('species files', 'SPECIES_FILES')
 
-    all_kegg_sets = process_kegg_sets(ini_file_path)
-    all_go_terms = process_go_terms(ini_file_path)
-    all_do_terms = process_do_terms(ini_file_path)
+    secrets_file = None
+    if main_config_file.has_option('main', 'SECRETS_FILE'):
+        secrets_file = main_config_file.get('main', 'SECRETS_FILE')
 
-    for term in all_kegg_sets:
-        load_to_tribe(ini_file_path, term)
+    process_to = main_config_file.get('main', 'PROCESS_TO')
 
-    for term in all_go_terms:
-        load_to_tribe(ini_file_path, term)
+    # Make a list of the locations of all species files:
+    species_files = species_files.replace(' ', '').split(',')
 
-    for term in all_do_terms:
-        load_to_tribe(ini_file_path, term)
+    for species_file in species_files:
+
+        download_all_files(species_file, secrets_location=secrets_file)
+
+        all_genesets = []
+
+        if species_file.has_section('GO'):
+            all_go_terms = process_go_terms(species_file)
+            all_genesets.extend(all_go_terms)
+
+        if species_file.has_section('KEGG'):
+            all_kegg_sets = process_kegg_sets(species_file)
+            all_genesets.extend(all_kegg_sets)
+
+        if species_file.has_section('DO'):
+            all_do_terms = process_do_terms(species_file)
+            all_genesets.extend(all_do_terms)
+
+        if process_to == 'Tribe':
+            for geneset in all_genesets:
+                load_to_tribe(ini_file_path, geneset)
