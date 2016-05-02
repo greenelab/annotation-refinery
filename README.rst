@@ -20,7 +20,7 @@ directory to run:
    they want the refinery to process.
 
 
-Optionally there can also be a ``secrets.ini`` file, which stores values like
+Optionally, there can also be a ``secrets.ini`` file, which stores values like
 usernames and passwords for access to restricted URLs.
 
 Examples of these files are in the main repository.
