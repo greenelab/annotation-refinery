@@ -55,13 +55,13 @@ if __name__ == "__main__":
                                            'BASE_DOWNLOAD_FOLDER')
     check_create_folder(download_folder)
 
-    species_files = main_config_file.get('species files', 'SPECIES_FILES')
-
     secrets_file = None
     if main_config_file.has_option('main', 'SECRETS_FILE'):
         secrets_file = main_config_file.get('main', 'SECRETS_FILE')
 
     process_to = main_config_file.get('main', 'PROCESS_TO')
+
+    species_files = main_config_file.get('species files', 'SPECIES_FILES')
 
     # Make a list of the locations of all species files:
     species_files = species_files.replace(' ', '').split(',')
