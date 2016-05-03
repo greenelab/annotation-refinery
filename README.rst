@@ -28,6 +28,11 @@ usernames and passwords for access to restricted URLs.
 The Main Configuration File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The main configuration file includes settings like the location(s) of the
+species file(s), where the output of the refinery (the processed genesets)
+should be loaded to, where annotation files should be downloaded to, 
+and optionally, the location of the secrets file.
+
 .. code-block::
 
     [main]
@@ -51,6 +56,9 @@ The Main Configuration File
 
 The Species File(s)
 ~~~~~~~~~~~~~~~~~~~
+
+Each species file should contain the URLs of the desired annotation files to be
+downloaded.
 
 .. code-block::
 
@@ -95,6 +103,9 @@ The Species File(s)
 The Secrets File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The secrets file contains things like usernames and passwords for databases,
+secret keys for APIs where annotation files will be downloaded from, etc.
+
 .. code-block::
 
     [OMIM API secrets]
@@ -108,8 +119,8 @@ The Secrets File
     PASSWORD: password
 
 
-Instructions for getting the Tribe secrets can be found here:
-http://tribe-greenelab.readthedocs.io/en/latest/api.html#creating-new-resources-through-tribe-s-api
-
 Instructions for getting an OMIM API secret key can be found here:
 http://omim.org/downloads
+
+Instructions for getting the Tribe secrets can be found here:
+http://tribe-greenelab.readthedocs.io/en/latest/api.html#creating-new-resources-through-tribe-s-api
