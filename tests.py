@@ -302,7 +302,7 @@ class GO_Test(unittest.TestCase):
     def testProcessGOTerms(self):
         test_ini_file = 'test_files/test_human.ini'
 
-        go_terms = process_go.process_go_terms(test_ini_file)
+        go_terms = process_go.process_go_terms(test_ini_file, 'test_files/')
 
         desired_output = [
             {'abstract':
@@ -469,7 +469,7 @@ class DO_Test(unittest.TestCase):
 
         # *NOTE: Here we will use an actual downloaded mim2gene.txt file
         # (instead of a test one), so that it gets all the Entrez IDs we need.
-        mim2gene_file = 'download_files/DO/mim2gene.txt'
+        mim2gene_file = 'download_files/Human/DO/mim2gene.txt'
         genemap_file = 'test_files/test_genemap.csv'
         mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
         mim_diseases = process_do.build_mim_diseases_dict(genemap_file,
