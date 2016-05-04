@@ -72,15 +72,18 @@ if __name__ == "__main__":
 
         all_genesets = []
 
-        if species_file.has_section('GO'):
+        species_config_file = SafeConfigParser()
+        species_config_file.read(species_file)
+
+        if species_config_file.has_section('GO'):
             all_go_terms = process_go_terms(species_file)
             all_genesets.extend(all_go_terms)
 
-        if species_file.has_section('KEGG'):
+        if species_config_file.has_section('KEGG'):
             all_kegg_sets = process_kegg_sets(species_file)
             all_genesets.extend(all_kegg_sets)
 
-        if species_file.has_section('DO'):
+        if species_config_file.has_section('DO'):
             all_do_terms = process_do_terms(species_file)
             all_genesets.extend(all_do_terms)
 
