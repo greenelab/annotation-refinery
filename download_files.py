@@ -7,7 +7,8 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def download_all_files(species_ini_file, secrets_location=None):
+def download_all_files(species_ini_file, base_download_folder,
+                       secrets_location=None):
     """
     Reads config INI file for a species, which contains the files (and
     their locations, or URLs) that must be loaded for this species, and calls
@@ -17,21 +18,33 @@ def download_all_files(species_ini_file, secrets_location=None):
     species_ini_file -- Path to the particular species INI file. This
     is a string.
 
+    base_download_folder -- A string. Path of the root folder where download
+    folders for other species will be created and where common downloaded files
+    will be saved. This is stored in the main configuration INI file.
+
+    secrets_location -- Optional string of location of the secrets INI
+    file.
+
     Returns:
     Nothing, just downloads and saves files to download_folder
 
     """
+    check_create_folder(base_download_folder)
 
     species_file = SafeConfigParser()
     species_file.read(species_ini_file)
 
+    sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
+    check_create_folder(sd_folder)
+
     if species_file.has_section('GO'):
         if species_file.getboolean('GO', 'DOWNLOAD'):
-            go_dir = species_file.get('GO', 'DOWNLOAD_FOLDER')
-            check_create_folder(go_dir)
 
             obo_url = species_file.get('GO', 'GO_OBO_URL')
-            download_from_url(obo_url, go_dir)
+            download_from_url(obo_url, base_download_folder)
+
+            go_dir = sd_folder + 'GO'
+            check_create_folder(go_dir)
 
             goa_url = species_file.get('GO', 'ASSOC_FILE_URL')
             download_from_url(goa_url, go_dir)
@@ -39,14 +52,16 @@ def download_all_files(species_ini_file, secrets_location=None):
     if species_file.has_section('KEGG'):
         if species_file.getboolean('KEGG', 'DOWNLOAD'):
 
-            kegg_dir = species_file.get('KEGG', 'DOWNLOAD_FOLDER')
-            check_create_folder(kegg_dir)
-
             kegg_root_url = species_file.get('KEGG', 'KEGG_ROOT_URL')
 
             kegg_info_url = kegg_root_url + species_file.get('KEGG',
                                                              'DB_INFO_URL')
-            download_from_url(kegg_info_url, kegg_dir, 'kegg_db_info')
+
+            download_from_url(kegg_info_url, base_download_folder,
+                              'kegg_db_info')
+
+            kegg_dir = sd_folder + 'KEGG'
+            check_create_folder(kegg_dir)
 
             all_set_urls = [kegg_root_url + x.strip() for x in species_file.get(
                     'KEGG', 'SETS_TO_DOWNLOAD').split(',')]
@@ -56,7 +71,7 @@ def download_all_files(species_ini_file, secrets_location=None):
 
     if species_file.has_section('DO'):
         if species_file.getboolean('DO', 'DOWNLOAD'):
-            do_dir = species_file.get('DO', 'DOWNLOAD_FOLDER')
+            do_dir = sd_folder + 'DO'
             check_create_folder(do_dir)
 
             obo_url = species_file.get('DO', 'DO_OBO_URL')
@@ -108,18 +123,21 @@ def download_kegg_info_files(kegg_set_ids, species_ini_file):
     is a string.
 
     Returns:
-    Nothing, just downloads and saves files to download_folder
+    Nothing, just downloads and saves files to keggset_info folder, which will
+    be the SPECIES_DOWNLOAD_FOLDER + 'KEGG/keggset_info_folder'
 
     """
     species_file = SafeConfigParser()
     species_file.read(species_ini_file)
 
-    download_folder = species_file.get('KEGG', 'KEGGSET_INFO_FOLDER')
-    check_create_folder(download_folder)
+    download_folder = species_file.get('species_info',
+                                       'SPECIES_DOWNLOAD_FOLDER')
+    keggset_info_folder = download_folder + 'KEGG/keggset_info_folder'
+    check_create_folder(keggset_info_folder)
 
     full_info_url = species_file.get('KEGG', 'KEGG_ROOT_URL') + \
         species_file.get('KEGG', 'SET_INFO_DIR')
 
     for kegg_id in kegg_set_ids:
         kegg_info_file = full_info_url + kegg_id
-        download_from_url(kegg_info_file, download_folder)
+        download_from_url(kegg_info_file, keggset_info_folder)
