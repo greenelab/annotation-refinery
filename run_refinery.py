@@ -48,12 +48,12 @@ if __name__ == "__main__":
         logger.error('Main configuration file must have a "download_folder" '
                      'section, which must contain a "BASE_DOWNLOAD_FOLDER" '
                      'parameter where download folders will be created for '
-                     'each type of annotation.')
+                     'each species. Common annotation files for all species'
+                     ' will also be saved here.')
         sys.exit(1)
 
     download_folder = main_config_file.get('download_folder',
                                            'BASE_DOWNLOAD_FOLDER')
-    check_create_folder(download_folder)
 
     secrets_file = None
     if main_config_file.has_option('main', 'SECRETS_FILE'):
@@ -61,14 +61,18 @@ if __name__ == "__main__":
 
     process_to = main_config_file.get('main', 'PROCESS_TO')
 
+    species_dir = main_config_file.get('species files', 'SPECIES_DIR')
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
 
     # Make a list of the locations of all species files:
     species_files = species_files.replace(' ', '').split(',')
 
     for species_file in species_files:
+        # Build full path of species_file
+        species_file = species_dir + species_file
 
-        download_all_files(species_file, secrets_location=secrets_file)
+        download_all_files(species_file, download_folder,
+                           secrets_location=secrets_file)
 
         all_genesets = []
 
@@ -76,11 +80,11 @@ if __name__ == "__main__":
         species_config_file.read(species_file)
 
         if species_config_file.has_section('GO'):
-            all_go_terms = process_go_terms(species_file)
+            all_go_terms = process_go_terms(species_file, download_folder)
             all_genesets.extend(all_go_terms)
 
         if species_config_file.has_section('KEGG'):
-            all_kegg_sets = process_kegg_sets(species_file)
+            all_kegg_sets = process_kegg_sets(species_file, download_folder)
             all_genesets.extend(all_kegg_sets)
 
         if species_config_file.has_section('DO'):
