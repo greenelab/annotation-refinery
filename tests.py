@@ -24,7 +24,7 @@ class KeggTest(unittest.TestCase):
     def testGetKeggInfo(self):
         """"""
         kegg_info = process_kegg.get_kegg_info(
-            'test_files/test_keggdb_info.csv')
+            'test_files/kegg_db_info')
 
         desired_output = {
             'brite': '148,770 entries',
@@ -48,7 +48,7 @@ class KeggTest(unittest.TestCase):
         """"""
 
         kegg_members_dict = process_kegg.get_kegg_sets_members(
-            'test_files/test_kegg_members.csv')
+            'test_files/KEGG/test_pathway.csv')
 
         desired_output = {
             'hsa00010': set(['10327', '124', '125', '126', '127', '128', '130',
@@ -61,7 +61,7 @@ class KeggTest(unittest.TestCase):
 
     def testGetKeggSetInfo(self):
         kegg_set_info = process_kegg.get_kegg_set_info(
-            'test_files/test_keggset_info_folder/hsa00010')
+            'test_files/KEGG/keggset_info_folder/hsa00010')
 
         desired_output = {
             'kegg_id': 'hsa00010',
@@ -92,9 +92,9 @@ class KeggTest(unittest.TestCase):
 
     def testBuildKeggSets(self):
         kegg_sets_members = process_kegg.get_kegg_sets_members(
-            'test_files/test_kegg_members.csv')
+            'test_files/KEGG/test_pathway.csv')
         test_keggsets = process_kegg.build_kegg_sets(
-            kegg_sets_members, 'test_files/test_keggset_info_folder',
+            kegg_sets_members, 'test_files/KEGG/keggset_info_folder',
             'Homo sapiens')
 
         desired_keggsets = [
@@ -162,7 +162,7 @@ class KeggTest(unittest.TestCase):
 
     def testProcessKeggSets(self):
         all_kegg_sets = process_kegg.process_kegg_sets(
-            'test_files/test_human.ini')
+            'test_files/test_human.ini', 'test_files/')
 
         desired_keggsets = [
             {'kegg_id': 'hsa00010',
@@ -243,7 +243,7 @@ class GO_Test(unittest.TestCase):
         pass
 
     def testGetFilteredAnnotations(self):
-        assoc_file = 'test_files/test_go_assoc_file.csv'
+        assoc_file = 'test_files/GO/test_go_assoc_file.csv'
         evcodes = 'EXP, IDA, IPI, IMP, IGI, IEP'
 
         filtered_annotations = process_go.get_filtered_annotations(
@@ -400,14 +400,14 @@ class DO_Test(unittest.TestCase):
         """"""
         self.disease_ontology = go()
         self.loaded_obo_bool = self.disease_ontology.load_obo(
-                'test_files/test_do_obo_file.obo')
+                'test_files/DO/test_do_obo_file.obo')
 
     def tearDown(self):
         """"""
         pass
 
     def testBuildOmimDict(self):
-        do_obo_file = 'test_files/test_do_obo_file.obo'
+        do_obo_file = 'test_files/DO/test_do_obo_file.obo'
 
         doid_omim_dict = process_do.build_doid_omim_dict(do_obo_file)
 
@@ -418,22 +418,20 @@ class DO_Test(unittest.TestCase):
         self.assertEqual(doid_omim_dict, desired_output)
 
     def testBuildMim2EntrezDict(self):
-        mim2gene_file = 'test_files/test_mim2gene.csv'
+        mim2gene_file = 'test_files/DO/test_mim2gene.csv'
 
         mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
 
-        desired_output = {'100725': '1145', '100730': '1146', '100720': '1144',
-                          '100740': '43', '100880': '48', '616872': '56889',
-                          '100650': '217', '100790': '429', '100850': '50',
-                          '100670': '219', '100710': '1140', '100690': '1134',
-                          '616874': '51643', '100678': '39', '100640': '216',
-                          '100660': '218'}
+        desired_output = {'155541': '4160', '604630': '8431', '601487': '5468',
+                          '605353': '51738', '176830': '5443',
+                          '603128': '6492', '100640': '216', '616919': '22844',
+                          '616923': '388591'}
 
         self.assertEqual(mim2entrez_dict, desired_output)
 
     def testBuildMimDiseasesDict(self):
-        mim2gene_file = 'test_files/test_mim2gene.csv'
-        genemap_file = 'test_files/test_genemap.csv'
+        mim2gene_file = 'test_files/DO/test_mim2gene.csv'
+        genemap_file = 'test_files/DO/test_genemap.csv'
         mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
         mim_diseases = process_do.build_mim_diseases_dict(genemap_file,
                                                           mim2entrez_dict)
@@ -443,34 +441,29 @@ class DO_Test(unittest.TestCase):
             gene_tuples_dict[mimid] = mimdisease.genetuples
 
         desired_gene_tuples = {
-            '265000': [('1146', 'C')], '605809': [('1145', 'C')],
-            '608930': [('1134', 'C')], '608931': [('1145', 'C')],
-            '616324': [('1145', 'C')], '601462': [('1134', 'C')],
-            '616322': [('1144', 'C')], '209880': [('429', 'C')],
-            '253290': [('1144', 'C'), ('1134', 'C'), ('1146', 'C')],
-            '616313': [('1140', 'C')], '614559': [('50', 'C')],
-            '610251': [('217', 'C')]}
+            '604367': [('5468', 'C')], '125853': [('5468', 'C')],
+            '609734': [('5443', 'C')], '609338': [('5468', 'C')],
+            '601665': [('8431', 'P'), ('5443', 'C'), ('51738', 'P'),
+                       ('5468', 'C'), ('6492', 'C'), ('4160', 'C')]
+        }
 
         phetypes_dict = {}
         for mimid, mimdisease in mim_diseases.iteritems():
             phetypes_dict[mimid] = mimdisease.phe_mm
 
-        desired_phenotypes = {
-            '265000': '(3)', '605809': '(3)', '608930': '(3)', '608931': '(3)',
-            '616324': '(3)', '601462': '(3)', '616322': '(3)', '209880': '(3)',
-            '253290': '(3)', '616313': '(3)', '614559': '(3)', '610251': '(3)'}
+        desired_phenotypes = {'604367': '(3)', '125853': '(3)',
+                              '609734': '(3)', '609338': '(3)',
+                              '601665': '(3)'}
 
         self.assertEqual(gene_tuples_dict, desired_gene_tuples)
         self.assertEqual(phetypes_dict, desired_phenotypes)
 
     def testAddDOTermAnnotations(self):
-        do_obo_file = 'test_files/test_do_obo_file.obo'
+        do_obo_file = 'test_files/DO/test_do_obo_file.obo'
         doid_omim_dict = process_do.build_doid_omim_dict(do_obo_file)
 
-        # *NOTE: Here we will use an actual downloaded mim2gene.txt file
-        # (instead of a test one), so that it gets all the Entrez IDs we need.
-        mim2gene_file = 'download_files/Human/DO/mim2gene.txt'
-        genemap_file = 'test_files/test_genemap.csv'
+        mim2gene_file = 'test_files/DO/test_mim2gene.csv'
+        genemap_file = 'test_files/DO/test_genemap.csv'
         mim2entrez_dict = process_do.build_mim2entrez_dict(mim2gene_file)
         mim_diseases = process_do.build_mim_diseases_dict(genemap_file,
                                                           mim2entrez_dict)
@@ -516,7 +509,7 @@ class DO_Test(unittest.TestCase):
         self.assertEqual(title_set, desired_output)
 
     def testCreateDOAbstractTitle(self):
-        do_obo_file = 'test_files/test_do_obo_file.obo'
+        do_obo_file = 'test_files/DO/test_do_obo_file.obo'
         doid_omim_dict = process_do.build_doid_omim_dict(do_obo_file)
 
         # We know from testBuildOmimDict above that this is the only
@@ -622,7 +615,8 @@ class LoaderTest(unittest.TestCase):
 
     def testLoadKEGGToTribe(self):
         species_ini_file = 'test_files/test_human.ini'
-        kegg_sets = process_kegg.process_kegg_sets(species_ini_file)
+        kegg_sets = process_kegg.process_kegg_sets(species_ini_file,
+                                                   'test_files/')
 
         main_config_file = 'test_files/test_main_config.ini'
         geneset_response = loader.load_to_tribe(main_config_file, kegg_sets[0])
@@ -634,7 +628,7 @@ class LoaderTest(unittest.TestCase):
 
     def testLoadGOToTribe(self):
         species_ini_file = 'test_files/test_human.ini'
-        go_terms = process_go.process_go_terms(species_ini_file)
+        go_terms = process_go.process_go_terms(species_ini_file, 'test_files/')
 
         main_config_file = 'test_files/test_main_config.ini'
         geneset_response = loader.load_to_tribe(main_config_file, go_terms[0])
