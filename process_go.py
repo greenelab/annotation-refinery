@@ -1,5 +1,6 @@
 import sys
 import gzip
+import re
 from ConfigParser import SafeConfigParser
 
 from go import go
@@ -14,6 +15,11 @@ GO_NAMESPACE_MAP = {
     'biological_process': 'BP',
     'molecular_function': 'MF',
     'cellular_component': 'CC',
+}
+
+DB_REMAP = {
+    'FB': 'FLYBASE',
+    'WB': 'WormBase',
 }
 
 
@@ -61,6 +67,21 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None,
 
         if leading_gene_id:
             xrid = xrid.split(':')[1]
+
+        if xrdb in DB_REMAP:
+            xrdb = DB_REMAP[xrdb]
+
+        # These next few lines are needed for processing
+        # Arabidopsis annotations
+        if xrdb == 'TAIR':
+            tair_regex = re.compile('AT[0-9MC]G[0-9][0-9][0-9][0-9][0-9]')
+            first_alias = toks[10].split('|')[0]
+            if tair_regex.match(toks[2]):
+                xrid = toks[2]
+            elif tair_regex.match(toks[9]):
+                xrid = toks[9]
+            elif tair_regex.match(first_alias):
+                xrid = first_alias
 
         if details == 'NOT':
             continue
