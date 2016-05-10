@@ -1,6 +1,8 @@
+import os
+import re
 import sys
 import gzip
-import re
+from urlparse import urlsplit
 from ConfigParser import SafeConfigParser
 
 from go import go
@@ -167,13 +169,14 @@ def process_go_terms(species_ini_file, base_download_folder):
     organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
     sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
 
-    obo_url = species_file.get('GO', 'GO_OBO_URL')
-    assoc_file_url = species_file.get('GO', 'ASSOC_FILE_URL')
+    obo_url = urlsplit(species_file.get('GO', 'GO_OBO_URL'))
+    assoc_file_url = urlsplit(species_file.get('GO', 'ASSOC_FILE_URL'))
 
-    obo_filename = obo_url.split('/')[-1]
-    assoc_filename = assoc_file_url.split('/')[-1]
-    obo_file = base_download_folder + obo_filename
-    assoc_file = sd_folder + 'GO/' + assoc_filename
+    obo_filename = os.path.basename(obo_url.path)
+    assoc_filename = os.path.basename(assoc_file_url.path)
+
+    obo_file = os.path.join(base_download_folder, obo_filename)
+    assoc_file = os.path.join(sd_folder, 'GO', assoc_filename)
 
     evcodes = species_file.get('GO', 'EVIDENCE_CODES')
     evcodes = evcodes.replace(' ', '').split(',')
