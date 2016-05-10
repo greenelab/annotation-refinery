@@ -34,7 +34,7 @@ def load_to_tribe(main_config_file, geneset_info):
 
     if not secrets_file.has_section('Tribe secrets'):
         logger.error('Secrets file has no "Tribe secrets" section, which is'
-                     'required to save the processed genesets to Tribe.')
+                     ' required to save the processed genesets to Tribe.')
         sys.exit(1)
 
     required_secrets = set(['tribe_id', 'tribe_secret', 'username',
