@@ -26,7 +26,7 @@ DB_REMAP = {
 
 
 def get_filtered_annotations(assoc_file, accepted_evcodes=None,
-                             leading_gene_id=None):
+                             remove_leading_gene_id=None):
     """
     This function reads in the association file and returns a list of
     annotations. Only annotations that have evidence codes in
@@ -40,9 +40,9 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None,
     accepted_evcodes -- A list of evidence codes (e.g. ['EXP', 'IDA', 'IPI'])
     to filter the annotations by.
 
-    leading_gene_id -- True or False value. For some organisms, such as Mouse,
-    there is a leading tag on the gene IDs column in the gene association file.
-    This tag is just a duplicate of the type of gene identifier (already
+    remove_leading_gene_id -- True or False value. For some organisms, such as
+    Mouse, there is a leading tag on the gene IDs column in the gene association
+    file. This tag is just a duplicate of the type of gene identifier (already
     present in the identifier type (xrdb) column) and should be removed to get
     the pure gene ID (e.g. to get "99668" as opposed to "MGI:99668").
 
@@ -67,7 +67,7 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None,
         (xrdb, xrid, details, goid, refstring, ev_code, date) = (
             toks[0], toks[1], toks[3], toks[4], toks[5], toks[6], toks[13])
 
-        if leading_gene_id:
+        if remove_leading_gene_id:
             xrid = xrid.split(':')[1]
 
         if xrdb in DB_REMAP:
@@ -181,12 +181,13 @@ def process_go_terms(species_ini_file, base_download_folder):
     evcodes = species_file.get('GO', 'EVIDENCE_CODES')
     evcodes = evcodes.replace(' ', '').split(',')
 
-    leading_gene_id = False
-    if species_file.has_option('GO', 'LEADING_GENE_ID'):
-        leading_gene_id = species_file.getboolean('GO', 'LEADING_GENE_ID')
+    remove_leading_gene_id = False
+    if species_file.has_option('GO', 'REMOVE_LEADING_GENE_ID'):
+        remove_leading_gene_id = species_file.getboolean(
+            'GO', 'REMOVE_LEADING_GENE_ID')
 
-    annotations = get_filtered_annotations(assoc_file, evcodes,
-                                           leading_gene_id=leading_gene_id)
+    annotations = get_filtered_annotations(
+        assoc_file, evcodes, remove_leading_gene_id=remove_leading_gene_id)
 
     gene_ontology = go()
     loaded_obo_bool = gene_ontology.load_obo(obo_file)
