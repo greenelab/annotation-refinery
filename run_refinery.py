@@ -65,7 +65,7 @@ if __name__ == "__main__":
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
 
     # Make a list of the locations of all species files:
-    species_files = species_files.replace(' ', '').split(',')
+    species_files = [filename.strip() for filename in species_files.split(',')]
 
     for species_file in species_files:
         # Build full path of species_file
