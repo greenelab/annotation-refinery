@@ -1,7 +1,10 @@
+import os
 import re
 import sys
-from go import go
+from urlparse import urlsplit
 from ConfigParser import SafeConfigParser
+
+from go import go
 
 # Import and set logger
 import logging
@@ -332,17 +335,18 @@ def process_do_terms(species_ini_file):
         sys.exit(1)
 
     sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
-    do_obo_url = species_file.get('DO', 'DO_OBO_URL')
-    mim2gene_url = species_file.get('DO', 'MIM2GENE_URL')
-    genemap_url = species_file.get('DO', 'GENEMAP_URL')
 
-    do_obo_filename = do_obo_url.split('/')[-1]
-    mim2gene_filename = mim2gene_url.split('/')[-1]
-    genemap_filename = genemap_url.split('/')[-1]
+    do_obo_url = urlsplit(species_file.get('DO', 'DO_OBO_URL'))
+    mim2gene_url = urlsplit(species_file.get('DO', 'MIM2GENE_URL'))
+    genemap_url = urlsplit(species_file.get('DO', 'GENEMAP_URL'))
 
-    do_obo_file = sd_folder + 'DO/' + do_obo_filename
-    mim2gene_file = sd_folder + 'DO/' + mim2gene_filename
-    genemap_file = sd_folder + 'DO/' + genemap_filename
+    do_obo_filename = os.path.basename(do_obo_url.path)
+    mim2gene_filename = os.path.basename(mim2gene_url.path)
+    genemap_filename = os.path.basename(genemap_url.path)
+
+    do_obo_file = os.path.join(sd_folder, 'DO', do_obo_filename)
+    mim2gene_file = os.path.join(sd_folder, 'DO', mim2gene_filename)
+    genemap_file = os.path.join(sd_folder, 'DO', genemap_filename)
 
     disease_ontology = go()
     loaded_obo_bool = disease_ontology.load_obo(do_obo_file)

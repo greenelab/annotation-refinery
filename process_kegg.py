@@ -1,13 +1,14 @@
+import os
 import sys
-import glob
 from collections import defaultdict
 from ConfigParser import SafeConfigParser
-from download_files import download_kegg_info_files
 
 # Import and set logger
 import logging
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+KEGGSET_INFO_FOLDER = 'KEGG/keggset_info_folder'
 
 
 def get_kegg_info(kegg_info_file):
@@ -104,7 +105,6 @@ def get_kegg_set_info(kegg_set_info_file):
     set_info_dict = {}
 
     kegg_set_type = None
-    kegg_id = None
     ks_title = None
 
     for line in kegg_set_info_fh:
@@ -153,7 +153,7 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
     all_kegg_sets = []
 
     for kegg_id in kegg_sets_members.keys():
-        info_file = keggset_info_folder + '/' + kegg_id
+        info_file = os.path.join(keggset_info_folder, kegg_id)
         kegg_set_info = get_kegg_set_info(info_file)
 
         kegg_set_info['organism'] = organism
@@ -184,6 +184,7 @@ def process_kegg_sets(species_ini_file, base_download_folder):
     a Python dictionary with the required information as its keys and values.
 
     """
+    from download_files import download_kegg_info_files
 
     species_file = SafeConfigParser()
     species_file.read(species_ini_file)
@@ -193,26 +194,22 @@ def process_kegg_sets(species_ini_file, base_download_folder):
                      ' to run the process_kegg_terms function.')
         sys.exit(1)
 
-    organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
-    sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
-    sets_to_download = species_file.get('KEGG', 'SETS_TO_DOWNLOAD').split(',')
-
-    kegg_members_files = []
-    for url in sets_to_download:
-        set_type = url.replace(' ', '').split('/')[-1]
-        members_file = sd_folder + 'KEGG/' + set_type
-        kegg_members_files.append(members_file)
-
-    kegg_info_file = base_download_folder + 'kegg_db_info'
-
-    keggset_info_folder = sd_folder + 'KEGG/keggset_info_folder'
-
+    kegg_info_file = os.path.join(base_download_folder, 'kegg_db_info')
     kegg_db_info = get_kegg_info(kegg_info_file)
     logger.info('Working with KEGG release %s.', kegg_db_info['release'])
     logger.info('KEGG Database info: %s.', kegg_db_info)
 
+    organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
+    sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
+
+    ks_urls = species_file.get('KEGG', 'SETS_TO_DOWNLOAD')
+    kegg_types = [os.path.basename(url.strip()) for url in ks_urls.split(',')]
+
+    keggset_info_folder = os.path.join(sd_folder, KEGGSET_INFO_FOLDER)
+
     all_kegg_sets = []
-    for members_file in kegg_members_files:
+    for kegg_type in kegg_types:
+        members_file = os.path.join(sd_folder, 'KEGG', kegg_type)
         kegg_sets_members = get_kegg_sets_members(members_file)
         download_kegg_info_files(kegg_sets_members.keys(), species_ini_file)
         kegg_sets = build_kegg_sets(kegg_sets_members, keggset_info_folder,

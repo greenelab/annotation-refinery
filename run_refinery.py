@@ -7,7 +7,6 @@ from download_files import download_all_files
 from process_kegg import process_kegg_sets
 from process_go import process_go_terms
 from process_do import process_do_terms
-from utils import check_create_folder
 from loader import load_to_tribe
 
 # Import and set logger
@@ -69,7 +68,7 @@ if __name__ == "__main__":
 
     for species_file in species_files:
         # Build full path of species_file
-        species_file = species_dir + species_file
+        species_file = os.path.join(species_dir, species_file)
 
         download_all_files(species_file, download_folder,
                            secrets_location=secrets_file)
