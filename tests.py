@@ -1,11 +1,36 @@
 import unittest
 from go import go
+import download_files
 import process_kegg
 import process_go
 import process_do
 import loader
 
 import logging
+
+
+class DownloadTest(unittest.TestCase):
+    """
+    Tests for functions in download_files.py file
+    """
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def testDownloadFilesNoSecretsLocation(self):
+        """
+        Test that the download_all_files() method raises SystemExit
+        when asked to download files to process Disease Ontology but
+        not passed a secrets_location.
+        """
+        with self.assertRaises(SystemExit) as se:
+            download_files.download_all_files(
+                'test_files/test_human.ini', 'test_files',
+                secrets_location=None)
+
+        self.assertEqual(se.exception.code, 1)
 
 
 class KeggTest(unittest.TestCase):
