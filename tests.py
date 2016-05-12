@@ -76,17 +76,17 @@ class KeggTest(unittest.TestCase):
             'test_files/KEGG/test_pathway.csv')
 
         desired_output = {
-            'hsa00010': set(['10327', '124', '125', '126', '127', '128', '130',
-                             '131', '130589', '160287']),
-            'hsa00020': set(['1431', '1737', '1738', '1743', '2271', '3417',
-                             '3418', '3419', '3420', '3421'])
+            'hsa00010': set([10327, 124, 125, 126, 127, 128, 130,
+                             131, 130589, 160287]),
+            'hsa00020': set([1431, 1737, 1738, 1743, 2271, 3417,
+                             3418, 3419, 3420, 3421])
         }
 
         self.assertEqual(kegg_members_dict, desired_output)
 
     def testGetKeggSetInfo(self):
         kegg_set_info = process_kegg.get_kegg_set_info(
-            'test_files/KEGG/keggset_info_folder/hsa00010')
+            'test_files/KEGG/keggset_info_folder/hsa00010', 'homo-sapiens')
 
         desired_output = {
             'kegg_id': 'hsa00010',
@@ -110,7 +110,22 @@ class KeggTest(unittest.TestCase):
                 ' structures in bacterial genomes. Gluconeogenesis is a '
                 'synthesis pathway of glucose from noncarbohydrate '
                 'precursors. It is essentially a reversal of glycolysis '
-                'with minor variations of alternative paths [MD:M00003].'
+                'with minor variations of alternative paths [MD:M00003].',
+            'slug': 'homo-sapiens-hsa00010'
+        }
+
+        self.assertEqual(kegg_set_info, desired_output)
+
+    def testAddOrganismToSlug(self):
+        kegg_set_info = process_kegg.get_kegg_set_info(
+            'test_files/KEGG/keggset_info_folder/M00001', 'mus-musculus')
+
+        desired_output = {
+            'kegg_id': 'M00001',
+            'title': 'KEGG-Module-M00001: Glycolysis '
+                     '(Embden-Meyerhof pathway), glucose => pyruvate',
+            'abstract': '',
+            'slug': 'mus-musculus-m00001'
         }
 
         self.assertEqual(kegg_set_info, desired_output)
@@ -120,7 +135,7 @@ class KeggTest(unittest.TestCase):
             'test_files/KEGG/test_pathway.csv')
         test_keggsets = process_kegg.build_kegg_sets(
             kegg_sets_members, 'test_files/KEGG/keggset_info_folder',
-            'Homo sapiens')
+            'Homo sapiens', 'Entrez')
 
         desired_keggsets = [
             {'kegg_id': 'hsa00010',
@@ -149,9 +164,11 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': {'10327': [], '124': [], '125': [], '126': [],
-                             '127': [], '128': [], '130': [], '130589': [],
-                             '131': [], '160287': []}},
+             'annotations': {10327: [], 124: [], 125: [], 126: [],
+                             127: [], 128: [], 130: [], 130589: [],
+                             131: [], 160287: []},
+             'slug': 'homo-sapiens-hsa00010',
+             'xrdb': 'Entrez'},
 
             {'kegg_id': 'hsa00020',
              'title': 'KEGG-Pathway-hsa00020: Citrate cycle (TCA cycle)'
@@ -178,9 +195,11 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': {'1431': [], '1737': [], '1738': [], '1743': [],
-                             '2271': [], '3417': [], '3418': [], '3419': [],
-                             '3420': [], '3421': []}}
+             'annotations': {1431: [], 1737: [], 1738: [], 1743: [],
+                             2271: [], 3417: [], 3418: [], 3419: [],
+                             3420: [], 3421: []},
+             'slug': 'homo-sapiens-hsa00020',
+             'xrdb': 'Entrez'}
         ]
 
         self.assertEqual(test_keggsets, desired_keggsets)
@@ -216,9 +235,11 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': {'10327': [], '124': [], '125': [], '126': [],
-                             '127': [], '128': [], '130': [], '130589': [],
-                             '131': [], '160287': []}},
+             'annotations': {10327: [], 124: [], 125: [], 126: [],
+                             127: [], 128: [], 130: [], 130589: [],
+                             131: [], 160287: []},
+             'slug': 'homo-sapiens-hsa00010',
+             'xrdb': 'Entrez'},
 
             {'kegg_id': 'hsa00020',
              'title': 'KEGG-Pathway-hsa00020: Citrate cycle (TCA cycle)'
@@ -245,9 +266,11 @@ class KeggTest(unittest.TestCase):
 
              # These are the only genes in our test_kegg_members.csv file
              # for this KEGG set
-             'annotations': {'1431': [], '1737': [], '1738': [], '1743': [],
-                             '2271': [], '3417': [], '3418': [], '3419': [],
-                             '3420': [], '3421': []}}
+             'annotations': {1431: [], 1737: [], 1738: [], 1743: [],
+                             2271: [], 3417: [], 3418: [], 3419: [],
+                             3420: [], 3421: []},
+             'slug': 'homo-sapiens-hsa00020',
+             'xrdb': 'Entrez'}
         ]
         self.assertEqual(all_kegg_sets, desired_keggsets)
 
@@ -344,7 +367,8 @@ class GO_Test(unittest.TestCase):
              'annotations': {'A0A024QZP7': [], 'A0A024R216': [],
                              'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000006:la liga'},
+             'title': 'GO-BP-0000006:la liga',
+             'slug': 'go0000006-homo-sapiens'},
             {'abstract':
                 'Catalysis of the transfer of a solute or solutes '
                 'from one side of a membrane to the other according to the '
@@ -359,7 +383,8 @@ class GO_Test(unittest.TestCase):
              'annotations': {'A0A024R1V6': [], 'A0A024R214': [],
                              'A0A024QZP7': [], 'A0A024R216': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000007:european team'},
+             'title': 'GO-BP-0000007:european team',
+             'slug': 'go0000007-homo-sapiens'},
             {'abstract':
                 "RZ - We're making this bogus term not OBSOLETE. Assists in "
                 "the correct assembly of ribosomes or ribosomal subunits in "
@@ -371,7 +396,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000005:premier league'},
+             'title': 'GO-BP-0000005:premier league',
+             'slug': 'go0000005-homo-sapiens'},
             {'abstract':
                 'The maintenance of the structure and integrity of the '
                 'mitochondrial genome; includes replication and segregation of'
@@ -382,7 +408,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000002:liverpool'},
+             'title': 'GO-BP-0000002:liverpool',
+             'slug': 'go0000002-homo-sapiens'},
             {'abstract':
                 'The production of new individuals that contain some portion '
                 'of genetic material inherited from one or more parent '
@@ -393,7 +420,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024QZP7': [], 'A0A024R214': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000003:eibar'},
+             'title': 'GO-BP-0000003:eibar',
+             'slug': 'go0000003-homo-sapiens'},
             {'abstract':
                 'The distribution of mitochondria, including the '
                 'mitochondrial genome, into daughter cells after mitosis or '
@@ -405,7 +433,8 @@ class GO_Test(unittest.TestCase):
              'organism': 'Homo sapiens',
              'annotations': {'A0A024R216': []},
              'xrdb': 'UniProtKB',
-             'title': 'GO-BP-0000001:barcelona'}]
+             'title': 'GO-BP-0000001:barcelona',
+             'slug': 'go0000001-homo-sapiens'}]
         self.assertEqual(go_terms, desired_output)
 
     def testHeadTermOBOFile(self):
@@ -567,7 +596,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-374:nutrition disease'},
+             'title': 'DO-374:nutrition disease',
+             'slug': 'doid374-homo-sapiens'},
             {'abstract':
                 'A disease that involving errors in metabolic processes of '
                 'building or degradation of molecules. Annotations from child'
@@ -577,7 +607,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-0014667:disease of metabolism'},
+             'title': 'DO-0014667:disease of metabolism',
+             'slug': 'doid0014667-homo-sapiens'},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. Only '
                 'annotations with confidence labeled C or P by OMIM have been'
@@ -585,7 +616,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-654:overnutrition'},
+             'title': 'DO-654:overnutrition',
+             'slug': 'doid654-homo-sapiens'},
             {'abstract':
                 'A disease is a disposition (i) to undergo pathological '
                 'processes that (ii) exists in an organism because of one or'
@@ -596,7 +628,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-4:disease'},
+             'title': 'DO-4:disease',
+             'slug': 'doid4-homo-sapiens'},
             {'abstract': ' Annotations from child terms in the disease '
                 'ontology are propagated through transitive closure. '
                 'Annotations directly to this term are provided by the OMIM '
@@ -605,7 +638,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-9970:obesity'},
+             'title': 'DO-9970:obesity',
+             'slug': 'doid9970-homo-sapiens'},
             {'abstract':
                 'A disease of metabolism that has _material_basis_in enzyme'
                 ' deficiency or accumulation of enzymes or toxins which '
@@ -618,7 +652,8 @@ class DO_Test(unittest.TestCase):
              'xrdb': 'Entrez', 'organism': 'Homo sapiens',
              'annotations': {4160: [], 8431: [], 51738: [], 5443: [],
                              5468: [], 6492: []},
-             'title': 'DO-0060158:acquired metabolic disease'}
+             'title': 'DO-0060158:acquired metabolic disease',
+             'slug': 'doid0060158-homo-sapiens'}
         ]
 
         self.assertEqual(do_terms, desired_output)
@@ -632,19 +667,25 @@ class LoaderTest(unittest.TestCase):
 
     def setUp(self):
         """"""
-        pass
+        species_ini_file = 'test_files/test_human.ini'
+
+        self.kegg_sets = process_kegg.process_kegg_sets(
+            species_ini_file, 'test_files/')
+
+        self.go_terms = process_go.process_go_terms(
+            species_ini_file, 'test_files/')
+
+        self.do_terms = process_do.process_do_terms(species_ini_file)
+
+        self.main_config_file = 'test_files/test_main_config.ini'
 
     def tearDown(self):
         """"""
         pass
 
     def testLoadKEGGToTribe(self):
-        species_ini_file = 'test_files/test_human.ini'
-        kegg_sets = process_kegg.process_kegg_sets(species_ini_file,
-                                                   'test_files/')
-
-        main_config_file = 'test_files/test_main_config.ini'
-        geneset_response = loader.load_to_tribe(main_config_file, kegg_sets[0])
+        geneset_response = loader.load_to_tribe(self.main_config_file,
+                                                self.kegg_sets[0])
 
         self.assertEqual(
             geneset_response['title'], 'KEGG-Pathway-hsa00010: Glycolysis / '
@@ -652,24 +693,134 @@ class LoaderTest(unittest.TestCase):
         self.assertEqual(geneset_response['tip_item_count'], 10)
 
     def testLoadGOToTribe(self):
-        species_ini_file = 'test_files/test_human.ini'
-        go_terms = process_go.process_go_terms(species_ini_file, 'test_files/')
+        geneset_response = loader.load_to_tribe(self.main_config_file,
+                                                self.go_terms[0])
 
-        main_config_file = 'test_files/test_main_config.ini'
-        geneset_response = loader.load_to_tribe(main_config_file, go_terms[0])
-
-        self.assertEqual(geneset_response['title'], 'GO-BP-0000006:la liga')
+        self.assertEqual(geneset_response['title'],
+                         'GO-BP-0000006:la liga')
         self.assertEqual(geneset_response['tip_item_count'], 3)
 
     def testLoadDOToTribe(self):
-        species_ini_file = 'test_files/test_human.ini'
-        do_terms = process_do.process_do_terms(species_ini_file)
-
-        main_config_file = 'test_files/test_main_config.ini'
-        geneset_response = loader.load_to_tribe(main_config_file, do_terms[0])
+        geneset_response = loader.load_to_tribe(self.main_config_file,
+                                                self.do_terms[0])
 
         self.assertEqual(geneset_response['title'], 'DO-374:nutrition disease')
         self.assertEqual(geneset_response['tip_item_count'], 6)
+
+    """
+    The next three tests check the creation of a new version of
+    a geneset if the geneset already exists and the annotations have
+    changed. For these tests, we will process the same geneset lists
+    as the previous tests, but we will load the second geneset in each
+    of those lists to Tribe.
+    """
+    def testCreateNewKEGGVersion(self):
+        """
+        Test adding one gene to an existing KEGG set
+        """
+
+        selected_kegg_term = self.kegg_sets[1]
+
+        geneset_response = loader.load_to_tribe(self.main_config_file,
+                                                selected_kegg_term,
+                                                create_new_versions=True)
+
+        self.assertEqual(
+            geneset_response['title'], 'KEGG-Pathway-hsa00020: Citrate cycle '
+                                       '(TCA cycle) - Homo sapiens (human)')
+        self.assertEqual(geneset_response['tip_item_count'], 10)
+
+        # Adding random gene 5432
+        selected_kegg_term['annotations'] = {
+            1431: [], 1737: [], 1738: [], 1743: [], 2271: [], 3417: [],
+            3418: [], 3419: [], 3420: [], 3421: [], 5432: []
+        }
+
+        version_response = loader.load_to_tribe(self.main_config_file,
+                                                selected_kegg_term,
+                                                create_new_versions=True)
+
+        self.assertEqual(len(version_response['annotations']), 11)
+
+    def testCreateNewGOVersion(self):
+        """
+        Test removing one gene from an existing GO term
+        """
+
+        selected_go_term = self.go_terms[1]
+
+        geneset_response = loader.load_to_tribe(
+            self.main_config_file, selected_go_term, create_new_versions=True)
+
+        self.assertEqual(geneset_response['title'],
+                         'GO-BP-0000007:european team')
+        self.assertEqual(geneset_response['tip_item_count'], 4)
+
+        # Remove gene 'A0A024R1V6'
+        selected_go_term['annotations'] = {
+            'A0A024R214': [], 'A0A024QZP7': [], 'A0A024R216': []}
+
+        version_response = loader.load_to_tribe(
+            self.main_config_file, selected_go_term, create_new_versions=True)
+
+        self.assertEqual(len(version_response['annotations']), 3)
+
+    def testCreateNewDOVersion(self):
+        """
+        Test adding one term and removing one term from an existing DO term
+        """
+
+        selected_do_term = self.do_terms[1]
+
+        geneset_response = loader.load_to_tribe(
+            self.main_config_file, selected_do_term, create_new_versions=True)
+
+        self.assertEqual(geneset_response['title'],
+                         'DO-0014667:disease of metabolism')
+        self.assertEqual(geneset_response['tip_item_count'], 6)
+
+        # Remove gene 5468, add random gene 4321
+        selected_do_term['annotations'] = {
+            4160: [], 8431: [], 51738: [], 5443: [], 6492: [], 4321: []}
+
+        version_response = loader.load_to_tribe(
+            self.main_config_file, selected_do_term, create_new_versions=True)
+
+        self.assertEqual(len(version_response['annotations']), 6)
+
+    """
+    The next three tests are similar to the three tests above, but they
+    check that if the geneset we want to create already exists and the
+    annotations have not changed, we handle the situation appropriately.
+    For these tests, we will process the same geneset lists
+    as the previous tests, but we will load the third geneset in each
+    of those lists to Tribe.
+    """
+
+    def testCreatingAlreadyExistingGeneset(self):
+        """
+        Testing that if we try to create an already created geneset
+        and annotations have not changed, fail gracefully.
+        """
+
+        selected_go_term = self.go_terms[2]
+
+        geneset_response = loader.load_to_tribe(
+            self.main_config_file, selected_go_term, create_new_versions=True)
+
+        self.assertEqual(geneset_response['title'],
+                         'GO-BP-0000005:premier league')
+        self.assertEqual(geneset_response['tip_item_count'], 1)
+
+        # Do not change the annotations, just try to save to Tribe again
+        response = loader.load_to_tribe(
+            self.main_config_file, selected_go_term, create_new_versions=True)
+
+        self.assertEqual(response['status_code'], 400)
+        self.assertEqual(
+            response['content'], 'There is already a geneset with the slug '
+            '"go0000005-homo-sapiens" and annotations {\'A0A024R214\': []} '
+            'saved in Tribe. A new geneset has not been saved.')
 
 
 if __name__ == '__main__':
