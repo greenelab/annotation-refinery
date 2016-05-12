@@ -81,12 +81,12 @@ def get_kegg_sets_members(kegg_sets_file):
             group = group.split('_').pop()
 
         geneid = toks[1].split(':')[1]  # gene listed second, has prefix
-        kegg_set_members[group].add(geneid)
+        kegg_set_members[group].add(int(geneid))
 
     return kegg_set_members
 
 
-def get_kegg_set_info(kegg_set_info_file):
+def get_kegg_set_info(kegg_set_info_file, org_slug):
     """
     Function to read in kegg_set_info_file and make a dictionary of the KEGG
     set with the information in this file.
@@ -94,6 +94,10 @@ def get_kegg_set_info(kegg_set_info_file):
     Arguments:
     kegg_set_info_file -- Path to file of information for specific KEGG
     set. This is a string.
+
+    org_slug -- A string of the organism's scientific name, modified
+    so that all characters are lowercase and whitespace is replaced
+    with a hyphen.
 
     Returns:
     set_info_dict -- Dictionary with 'title' and 'abstract' (which correspond
@@ -122,12 +126,16 @@ def get_kegg_set_info(kegg_set_info_file):
         set_info_dict['title'] = 'KEGG-' + kegg_set_type + '-' + \
             set_info_dict['kegg_id'] + ': ' + ks_title
 
+        # Add org_slug to the geneset 'slug'
+        lowercase_kegg_id = set_info_dict['kegg_id'].lower()
+        set_info_dict['slug'] = org_slug + '-' + lowercase_kegg_id
+
         if 'abstract' not in set_info_dict:
             set_info_dict['abstract'] = ''
     return set_info_dict
 
 
-def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
+def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism, xrdb):
     """
     Function to build all KEGG sets **for a given set type** (e.g. pathway,
     module, disease, etc.), since members_file will only contain members
@@ -154,9 +162,12 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism):
 
     for kegg_id in kegg_sets_members.keys():
         info_file = os.path.join(keggset_info_folder, kegg_id)
-        kegg_set_info = get_kegg_set_info(info_file)
+        org_slug = organism.lower().replace(' ', '-')
+
+        kegg_set_info = get_kegg_set_info(info_file, org_slug)
 
         kegg_set_info['organism'] = organism
+        kegg_set_info['xrdb'] = xrdb
         kegg_set_info['annotations'] = {}
 
         # This following loop fills out annotations. Since KEGG sets do not
@@ -202,6 +213,8 @@ def process_kegg_sets(species_ini_file, base_download_folder):
     organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
     sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
 
+    xrdb = species_file.get('KEGG', 'XRDB')
+
     ks_urls = species_file.get('KEGG', 'SETS_TO_DOWNLOAD')
     kegg_types = [os.path.basename(url.strip()) for url in ks_urls.split(',')]
 
@@ -213,6 +226,6 @@ def process_kegg_sets(species_ini_file, base_download_folder):
         kegg_sets_members = get_kegg_sets_members(members_file)
         download_kegg_info_files(kegg_sets_members.keys(), species_ini_file)
         kegg_sets = build_kegg_sets(kegg_sets_members, keggset_info_folder,
-                                    organism)
+                                    organism, xrdb)
         all_kegg_sets.extend(kegg_sets)
     return all_kegg_sets

@@ -335,10 +335,12 @@ def process_do_terms(species_ini_file):
         sys.exit(1)
 
     sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
+    organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
 
     do_obo_url = urlsplit(species_file.get('DO', 'DO_OBO_URL'))
     mim2gene_url = urlsplit(species_file.get('DO', 'MIM2GENE_URL'))
     genemap_url = urlsplit(species_file.get('DO', 'GENEMAP_URL'))
+    xrdb = species_file.get('DO', 'XRDB')
 
     do_obo_filename = os.path.basename(do_obo_url.path)
     mim2gene_filename = os.path.basename(mim2gene_url.path)
@@ -365,6 +367,8 @@ def process_do_terms(species_ini_file):
     disease_ontology.populated = True
     disease_ontology.propagate()
 
+    org_slug = organism.lower().replace(' ', '-')
+
     do_terms = []
 
     for term_id, term in disease_ontology.go_terms.iteritems():
@@ -373,8 +377,9 @@ def process_do_terms(species_ini_file):
 
         do_term['title'] = create_do_term_title(term)
         do_term['abstract'] = create_do_term_abstract(term, doid_omim_dict)
-        do_term['xrdb'] = 'Entrez'
-        do_term['organism'] = 'Homo sapiens'  # DO only exists for Homo sapiens
+        do_term['xrdb'] = xrdb
+        do_term['organism'] = organism
+        do_term['slug'] = term_id.lower().replace(':', '') + '-' + org_slug
 
         do_term['annotations'] = {}
 
