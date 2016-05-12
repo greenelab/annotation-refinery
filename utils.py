@@ -87,3 +87,10 @@ def download_from_url(url, download_folder, file_name=None):
         logger.error('There was an error when downloading the file "' +
                      filename + '" - downloading could not be completed.')
         return False
+
+
+def translate_gene_ids(tribe_url, gene_list, from_id, to_id):
+    payload = {'gene_list': gene_list, 'from_id': from_id, 'to_id': to_id}
+    r = requests.post(tribe_url + '/api/v1/gene/xrid_translate', data=payload)
+    result_dictionary = r.json()
+    return result_dictionary
