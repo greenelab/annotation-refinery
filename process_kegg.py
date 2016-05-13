@@ -81,7 +81,7 @@ def get_kegg_sets_members(kegg_sets_file):
             group = group.split('_').pop()
 
         geneid = toks[1].split(':')[1]  # gene listed second, has prefix
-        kegg_set_members[group].add(int(geneid))
+        kegg_set_members[group].add(geneid)
 
     return kegg_set_members
 
@@ -174,7 +174,10 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism, xrdb):
         # have publications associated with their genes, each gene will have
         # an empty list as a value in the set's annotations.
         for member in kegg_sets_members[kegg_id]:
-            kegg_set_info['annotations'][member] = []
+            if xrdb == 'Entrez':
+                kegg_set_info['annotations'][int(member)] = []
+            else:
+                kegg_set_info['annotations'][member] = []
 
         all_kegg_sets.append(kegg_set_info)
 
