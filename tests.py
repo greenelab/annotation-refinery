@@ -76,10 +76,10 @@ class KeggTest(unittest.TestCase):
             'test_files/KEGG/test_pathway.csv')
 
         desired_output = {
-            'hsa00010': set([10327, 124, 125, 126, 127, 128, 130,
-                             131, 130589, 160287]),
-            'hsa00020': set([1431, 1737, 1738, 1743, 2271, 3417,
-                             3418, 3419, 3420, 3421])
+            'hsa00010': set(['10327', '124', '125', '126', '127', '128', '130',
+                             '131', '130589', '160287']),
+            'hsa00020': set(['1431', '1737', '1738', '1743', '2271', '3417',
+                             '3418', '3419', '3420', '3421'])
         }
 
         self.assertEqual(kegg_members_dict, desired_output)
@@ -789,12 +789,9 @@ class LoaderTest(unittest.TestCase):
         self.assertEqual(len(version_response['annotations']), 6)
 
     """
-    The next three tests are similar to the three tests above, but they
-    check that if the geneset we want to create already exists and the
+    The next test is similar to the three tests above, but it checks
+    that if the geneset we want to create already exists and the
     annotations have not changed, we handle the situation appropriately.
-    For these tests, we will process the same geneset lists
-    as the previous tests, but we will load the third geneset in each
-    of those lists to Tribe.
     """
 
     def testCreatingAlreadyExistingGeneset(self):

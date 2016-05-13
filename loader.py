@@ -101,6 +101,7 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
                 geneset_info['geneset'] = gs_response['resource_uri']
                 geneset_info['parent'] = gs_response['tip']['resource_uri']
                 geneset_info['description'] = 'Updating annotations.'
+
                 response = create_remote_version(access_token, geneset_info,
                                                  tribe_url)
             else:
