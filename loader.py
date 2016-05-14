@@ -60,10 +60,9 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
         username, password, tribe_id, tribe_secret, access_token_url)
 
     if create_new_versions:
-        gs_slug = geneset_info['slug']
 
-        complete_gs_slug = username + '/' + gs_slug
-        gs_url = tribe_url + '/api/v1/geneset/' + complete_gs_slug
+        gs_url = tribe_url + '/api/v1/geneset/' + username + '/' + \
+            geneset_info['slug']
 
         parameters = {'oauth_consumer_key': access_token,
                       'full_annotations': 'true', 'show_tip': 'true',
@@ -107,7 +106,7 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
             else:
                 # Do not create a new version or geneset
                 logger.info('Geneset with title %s already exists with the '
-                            'same annotations and Tribe. Not attempting to '
+                            'same annotations in Tribe. Not attempting to '
                             'save this geneset.', geneset_info['title'])
                 response = {}
                 response['content'] = (
