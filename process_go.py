@@ -233,7 +233,7 @@ def process_go_terms(species_ini_file, base_download_folder):
         for annotation in term.annotations:
             if annotation.gid not in go_term['annotations']:
                 go_term['annotations'][annotation.gid] = []
-            else:
+            elif annotation.ref is not None:
                 go_term['annotations'][annotation.gid].append(annotation.ref)
 
             if annotation.xdb is not None:
