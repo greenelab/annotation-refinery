@@ -99,7 +99,7 @@ def get_kegg_set_info(kegg_set_info_file, org_slug):
 
     org_slug -- A string of the organism's scientific name, modified
     so that all characters are lowercase and whitespace is replaced
-    with a hyphen.
+    with a hyphen. This is done with the slugify.slugify() function.
 
     Returns:
     set_info_dict -- Dictionary with 'title' and 'abstract' (which correspond
