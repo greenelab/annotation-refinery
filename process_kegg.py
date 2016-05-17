@@ -180,7 +180,12 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism, xrdb):
         # an empty list as a value in the set's annotations.
         for member in kegg_sets_members[kegg_id]:
             if xrdb == 'Entrez':
-                kegg_set_info['annotations'][int(member)] = []
+                try:
+                    kegg_set_info['annotations'][int(member)] = []
+                except ValueError:
+                    logger.error('Entrez ID %s could not be coerced to an '
+                                 'integer and was not included in KEGG set'
+                                 'with kegg_id %s', member, kegg_id)
             else:
                 kegg_set_info['annotations'][member] = []
 
