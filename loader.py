@@ -158,8 +158,19 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
                 old_annotations[gene] = set(annotation['pubs'])
 
             gene_list = geneset_info['annotations'].keys()
-            gene_entrezids = translate_gene_ids(tribe_url, gene_list,
-                                                geneset_info['xrdb'], 'Entrez')
+            translate_response = translate_gene_ids(tribe_url, gene_list,
+                                                    geneset_info['xrdb'],
+                                                    'Entrez')
+            if translate_response.status_code != 200:
+                logger.error(('Tribe request to translate gene IDs with Tribe '
+                              'url={0} gene_list={1} and from_id={2} failed.'
+                              'Previous annotations could not be retrieved, '
+                              'and new version of geneset with data {3} will '
+                              'not be created.').format(tribe_url, gene_list,
+                             geneset_info['xrdb'], geneset_info))
+                return False
+
+            gene_entrezids = translate_response.json()
 
             pub_set_annotations = {}
             for gene, publist in geneset_info['annotations'].iteritems():
