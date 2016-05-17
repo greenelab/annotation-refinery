@@ -813,7 +813,7 @@ class LoaderTest(unittest.TestCase):
         response = loader.load_to_tribe(
             self.main_config_file, selected_go_term, create_new_versions=True)
 
-        self.assertEqual(response['status_code'], 400)
+        self.assertEqual(response['status_code'], 409)
         self.assertEqual(
             response['content'], 'There is already a geneset with the slug '
             '"go0000005-homo-sapiens" and annotations {\'A0A024R214\': []} '
