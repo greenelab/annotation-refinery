@@ -5,6 +5,7 @@ from urlparse import urlsplit
 from ConfigParser import SafeConfigParser
 
 from go import go
+from slugify import slugify
 
 # Import and set logger
 import logging
@@ -367,7 +368,7 @@ def process_do_terms(species_ini_file):
     disease_ontology.populated = True
     disease_ontology.propagate()
 
-    org_slug = organism.lower().replace(' ', '-')
+    org_slug = slugify(organism)
 
     do_terms = []
 
@@ -379,7 +380,7 @@ def process_do_terms(species_ini_file):
         do_term['abstract'] = create_do_term_abstract(term, doid_omim_dict)
         do_term['xrdb'] = xrdb
         do_term['organism'] = organism
-        do_term['slug'] = term_id.lower().replace(':', '') + '-' + org_slug
+        do_term['slug'] = slugify(term_id) + '-' + org_slug
 
         do_term['annotations'] = {}
 

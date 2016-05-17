@@ -3,6 +3,8 @@ import sys
 from collections import defaultdict
 from ConfigParser import SafeConfigParser
 
+from slugify import slugify
+
 # Import and set logger
 import logging
 logger = logging.getLogger(__name__)
@@ -127,8 +129,8 @@ def get_kegg_set_info(kegg_set_info_file, org_slug):
             set_info_dict['kegg_id'] + ': ' + ks_title
 
         # Add org_slug to the geneset 'slug'
-        lowercase_kegg_id = set_info_dict['kegg_id'].lower()
-        set_info_dict['slug'] = org_slug + '-' + lowercase_kegg_id
+        set_info_dict['slug'] = org_slug + '-' + \
+            set_info_dict['kegg_id'].lower()
 
         if 'abstract' not in set_info_dict:
             set_info_dict['abstract'] = ''
@@ -152,6 +154,9 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism, xrdb):
     organims -- A string of the scientific name for our desired organism
     (e.g. 'Homo sapiens')
 
+    xrdb -- A string. The name of the cross-reference database (i.e. type of
+    gene identifier) used by KEGG in the members file(s) for this species.
+
     Returns:
     all_kegg_sets -- A list of processed KEGG sets, where each KEGG set is
     a Python dictionary, containing its title, abstract, and annotations.
@@ -162,7 +167,7 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism, xrdb):
 
     for kegg_id in kegg_sets_members.keys():
         info_file = os.path.join(keggset_info_folder, kegg_id)
-        org_slug = organism.lower().replace(' ', '-')
+        org_slug = slugify(organism)
 
         kegg_set_info = get_kegg_set_info(info_file, org_slug)
 
