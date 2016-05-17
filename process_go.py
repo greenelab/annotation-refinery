@@ -6,6 +6,7 @@ from urlparse import urlsplit
 from ConfigParser import SafeConfigParser
 
 from go import go
+from slugify import slugify
 
 # Import and set logger
 import logging
@@ -212,7 +213,7 @@ def process_go_terms(species_ini_file, base_download_folder):
     gene_ontology.populated = True
     gene_ontology.propagate()
 
-    org_slug = organism.lower().replace(' ', '-')
+    org_slug = slugify(organism)
 
     GO_terms = []
 
@@ -225,7 +226,7 @@ def process_go_terms(species_ini_file, base_download_folder):
         go_term['title'] = create_go_term_title(term)
         go_term['abstract'] = create_go_term_abstract(term, evcodes)
         go_term['organism'] = organism
-        go_term['slug'] = term_id.lower().replace(':', '') + '-' + org_slug
+        go_term['slug'] = slugify(term_id) + '-' + org_slug
 
         go_term['annotations'] = {}
         go_term_xrdb = None
