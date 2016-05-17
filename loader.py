@@ -52,14 +52,14 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
 
     create_new_versions -- Boolean keyword argument. If False, this function
     will not try to create new versions of already existing genesets - it will
-    attempt to create a geneset in Tribe from the geneset_info and fail if the
-    geneset (with the same title and creator username) already exists.
-    If True, this function will check if a geneset with the same title and
-    creator username exists. If no such geneset exists, it will create a new
-    geneset, but if such geneset does exist, it will check if the
-    annotations have changed. If the so, it will create a new version of the
-    geneset with the new annotations. If the annotations have not changed, no
-    new geneset version will be saved.
+    attempt to create a geneset in Tribe from the geneset_info and fail if
+    the geneset (with the same title and creator username) already exists.
+    If True, this function will check if a geneset with the same title
+    and creator username exists. If no such geneset exists, it will create
+    a new geneset, but if such geneset does exist, it will check if the
+    annotations have changed. If the annotations have changed, it will
+    create a new version of the geneset with the new annotations.
+    If the annotations have not changed, no new geneset version will be saved.
 
     Returns:
     Either:
