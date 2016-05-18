@@ -213,8 +213,6 @@ def process_go_terms(species_ini_file, base_download_folder):
     gene_ontology.populated = True
     gene_ontology.propagate()
 
-    org_slug = slugify(organism)
-
     GO_terms = []
 
     for (term_id, term) in gene_ontology.go_terms.iteritems():
@@ -226,7 +224,7 @@ def process_go_terms(species_ini_file, base_download_folder):
         go_term['title'] = create_go_term_title(term)
         go_term['abstract'] = create_go_term_abstract(term, evcodes)
         go_term['organism'] = organism
-        go_term['slug'] = slugify(term_id) + '-' + org_slug
+        go_term['slug'] = slugify(term_id + '-' + organism)
 
         go_term['annotations'] = {}
         go_term_xrdb = None

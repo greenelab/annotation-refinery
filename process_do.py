@@ -368,8 +368,6 @@ def process_do_terms(species_ini_file):
     disease_ontology.populated = True
     disease_ontology.propagate()
 
-    org_slug = slugify(organism)
-
     do_terms = []
 
     for term_id, term in disease_ontology.go_terms.iteritems():
@@ -380,7 +378,7 @@ def process_do_terms(species_ini_file):
         do_term['abstract'] = create_do_term_abstract(term, doid_omim_dict)
         do_term['xrdb'] = xrdb
         do_term['organism'] = organism
-        do_term['slug'] = slugify(term_id) + '-' + org_slug
+        do_term['slug'] = slugify(term_id + '-' + organism)
 
         do_term['annotations'] = {}
 

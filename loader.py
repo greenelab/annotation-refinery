@@ -25,8 +25,8 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
 
     Arguments:
     main_config_file -- A string, location of the main INI configuration
-    file, which should include Tribe parameters and location of secrets
-    file.
+    file. This file should include Tribe parameters and the location of
+    the secrets file.
 
     geneset_info -- Dictionary containing the data for the geneset or
     version to be created. The geneset_info dictionary **must** contain
@@ -66,7 +66,7 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
     a) response -- The response from Tribe, including a 'status_code' and
     'content'
 
-    or b) False (and raises an error), if the geneset_info did not contain a
+    or b) False (and logs an error), if the geneset_info did not contain a
     title or annotations.
 
     """
