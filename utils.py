@@ -3,7 +3,7 @@ import tempfile
 import shutil
 import requests
 import urllib
-from ConfigParser import SafeConfigParser
+from urlparse import urlsplit
 
 import logging
 logger = logging.getLogger(__name__)
@@ -49,13 +49,13 @@ def download_from_url(url, download_folder, file_name=None):
     if file_name:
         filename = file_name
     else:
-        filename = url.split('/')[-1]
+        filename = os.path.basename(urlsplit(url).path)
 
-    target_filename = download_folder + '/' + filename
+    target_filename = os.path.join(download_folder, filename)
 
     if os.path.exists(target_filename):
-        logger.error('Not downloading file ' + filename + ', as it already'
-                     ' exists in the download_folder specified.')
+        logger.warning('Not downloading file ' + filename + ', as it already'
+                       ' exists in the download_folder specified.')
         return False
 
     try:
@@ -87,6 +87,13 @@ def download_from_url(url, download_folder, file_name=None):
         logger.error('There was an error when downloading the file "' +
                      filename + '" - downloading could not be completed.')
         return False
+
+
+def translate_gene_ids(tribe_url, gene_list, from_id, to_id):
+    payload = {'gene_list': gene_list, 'from_id': from_id, 'to_id': to_id}
+    response = requests.post(tribe_url + '/api/v1/gene/xrid_translate',
+                             data=payload)
+    return response
 
 
 def build_tags_dictionary(tag_mapping_file, geneset_id_column,

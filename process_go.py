@@ -1,8 +1,12 @@
+import os
+import re
 import sys
 import gzip
+from urlparse import urlsplit
 from ConfigParser import SafeConfigParser
 
 from go import go
+from slugify import slugify
 from utils import build_tags_dictionary
 
 # Import and set logger
@@ -17,8 +21,14 @@ GO_NAMESPACE_MAP = {
     'cellular_component': 'CC',
 }
 
+DB_REMAP = {
+    'FB': 'FLYBASE',
+    'WB': 'WormBase',
+}
 
-def get_filtered_annotations(assoc_file, accepted_evcodes=None):
+
+def get_filtered_annotations(assoc_file, accepted_evcodes=None,
+                             remove_leading_gene_id=None):
     """
     This function reads in the association file and returns a list of
     annotations. Only annotations that have evidence codes in
@@ -28,6 +38,16 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None):
     Arguments:
     assoc_file -- A string. Location of the GO association file to be
     read in.
+
+    accepted_evcodes -- A list of evidence codes (e.g. ['EXP', 'IDA', 'IPI'])
+    to filter the annotations by.
+
+    remove_leading_gene_id -- True or False value. For some organisms, such
+    as Mouse, there is a leading tag on the gene IDs column in the gene
+    association file. This tag is just a duplicate of the type of gene
+    identifier (already present in the identifier type (xrdb) column) and
+    should be removed to get the pure gene ID (e.g. to get "99668" as
+    opposed to "MGI:99668").
 
     Returns:
     annotations -- A list of all the annotations that meet the desired
@@ -49,6 +69,24 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None):
         toks = line.strip().split('\t')
         (xrdb, xrid, details, goid, refstring, ev_code, date) = (
             toks[0], toks[1], toks[3], toks[4], toks[5], toks[6], toks[13])
+
+        if remove_leading_gene_id:
+            xrid = xrid.split(':')[1]
+
+        if xrdb in DB_REMAP:
+            xrdb = DB_REMAP[xrdb]
+
+        # These next few lines are needed for processing
+        # Arabidopsis annotations
+        if xrdb == 'TAIR':
+            tair_regex = re.compile('AT[0-9MC]G[0-9][0-9][0-9][0-9][0-9]')
+            first_alias = toks[10].split('|')[0]
+            if tair_regex.match(toks[2]):
+                xrid = toks[2]
+            elif tair_regex.match(toks[9]):
+                xrid = toks[9]
+            elif tair_regex.match(first_alias):
+                xrid = first_alias
 
         if details == 'NOT':
             continue
@@ -118,7 +156,7 @@ def create_go_term_abstract(go_term, evlist=None):
     return description
 
 
-def process_go_terms(species_ini_file):
+def process_go_terms(species_ini_file, base_download_folder):
     """
     Function to read in config INI file and run the other functions to
     process GO terms.
@@ -131,17 +169,31 @@ def process_go_terms(species_ini_file):
                      ' to run the process_go_terms function.')
         sys.exit(1)
 
-    evcodes = species_file.get('GO', 'EVIDENCE_CODES')
-    assoc_file = species_file.get('GO', 'ASSOC_FILE')
-    obo_location = species_file.get('GO', 'OBO_FILE')
     organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
+    sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
 
+    obo_url = urlsplit(species_file.get('GO', 'GO_OBO_URL'))
+    assoc_file_url = urlsplit(species_file.get('GO', 'ASSOC_FILE_URL'))
+
+    obo_filename = os.path.basename(obo_url.path)
+    assoc_filename = os.path.basename(assoc_file_url.path)
+
+    obo_file = os.path.join(base_download_folder, obo_filename)
+    assoc_file = os.path.join(sd_folder, 'GO', assoc_filename)
+
+    evcodes = species_file.get('GO', 'EVIDENCE_CODES')
     evcodes = evcodes.replace(' ', '').split(',')
 
-    annotations = get_filtered_annotations(assoc_file, evcodes)
+    remove_leading_gene_id = False
+    if species_file.has_option('GO', 'REMOVE_LEADING_GENE_ID'):
+        remove_leading_gene_id = species_file.getboolean(
+            'GO', 'REMOVE_LEADING_GENE_ID')
+
+    annotations = get_filtered_annotations(
+        assoc_file, evcodes, remove_leading_gene_id=remove_leading_gene_id)
 
     gene_ontology = go()
-    loaded_obo_bool = gene_ontology.load_obo(obo_location)
+    loaded_obo_bool = gene_ontology.load_obo(obo_file)
     if loaded_obo_bool is False:
         logger.error('GO OBO file could not be loaded.')
 
@@ -185,6 +237,7 @@ def process_go_terms(species_ini_file):
         go_term['title'] = create_go_term_title(term)
         go_term['abstract'] = create_go_term_abstract(term, evcodes)
         go_term['organism'] = organism
+        go_term['slug'] = slugify(term_id + '-' + organism)
 
         go_term['annotations'] = {}
         go_term_xrdb = None
@@ -192,7 +245,7 @@ def process_go_terms(species_ini_file):
         for annotation in term.annotations:
             if annotation.gid not in go_term['annotations']:
                 go_term['annotations'][annotation.gid] = []
-            else:
+            elif annotation.ref is not None:
                 go_term['annotations'][annotation.gid].append(annotation.ref)
 
             if annotation.xdb is not None:
