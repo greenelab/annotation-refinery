@@ -1,8 +1,11 @@
+import os
 import re
 import sys
+from urlparse import urlsplit
 from ConfigParser import SafeConfigParser
 
 from go import go
+from slugify import slugify
 from utils import build_tags_dictionary
 
 # Import and set logger
@@ -97,6 +100,10 @@ def build_mim2entrez_dict(mim2gene_file):
             continue
 
         if mim_type in TYPE_FILTER:
+            if entrez_gid == '':
+                logger.warning("Gene Entrez ID was blank for MIM ID '%s' in %s"
+                               " mim-to-gene mapping file", mim, mim2gene_file)
+                continue
             if mim in mim2entrez_dict:
                 logger.warning("MIM already exists in mim2entrez_dict: %s", mim)
             mim2entrez_dict[mim] = entrez_gid
@@ -184,7 +191,7 @@ def build_mim_diseases_dict(genemap_file, mim2entrez_dict):
 
                 if mim_dis_id not in mim_diseases:
                     mim_diseases[mim_dis_id] = MIMdisease()
-                    mim_diseases[mim_dis_id].mmid = mim_dis_id
+                    mim_diseases[mim_dis_id].mimid = mim_dis_id
                     mim_diseases[mim_dis_id].phe_mm = mim_phetype
 
                 if tuple_gid_conf not in mim_diseases[mim_dis_id].genetuples:
@@ -329,9 +336,21 @@ def process_do_terms(species_ini_file):
                      ' to run the process_do_terms function.')
         sys.exit(1)
 
-    do_obo_file = species_file.get('DO', 'DO_OBO_FILE')
-    mim2gene_file = species_file.get('DO', 'MIM2GENE_FILE')
-    genemap_file = species_file.get('DO', 'GENEMAP_FILE')
+    sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
+    organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
+
+    do_obo_url = urlsplit(species_file.get('DO', 'DO_OBO_URL'))
+    mim2gene_url = urlsplit(species_file.get('DO', 'MIM2GENE_URL'))
+    genemap_url = urlsplit(species_file.get('DO', 'GENEMAP_URL'))
+    xrdb = species_file.get('DO', 'XRDB')
+
+    do_obo_filename = os.path.basename(do_obo_url.path)
+    mim2gene_filename = os.path.basename(mim2gene_url.path)
+    genemap_filename = os.path.basename(genemap_url.path)
+
+    do_obo_file = os.path.join(sd_folder, 'DO', do_obo_filename)
+    mim2gene_file = os.path.join(sd_folder, 'DO', mim2gene_filename)
+    genemap_file = os.path.join(sd_folder, 'DO', genemap_filename)
 
     disease_ontology = go()
     loaded_obo_bool = disease_ontology.load_obo(do_obo_file)
@@ -369,8 +388,9 @@ def process_do_terms(species_ini_file):
 
         do_term['title'] = create_do_term_title(term)
         do_term['abstract'] = create_do_term_abstract(term, doid_omim_dict)
-        do_term['xrdb'] = 'Entrez'
-        do_term['organism'] = 'Homo sapiens'  # DO only exists for Homo sapiens
+        do_term['xrdb'] = xrdb
+        do_term['organism'] = organism
+        do_term['slug'] = slugify(term_id + '-' + organism)
 
         do_term['annotations'] = {}
 
