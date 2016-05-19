@@ -67,6 +67,7 @@ downloaded.
     [species_info]
     SCIENTIFIC_NAME: Homo sapiens
     TAXONOMY_ID: 9606
+    SPECIES_DOWNLOAD_FOLDER: download_files/Human
 
 
     # ***********************************************
@@ -76,28 +77,43 @@ downloaded.
 
     [GO]
     DOWNLOAD: TRUE
+
     GO_OBO_URL: ftp://ftp.geneontology.org/go/ontology/obo_format_1_2/gene_ontology.1_2.obo
     ASSOC_FILE_URL: ftp://ftp.geneontology.org/go/gene-associations/gene_association.goa_human.gz
-    DOWNLOAD_FOLDER: download_files/GO
 
-    OBO_FILE: download_files/GO/gene_ontology.1_2.obo
-    ASSOC_FILE: download_files/GO/gene_association.goa_human.gz
-
-    # We want to filter GO terms so that we only process the ones with the
-    # following evidence codes:
     EVIDENCE_CODES: EXP, IDA, IPI, IMP, IGI, IEP
 
+    TAG_MAPPING_FILE: tag_mapping_files/brenda-gobp-all_mapping.dir.v2.txt
+    GO_ID_COLUMN: 2
+    GO_NAME_COLUMN: 3
+    TAG_COLUMN: 1
+    TAG_FILE_HEADER: TRUE
+
+
+    [KEGG]
+    DOWNLOAD: TRUE
+    KEGG_ROOT_URL: http://rest.kegg.jp
+    DB_INFO_URL: /info/kegg
+    SETS_TO_DOWNLOAD: /link/hsa/pathway, /link/hsa/module, /link/hsa/disease
+    SET_INFO_DIR: /get/
+
+    # This is the type of gene identifier used by KEGG for this species
+    XRDB: Entrez
 
     [DO]
     DOWNLOAD: TRUE
     DO_OBO_URL: http://sourceforge.net/p/diseaseontology/code/HEAD/tree/trunk/HumanDO.obo?format=raw
     MIM2GENE_URL: http://omim.org/static/omim/data/mim2gene.txt
     GENEMAP_URL: http://data.omim.org/downloads/<SecretKey>/genemap.txt
-    DOWNLOAD_FOLDER: download_files/DO
 
-    DO_OBO_FILE: download_files/DO/HumanDO.obo?format=raw
-    MIM2GENE_FILE: download_files/DO/mim2gene.txt
-    GENEMAP_FILE: download_files/DO/genemap.txt
+    # This is the type of gene identifier used by DO
+    XRDB: Entrez
+
+    TAG_MAPPING_FILE: tag_mapping_files/tissue-disease_curated-associations.txt
+    DO_ID_COLUMN: 2
+    DO_NAME_COLUMN: 3
+    TAG_COLUMN: 1
+    TAG_FILE_HEADER: TRUE
 
 
 The Secrets File
