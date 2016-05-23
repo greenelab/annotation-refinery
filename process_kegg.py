@@ -194,9 +194,8 @@ def build_kegg_sets(kegg_sets_members, keggset_info_folder, organism, xrdb,
             else:
                 kegg_set_info['annotations'][member] = []
 
-        if tags_dictionary:
-            if kegg_id in tags_dictionary:
-                kegg_set_info['tags'] = tags_dictionary[kegg_id]['gs_tags']
+        if tags_dictionary and kegg_id in tags_dictionary:
+            kegg_set_info['tags'] = tags_dictionary[kegg_id]['gs_tags']
 
         all_kegg_sets.append(kegg_set_info)
 
