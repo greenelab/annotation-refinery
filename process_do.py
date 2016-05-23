@@ -401,9 +401,8 @@ def process_do_terms(species_ini_file):
                 do_term['annotations'][annotation.gid].append(annotation.ref)
 
         if do_term['annotations']:
-            if tags_dictionary:
-                if term_id in tags_dictionary:
-                    do_term['tags'] = tags_dictionary[term_id]['gs_tags']
+            if tags_dictionary and term_id in tags_dictionary:
+                do_term['tags'] = tags_dictionary[term_id]['gs_tags']
             do_terms.append(do_term)
 
     return do_terms

@@ -260,9 +260,8 @@ def process_go_terms(species_ini_file, base_download_folder):
         go_term['xrdb'] = go_term_xrdb
 
         if go_term['annotations']:
-            if tags_dictionary:
-                if term_id in tags_dictionary:
-                    go_term['tags'] = tags_dictionary[term_id]['gs_tags']
+            if tags_dictionary and term_id in tags_dictionary:
+                go_term['tags'] = tags_dictionary[term_id]['gs_tags']
             GO_terms.append(go_term)
 
     return GO_terms
