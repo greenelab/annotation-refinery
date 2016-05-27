@@ -1,0 +1,1031 @@
+format-version: 1.2
+data-version: releases/2016-05-03
+date: 29:04:2016 15:30
+saved-by: hjd
+auto-generated-by: OBO-Edit 2.3.1
+subsetdef: goantislim_grouping "Grouping classes that can be excluded"
+subsetdef: gocheck_do_not_annotate "Term not to be used for direct annotation"
+subsetdef: gocheck_do_not_manually_annotate "Term not to be used for direct manual annotation"
+subsetdef: goslim_aspergillus "Aspergillus GO slim"
+subsetdef: goslim_candida "Candida GO slim"
+subsetdef: goslim_chembl "ChEMBL protein targets summary"
+subsetdef: goslim_generic "Generic GO slim"
+subsetdef: goslim_goa "GOA and proteome slim"
+subsetdef: goslim_metagenomics "Metagenomics GO slim"
+subsetdef: goslim_pir "PIR GO slim"
+subsetdef: goslim_plant "Plant GO slim"
+subsetdef: goslim_pombe "Fission yeast GO slim"
+subsetdef: goslim_synapse "synapse GO slim"
+subsetdef: goslim_virus "Viral GO slim"
+subsetdef: goslim_yeast "Yeast GO slim"
+subsetdef: gosubset_prok "Prokaryotic GO subset"
+subsetdef: mf_needs_review "Catalytic activity terms in need of attention"
+subsetdef: termgenie_unvetted "Terms created by TermGenie that do not follow a template and require additional vetting by editors"
+subsetdef: virus_checked "Viral overhaul terms"
+synonymtypedef: systematic_synonym "Systematic synonym" EXACT
+default-namespace: gene_ontology
+remark: cvs version: use data-version
+ontology: go
+
+[Term]
+id: GO:0000030
+name: mannosyltransferase activity
+namespace: molecular_function
+def: "Catalysis of the transfer of a mannosyl group to an acceptor molecule, typically another carbohydrate or a lipid." [GOC:ai, GOC:cjm]
+subset: gosubset_prok
+xref: EC:2.4.1.-
+xref: Reactome:REACT_1018 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Homo sapiens"
+xref: Reactome:REACT_105204 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Dictyostelium discoideum"
+xref: Reactome:REACT_2179 "mannose (a1-2) mannose (a1-6) (ethanolamineP) mannose (a1-4) glucosaminyl-acyl-PI -> mannose (a1) mannose (a1-2) mannose (a1-6) (ethanolamineP) mannose (a1-4) glucosaminyl-acyl-PI, Homo sapiens"
+xref: Reactome:REACT_22117 "Addition of the eighth mannose to the N-glycan precursor by ALG12, inside the ER lumen, Homo sapiens"
+xref: Reactome:REACT_30252 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Rattus norvegicus"
+xref: Reactome:REACT_34702 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Danio rerio"
+xref: Reactome:REACT_63412 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Mus musculus"
+xref: Reactome:REACT_87972 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Canis familiaris"
+xref: Reactome:REACT_95740 "glucosaminyl-acyl-PI + dolichol phosphate D-mannose -> mannose(al1-4)glucosaminyl-acyl-PI + dolichol phosphate, Gallus gallus"
+is_a: GO:0016758 ! transferase activity, transferring hexosyl groups
+
+
+[Term]
+id: GO:0001503
+name: ossification
+namespace: biological_process
+def: "The formation of bone or of a bony substance, or the conversion of fibrous tissue or of cartilage into bone or a bony substance." [GOC:mtg_mpo, PMID:17572649]
+comment: Note that this term does not have a 'developmental process' parent because ossification isn't necessarily developmental, can also occur as part of bone remodeling. Instead use 'ossification involved in bone maturation ; GO:0043931'.
+synonym: "bone biosynthesis" EXACT []
+synonym: "bone formation" EXACT []
+synonym: "osteogenesis" EXACT []
+xref: Wikipedia:Ossification
+
+[Term]
+id: GO:0001649
+name: osteoblast differentiation
+namespace: biological_process
+def: "The process whereby a relatively unspecialized cell acquires the specialized features of an osteoblast, a mesodermal or neural crest cell that gives rise to bone." [CL:0000062, GO_REF:0000034, GOC:jid]
+synonym: "osteoblast cell differentiation" EXACT []
+
+[Term]
+id: GO:0003674
+name: molecular_function
+namespace: molecular_function
+alt_id: GO:0005554
+def: "Elemental activities, such as catalysis or binding, describing the actions of a gene product at the molecular level. A given gene product may exhibit one or more molecular functions." [GOC:go_curators]
+comment: Note that, in addition to forming the root of the molecular function ontology, this term is recommended for use for the annotation of gene products whose molecular function is unknown. Note that when this term is used for annotation, it indicates that no information was available about the molecular function of the gene product annotated as of the date the annotation was made; the evidence code ND, no data, is used to indicate this.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "molecular function" EXACT []
+
+[Term]
+id: GO:0003824
+name: catalytic activity
+namespace: molecular_function
+def: "Catalysis of a biochemical reaction at physiological temperatures. In biologically catalyzed reactions, the reactants are known as substrates, and the catalysts are naturally occurring macromolecular substances known as enzymes. Enzymes possess specific binding sites for substrates, and are usually composed wholly or largely of protein, but RNA that has catalytic activity (ribozyme) is often also regarded as enzymatic." [ISBN:0198506732]
+subset: goslim_chembl
+subset: goslim_pir
+subset: goslim_plant
+subset: gosubset_prok
+synonym: "enzyme activity" EXACT [GOC:dph, GOC:tb]
+xref: Wikipedia:Enzyme
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0003976
+name: UDP-N-acetylglucosamine-lysosomal-enzyme N-acetylglucosaminephosphotransferase activity
+namespace: molecular_function
+def: "Catalysis of the reaction: UDP-N-acetyl-D-glucosamine + lysosomal-enzyme D-mannose = UMP + lysosomal-enzyme N-acetyl-D-glucosaminyl-phospho-D-mannose." [EC:2.7.8.17]
+synonym: "lysosomal enzyme precursor acetylglucosamine-1-phosphotransferase activity" EXACT [EC:2.7.8.17]
+synonym: "N-acetylglucosaminyl phosphotransferase activity" EXACT [EC:2.7.8.17]
+synonym: "N-acetylglucosaminylphosphotransferase activity" RELATED [EC:2.7.8.17]
+synonym: "UDP-GlcNAc:glycoprotein N-acetylglucosamine-1-phosphotransferase activity" EXACT [EC:2.7.8.17]
+synonym: "UDP-N-acetyl-D-glucosamine:lysosomal-enzyme N-acetylglucosaminephosphotransferase activity" EXACT [EC:2.7.8.17]
+synonym: "UDP-N-acetylglucosamine:glycoprotein N-acetylglucosamine-1-phosphotransferase activity" EXACT [EC:2.7.8.17]
+synonym: "UDP-N-acetylglucosamine:glycoprotein N-acetylglucosaminyl-1-phosphotransferase activity" EXACT [EC:2.7.8.17]
+synonym: "UDP-N-acetylglucosamine:lysosomal enzyme N-acetylglucosamine-1-phosphotransferase activity" EXACT [EC:2.7.8.17]
+xref: EC:2.7.8.17
+xref: MetaCyc:2.7.8.17-RXN
+
+[Term]
+id: GO:0004169
+name: dolichyl-phosphate-mannose-protein mannosyltransferase activity
+namespace: molecular_function
+def: "Catalysis of the reaction: dolichyl phosphate D-mannose + protein = dolichyl phosphate + O-D-mannosylprotein." [EC:2.4.1.109, GOC:pr]
+comment: Note that this activity has never been observed in green plants. However, N- and C-mannosylation may occur in these species; see figure 1 in PMID:21558543.
+subset: gosubset_prok
+synonym: "dolichol phosphomannose-protein mannosyltransferase activity" EXACT [EC:2.4.1.109]
+synonym: "dolichyl-phosphate-D-mannose:protein O-D-mannosyltransferase activity" EXACT [EC:2.4.1.109]
+synonym: "dolichyl-phosphate-mannose-protein O-mannosyltransferase activity" EXACT []
+synonym: "O-glycoside mannosyltransferase" BROAD []
+synonym: "protein O-D-mannosyltransferase activity" EXACT [EC:2.4.1.109]
+synonym: "protein O-mannosyltransferase activity" EXACT []
+xref: EC:2.4.1.109
+xref: MetaCyc:2.4.1.109-RXN
+is_a: GO:0000030 ! mannosyltransferase activity
+
+[Term]
+id: GO:0006022
+name: aminoglycan metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving aminoglycans, any polymer containing amino groups that consists of more than about 10 monosaccharide residues joined to each other by glycosidic linkages." [GOC:ai, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "aminoglycan metabolism" EXACT []
+
+[Term]
+id: GO:0006023
+name: aminoglycan biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of aminoglycans, any polymer containing amino groups that consists of more than about 10 monosaccharide residues joined to each other by glycosidic linkages." [GOC:ai, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "aminoglycan anabolism" EXACT []
+synonym: "aminoglycan biosynthesis" EXACT []
+synonym: "aminoglycan formation" EXACT []
+synonym: "aminoglycan synthesis" EXACT []
+is_a: GO:0006022 ! aminoglycan metabolic process
+is_a: GO:0044711 ! single-organism biosynthetic process
+
+[Term]
+id: GO:0006024
+name: glycosaminoglycan biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of glycosaminoglycans, any of a group of polysaccharides that contain amino sugars." [ISBN:0192800981]
+subset: gosubset_prok
+synonym: "glycosaminoglycan anabolism" EXACT []
+synonym: "glycosaminoglycan biosynthesis" EXACT []
+synonym: "glycosaminoglycan formation" EXACT []
+synonym: "glycosaminoglycan synthesis" EXACT []
+is_a: GO:0006023 ! aminoglycan biosynthetic process
+is_a: GO:0030203 ! glycosaminoglycan metabolic process
+
+[Term]
+id: GO:0006029
+name: proteoglycan metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving proteoglycans, any glycoprotein in which the carbohydrate units are glycosaminoglycans." [GOC:mah, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "proteoglycan metabolism" EXACT []
+synonym: "proteoglycan sulfate transfer" NARROW []
+is_a: GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:0006056
+name: mannoprotein metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving mannoproteins, any protein that contains covalently bound mannose residues." [ISBN:0198506732]
+subset: gosubset_prok
+synonym: "mannoprotein metabolism" EXACT []
+is_a: GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:0006486
+name: protein glycosylation
+namespace: biological_process
+def: "A protein modification process that results in the addition of a carbohydrate or carbohydrate derivative unit to a protein amino acid, e.g. the addition of glycan chains to proteins." [GOC:curators, GOC:pr]
+subset: goslim_pombe
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "protein amino acid glycosylation" EXACT [GOC:bf]
+is_a: GO:0043413 ! macromolecule glycosylation
+relationship: part_of GO:0009101 ! glycoprotein biosynthetic process
+
+[Term]
+id: GO:0006487
+name: protein N-linked glycosylation
+namespace: biological_process
+def: "A protein glycosylation process in which a carbohydrate or carbohydrate derivative unit is added to a protein via the N4 atom of peptidyl-asparagine, the omega-N of arginine, or the N1' atom peptidyl-tryptophan." [GOC:pr, RESID:AA0151, RESID:AA0156, RESID:AA0327]
+subset: gosubset_prok
+synonym: "N-glycan biosynthesis" RELATED []
+synonym: "N-glycan metabolism" RELATED []
+synonym: "protein amino acid N-linked glycosylation" EXACT [GOC:bf]
+xref: RESID:AA0151
+xref: RESID:AA0156
+xref: RESID:AA0327
+is_a: GO:0006486 ! protein glycosylation
+
+[Term]
+id: GO:0006491
+name: N-glycan processing
+namespace: biological_process
+alt_id: GO:0006492
+def: "The conversion of N-linked glycan (N = nitrogen) structures from the initially transferred oligosaccharide to a mature form, by the actions of glycosidases and glycosyltransferases. The early processing steps are conserved and play roles in glycoprotein folding and trafficking." [ISBN:0879695595, PMID:12736198]
+subset: gosubset_prok
+synonym: "N-glycan catabolism" RELATED []
+synonym: "N-glycan degradation" RELATED []
+synonym: "N-linked glycoprotein maturation" EXACT []
+is_a: GO:0009311 ! oligosaccharide metabolic process
+relationship: part_of GO:0006487 ! protein N-linked glycosylation
+
+[Term]
+id: GO:0006493
+name: protein O-linked glycosylation
+namespace: biological_process
+def: "A protein glycosylation process in which a carbohydrate or carbohydrate derivative unit is added to a protein via the hydroxyl group of peptidyl-serine, peptidyl-threonine, peptidyl-hydroxylysine, or peptidyl-hydroxyproline, or via the phenol group of peptidyl-tyrosine, forming an O-glycan." [GOC:pr, ISBN:0879695595, RESID:AA0153, RESID:AA0154, RESID:AA0155, RESID:AA0157, RESID:AA0212]
+subset: gosubset_prok
+synonym: "protein amino acid O-linked glycosylation" EXACT [GOC:bf]
+xref: RESID:AA0153
+xref: RESID:AA0154
+xref: RESID:AA0155
+xref: RESID:AA0157
+xref: RESID:AA0212
+is_a: GO:0006486 ! protein glycosylation
+
+[Term]
+id: GO:0006516
+name: glycoprotein catabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the breakdown of glycoproteins, any protein that contains covalently bound glycose (i.e. monosaccharide) residues; the glycose occurs most commonly as oligosaccharide or fairly small polysaccharide but occasionally as monosaccharide." [GOC:go_curators, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "glycoprotein breakdown" EXACT []
+synonym: "glycoprotein catabolism" EXACT []
+synonym: "glycoprotein degradation" EXACT []
+is_a: GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:0006622
+name: protein targeting to lysosome
+namespace: biological_process
+def: "The process of directing proteins towards the lysosome using signals contained within the protein." [GOC:curators]
+synonym: "protein-lysosome targeting" EXACT []
+is_a: GO:0006623 ! protein targeting to vacuole
+is_a: GO:0061462 ! protein localization to lysosome
+
+[Term]
+id: GO:0006623
+name: protein targeting to vacuole
+namespace: biological_process
+def: "The process of directing proteins towards the vacuole, usually using signals contained within the protein." [GOC:curators]
+synonym: "protein vacuolar targeting" EXACT []
+synonym: "protein-vacuolar targeting" EXACT []
+synonym: "protein-vacuole targeting" EXACT []
+synonym: "vacuolar protein sorting" EXACT [GOC:vw]
+
+[Term]
+id: GO:0007507
+name: heart development
+namespace: biological_process
+alt_id: GO:0007511
+def: "The process whose specific outcome is the progression of the heart over time, from its formation to the mature structure. The heart is a hollow, muscular organ, which, by contracting rhythmically, keeps up the circulation of the blood." [GOC:jid, UBERON:0000948]
+synonym: "cardiac development" RELATED []
+synonym: "dorsal vessel development" NARROW []
+xref: Wikipedia:Heart_development
+
+[Term]
+id: GO:0007517
+name: muscle organ development
+namespace: biological_process
+def: "The process whose specific outcome is the progression of the muscle over time, from its formation to the mature structure. The muscle is an organ consisting of a tissue made up of various elongated cells that are specialized to contract and thus to produce movement and mechanical work." [GOC:jid, ISBN:0198506732]
+
+[Term]
+id: GO:0008104
+name: protein localization
+namespace: biological_process
+def: "Any process in which a protein is transported to, or maintained in, a specific location." [GOC:ai]
+subset: gosubset_prok
+synonym: "establishment and maintenance of protein localization" EXACT []
+synonym: "protein localisation" EXACT [GOC:mah]
+
+[Term]
+id: GO:0008045
+name: motor neuron axon guidance
+namespace: biological_process
+def: "The process in which the migration of an axon growth cone of a motor neuron is directed to a specific target site in response to a combination of attractive and repulsive cues." [CL:0000100, GOC:pr, ISBN:0878932437]
+synonym: "motoneuron axon guidance" EXACT []
+synonym: "motor axon guidance" EXACT []
+synonym: "motor axon pathfinding" EXACT [GOC:mah]
+
+[Term]
+id: GO:0008150
+name: biological_process
+namespace: biological_process
+alt_id: GO:0000004
+alt_id: GO:0007582
+def: "Any process specifically pertinent to the functioning of integrated living units: cells, tissues, organs, and organisms. A process is a collection of molecular events with a defined beginning and end." [GOC:go_curators, GOC:isa_complete]
+comment: Note that, in addition to forming the root of the biological process ontology, this term is recommended for use for the annotation of gene products whose biological process is unknown. Note that when this term is used for annotation, it indicates that no information was available about the biological process of the gene product annotated as of the date the annotation was made; the evidence code ND, no data, is used to indicate this.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_pombe
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "biological process" EXACT []
+synonym: "physiological process" EXACT []
+xref: Wikipedia:Biological_process
+
+[Term]
+id: GO:0008152
+name: metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways, including anabolism and catabolism, by which living organisms transform chemical substances. Metabolic processes typically transform small molecules, but also include macromolecular processes such as DNA repair and replication, and protein synthesis and degradation." [GOC:go_curators, ISBN:0198547684]
+comment: Note that metabolic processes do not include single functions or processes such as protein-protein interactions, protein-nucleic acids, nor receptor-ligand interactions.
+subset: gocheck_do_not_manually_annotate
+subset: goslim_chembl
+subset: goslim_pir
+subset: goslim_plant
+subset: gosubset_prok
+synonym: "metabolic process resulting in cell growth" NARROW []
+synonym: "metabolism" EXACT []
+synonym: "metabolism resulting in cell growth" NARROW []
+xref: Wikipedia:Metabolism
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0009100
+name: glycoprotein metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving glycoproteins, any protein that contains covalently bound glycose (i.e. monosaccharide) residues; the glycose occurs most commonly as oligosaccharide or fairly small polysaccharide but occasionally as monosaccharide." [GOC:go_curators, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "glycoprotein metabolism" EXACT []
+
+[Term]
+id: GO:0009101
+name: glycoprotein biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of glycoproteins, any protein that contains covalently bound glycose (i.e. monosaccharide) residues; the glycose occurs most commonly as oligosaccharide or fairly small polysaccharide but occasionally as monosaccharide." [GOC:go_curators, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "glycoprotein anabolism" EXACT []
+synonym: "glycoprotein biosynthesis" EXACT []
+synonym: "glycoprotein formation" EXACT []
+synonym: "glycoprotein synthesis" EXACT []
+is_a: GO:0009100 ! glycoprotein metabolic process
+is_a: GO:0034645 ! cellular macromolecule biosynthetic process
+
+[Term]
+id: GO:0009311
+name: oligosaccharide metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving oligosaccharides, molecules with between two and (about) 20 monosaccharide residues connected by glycosidic linkages." [ISBN:0198506732]
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "oligosaccharide metabolism" EXACT []
+is_a: GO:0044723 ! single-organism carbohydrate metabolic process
+
+[Term]
+id: GO:0009950
+name: dorsal/ventral axis specification
+namespace: biological_process
+def: "The establishment, maintenance and elaboration of the dorsal/ventral axis. The dorsal/ventral axis is defined by a line that runs orthogonal to both the anterior/posterior and left/right axes. The dorsal end is defined by the upper or back side of an organism. The ventral end is defined by the lower or front side of an organism." [GOC:dph, GOC:go_curators, GOC:tb]
+synonym: "dorsal-ventral axis specification" EXACT [GOC:mah]
+synonym: "dorsal/ventral axis determination" RELATED [GOC:dph]
+synonym: "dorsoventral axis specification" EXACT [GOC:mah]
+
+[Term]
+id: GO:0009987
+name: cellular process
+namespace: biological_process
+alt_id: GO:0008151
+alt_id: GO:0050875
+def: "Any process that is carried out at the cellular level, but not necessarily restricted to a single cell. For example, cell communication occurs among more than one cell, but occurs at the cellular level." [GOC:go_curators, GOC:isa_complete]
+subset: goslim_pir
+subset: goslim_plant
+subset: gosubset_prok
+synonym: "cell growth and/or maintenance" NARROW []
+synonym: "cell physiology" EXACT []
+synonym: "cellular physiological process" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0010559
+name: regulation of glycoprotein biosynthetic process
+namespace: biological_process
+def: "Any process that modulates the rate, frequency, or extent of the chemical reactions and pathways resulting in the formation of glycoproteins, any protein that contains covalently bound glycose (i.e. monosaccharide) residues; the glycose occurs most commonly as oligosaccharide or fairly small polysaccharide but occasionally as monosaccharide." [GOC:dph, GOC:tb]
+subset: gosubset_prok
+is_a: GO:1903018 ! regulation of glycoprotein metabolic process
+relationship: regulates GO:0009101 ! glycoprotein biosynthetic process
+
+[Term]
+id: GO:0015012
+name: heparan sulfate proteoglycan biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of the heparan sulfate proteoglycan, a glycosaminoglycan with repeat unit consisting of alternating alpha-(1->4)-linked hexuronic acid and glucosamine residues; the former are a mixture of sulfated and nonsulfated D-glucuronic acid and L-iduronic acid; the L-iduronic acid is either sulfated or acetylated on its amino group as well as being sulfated on one of its hydroxyl groups; heparan sulfate chains are covalently linked to peptidyl-serine by a glycosidic attachment through the trisaccharide galactosyl-galactosyl-xylosyl to serine residues." [GOC:mah, ISBN:0198506732, ISBN:0198547684, RESID:AA0210]
+subset: gosubset_prok
+synonym: "heparan sulfate proteoglycan anabolism" EXACT []
+synonym: "heparan sulfate proteoglycan biosynthesis" EXACT []
+synonym: "heparan sulfate proteoglycan formation" EXACT []
+synonym: "heparan sulfate proteoglycan synthesis" EXACT []
+synonym: "heparan sulphate proteoglycan biosynthesis" EXACT []
+synonym: "heparan sulphate proteoglycan biosynthetic process" EXACT []
+synonym: "heparin proteoglycan biosynthetic process" RELATED []
+xref: RESID:AA0210
+is_a: GO:0030166 ! proteoglycan biosynthetic process
+is_a: GO:0030201 ! heparan sulfate proteoglycan metabolic process
+is_a: GO:0044711 ! single-organism biosynthetic process
+
+[Term]
+id: GO:0016256
+name: N-glycan processing to lysosome
+namespace: biological_process
+def: "The modification of high-mannose N-glycans by UDP-N-acetylglucosamine-lysosomal-enzyme N-acetylglucosaminephosphotransferase and the subsequent removal of the N-acetylglucosamine residues yielding mannose-6-P that occurs in the ER-Golgi apparatus to N-glycans destined for the lysosome." [ISBN:0879695595]
+is_a: GO:0006491 ! N-glycan processing
+relationship: part_of GO:0006622 ! protein targeting to lysosome
+
+[Term]
+id: GO:0016262
+name: protein N-acetylglucosaminyltransferase activity
+namespace: molecular_function
+alt_id: GO:0016253
+def: "Catalysis of the reaction: UDP-N-acetyl-D-glucosamine + protein = UDP + 4-N-(N-acetyl-D-glucosaminyl)-protein." [EC:2.4.1.94]
+synonym: "N-GlcNAc transferase activity" EXACT [EC:2.4.1.94]
+synonym: "UDP-N-acetyl-D-glucosamine:protein beta-N-acetyl-D-glucosaminyl-transferase activity" EXACT []
+synonym: "UDP-N-acetylglucosamine-peptide N-acetylglucosaminyltransferase activity" EXACT []
+synonym: "uridine diphospho-N-acetylglucosamine:polypeptide beta-N-acetylglucosaminyltransferase activity" EXACT []
+synonym: "uridine diphosphoacetylglucosamine-protein acetylglucosaminyltransferase activity" EXACT []
+xref: EC:2.4.1.94
+xref: MetaCyc:2.4.1.94-RXN
+
+[Term]
+id: GO:0016740
+name: transferase activity
+namespace: molecular_function
+def: "Catalysis of the transfer of a group, e.g. a methyl group, glycosyl group, acyl group, phosphorus-containing, or other groups, from one compound (generally regarded as the donor) to another compound (generally regarded as the acceptor). Transferase is the systematic name for any enzyme of EC class 2." [ISBN:0198506732]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+subset: gosubset_prok
+xref: EC:2
+xref: Reactome:REACT_25050 "Molybdenum ion transfer onto molybdopterin, Homo sapiens"
+is_a: GO:0003824 ! catalytic activity
+
+[Term]
+id: GO:0016757
+name: transferase activity, transferring glycosyl groups
+namespace: molecular_function
+alt_id: GO:0016932
+def: "Catalysis of the transfer of a glycosyl group from one compound (donor) to another (acceptor)." [GOC:jl, ISBN:0198506732]
+comment: Note that enzymes of class EC:2.4.99.- should also be annotated to this term.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_yeast
+subset: gosubset_prok
+synonym: "glycosyltransferase activity" EXACT []
+synonym: "transferase activity, transferring other glycosyl groups" NARROW []
+synonym: "transglycosidase activity" EXACT []
+synonym: "transglycosylase activity" EXACT []
+xref: EC:2.4
+is_a: GO:0016740 ! transferase activity
+
+[Term]
+id: GO:0016758
+name: transferase activity, transferring hexosyl groups
+namespace: molecular_function
+def: "Catalysis of the transfer of a hexosyl group from one compound (donor) to another (acceptor)." [GOC:jl]
+subset: gosubset_prok
+synonym: "hexosyltransferase activity" EXACT []
+xref: EC:2.4.1
+is_a: GO:0016757 ! transferase activity, transferring glycosyl groups
+
+[Term]
+id: GO:0019222
+name: regulation of metabolic process
+namespace: biological_process
+def: "Any process that modulates the frequency, rate or extent of the chemical reactions and pathways within a cell or an organism." [GOC:go_curators]
+subset: gosubset_prok
+synonym: "regulation of metabolism" EXACT []
+relationship: regulates GO:0008152 ! metabolic process
+
+[Term]
+id: GO:0019538
+name: protein metabolic process
+namespace: biological_process
+alt_id: GO:0006411
+def: "The chemical reactions and pathways involving a specific protein, rather than of proteins in general. Includes protein modification." [GOC:ma]
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: gosubset_prok
+synonym: "protein metabolic process and modification" EXACT []
+synonym: "protein metabolism" EXACT []
+synonym: "protein metabolism and modification" EXACT []
+xref: Wikipedia:Protein_metabolism
+
+[Term]
+id: GO:0022008
+name: neurogenesis
+namespace: biological_process
+def: "Generation of cells within the nervous system." [GO_REF:0000021, GOC:cls, GOC:curators, GOC:dgh, GOC:dph, GOC:jid, GOC:mtg_15jun06]
+comment: This term was added by GO_REF:0000021.
+synonym: "nervous system cell generation" EXACT systematic_synonym []
+synonym: "neural cell differentiation" RELATED [GOC:BHF, GOC:dph]
+xref: Wikipedia:Neurogenesis
+
+[Term]
+id: GO:0030166
+name: proteoglycan biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of proteoglycans, any glycoprotein in which the carbohydrate units are glycosaminoglycans." [GOC:mah, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "proteoglycan anabolism" EXACT []
+synonym: "proteoglycan biosynthesis" EXACT []
+synonym: "proteoglycan formation" EXACT []
+synonym: "proteoglycan synthesis" EXACT []
+is_a: GO:0006029 ! proteoglycan metabolic process
+is_a: GO:0009101 ! glycoprotein biosynthetic process
+
+[Term]
+id: GO:0030167
+name: proteoglycan catabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the breakdown of proteoglycans, any glycoprotein in which the carbohydrate units are glycosaminoglycans." [GOC:mah, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "proteoglycan breakdown" EXACT []
+synonym: "proteoglycan catabolism" EXACT []
+synonym: "proteoglycan degradation" EXACT []
+is_a: GO:0006029 ! proteoglycan metabolic process
+is_a: GO:0006516 ! glycoprotein catabolic process
+
+[Term]
+id: GO:0030198
+name: extracellular matrix organization
+namespace: biological_process
+def: "A process that is carried out at the cellular level which results in the assembly, arrangement of constituent parts, or disassembly of an extracellular matrix." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+subset: gosubset_prok
+synonym: "extracellular matrix organisation" EXACT [GOC:curators]
+synonym: "extracellular matrix organization and biogenesis" RELATED [GOC:mah]
+
+[Term]
+id: GO:0030201
+name: heparan sulfate proteoglycan metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving any proteoglycan containing heparan sulfate, any member of a group of glycosaminoglycans that have repeat units consisting of alternating alpha-(1->4)-linked hexuronic acid and glucosamine residues, the former being a mixture of sulfated and nonsulfated D-glucuronic and L-iduronic acids, and the latter being either sulfated or acetylated on its amino group as well as sulfated on one of its hydroxyl groups." [GOC:mah, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "heparan sulfate proteoglycan metabolism" EXACT []
+synonym: "heparan sulphate proteoglycan metabolic process" EXACT []
+synonym: "heparan sulphate proteoglycan metabolism" EXACT []
+synonym: "heparin proteoglycan metabolic process" RELATED []
+is_a: GO:0006029 ! proteoglycan metabolic process
+
+[Term]
+id: GO:0030203
+name: glycosaminoglycan metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving glycosaminoglycans, any one of a group of polysaccharides that contain amino sugars. Formerly known as mucopolysaccharides, they include hyaluronic acid and chondroitin, which provide lubrication in joints and form part of the matrix of cartilage. The three-dimensional structure of these molecules enables them to trap water, which forms a gel and gives glycosaminoglycans their elastic properties." [ISBN:0192800981]
+subset: gosubset_prok
+synonym: "glycosaminoglycan metabolism" EXACT []
+is_a: GO:0006022 ! aminoglycan metabolic process
+
+[Term]
+id: GO:0030206
+name: chondroitin sulfate biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of chondroitin sulfate, any member of a group of 10-60 kDa glycosaminoglycans, widely distributed in cartilage and other mammalian connective tissues, the repeat units of which consist of beta-(1,4)-linked D-glucuronyl beta-(1,3)-N-acetyl-D-galactosamine sulfate." [GOC:mah, ISBN:0198506732]
+subset: gosubset_prok
+synonym: "chondroitin sulfate anabolism" EXACT []
+synonym: "chondroitin sulfate biosynthesis" EXACT []
+synonym: "chondroitin sulfate formation" EXACT []
+synonym: "chondroitin sulfate synthesis" EXACT []
+synonym: "chondroitin sulphate biosynthesis" EXACT []
+synonym: "chondroitin sulphate biosynthetic process" EXACT []
+is_a: GO:0006024 ! glycosaminoglycan biosynthetic process
+relationship: part_of GO:0050650 ! chondroitin sulfate proteoglycan biosynthetic process
+
+[Term]
+id: GO:0030509
+name: BMP signaling pathway
+namespace: biological_process
+def: "A series of molecular signals initiated by the binding of a member of the BMP (bone morphogenetic protein) family to a receptor on the surface of a target cell, and ending with regulation of a downstream cellular process, e.g. transcription." [GOC:signaling, ISBN:0878932437, PR:000000034]
+synonym: "BMP receptor signaling pathway" RELATED []
+synonym: "BMP signalling pathway" EXACT []
+synonym: "bone morphogenetic protein signaling pathway" EXACT []
+synonym: "bone morphogenetic protein signalling pathway" EXACT []
+xref: Reactome:REACT_105000 "Signaling by BMP, Mus musculus"
+xref: Reactome:REACT_107332 "Signaling by BMP, Bos taurus"
+xref: Reactome:REACT_12034 "Signaling by BMP, Homo sapiens"
+xref: Reactome:REACT_28579 "Signaling by BMP, Sus scrofa"
+xref: Reactome:REACT_31763 "Signaling by BMP, Taeniopygia guttata"
+xref: Reactome:REACT_77157 "Signaling by BMP, Gallus gallus"
+xref: Reactome:REACT_79322 "Signaling by BMP, Drosophila melanogaster"
+xref: Reactome:REACT_80158 "Signaling by BMP, Rattus norvegicus"
+xref: Reactome:REACT_81213 "Signaling by BMP, Xenopus tropicalis"
+xref: Reactome:REACT_86022 "Signaling by BMP, Canis familiaris"
+xref: Reactome:REACT_96139 "Signaling by BMP, Danio rerio"
+
+[Term]
+id: GO:0030513
+name: positive regulation of BMP signaling pathway
+namespace: biological_process
+def: "Any process that activates or increases the frequency, rate or extent of BMP signaling pathway activity." [GOC:go_curators]
+synonym: "activation of BMP signaling pathway" NARROW []
+synonym: "positive regulation of BMP receptor signaling pathway" RELATED []
+synonym: "positive regulation of BMP signalling pathway" EXACT []
+synonym: "positive regulation of bone morphogenetic protein signaling pathway" EXACT []
+synonym: "positive regulation of bone morphogenetic protein signalling pathway" EXACT []
+synonym: "stimulation of BMP signaling pathway" NARROW []
+synonym: "up regulation of BMP signaling pathway" EXACT []
+synonym: "up-regulation of BMP signaling pathway" EXACT []
+synonym: "upregulation of BMP signaling pathway" EXACT []
+relationship: positively_regulates GO:0030509 ! BMP signaling pathway
+
+[Term]
+id: GO:0030516
+name: regulation of axon extension
+namespace: biological_process
+def: "Any process that modulates the rate, direction or extent of axon extension." [GOC:go_curators]
+relationship: regulates GO:0048675 ! axon extension
+
+[Term]
+id: GO:0033365
+name: protein localization to organelle
+namespace: biological_process
+def: "A process in which a protein is transported to, or maintained in, a location within an organelle." [GOC:mah]
+synonym: "protein localisation to organelle" EXACT [GOC:mah]
+synonym: "protein localization in organelle" EXACT [GOC:mah]
+is_a: GO:0034613 ! cellular protein localization
+
+[Term]
+id: GO:0034613
+name: cellular protein localization
+namespace: biological_process
+alt_id: GO:0016249
+def: "Any process in which a protein is transported to, and/or maintained in, a specific location at the level of a cell. Localization at the cellular level encompasses movement within the cell, from within the cell to the cell surface, or from one location to another at the surface of a cell." [GOC:mah]
+synonym: "cellular protein localisation" EXACT [GOC:mah]
+synonym: "channel localizer activity" NARROW [GOC:mah]
+is_a: GO:0008104 ! protein localization
+
+[Term]
+id: GO:0034645
+name: cellular macromolecule biosynthetic process
+namespace: biological_process
+alt_id: GO:0034961
+def: "The chemical reactions and pathways resulting in the formation of a macromolecule, any molecule of high relative molecular mass, the structure of which essentially comprises the multiple repetition of units derived, actually or conceptually, from molecules of low relative molecular mass, carried out by individual cells." [CHEBI:33694, GOC:mah]
+synonym: "cellular biopolymer biosynthetic process" EXACT [GOC:mtg_chebi_dec09]
+synonym: "cellular macromolecule anabolism" EXACT [GOC:mah]
+synonym: "cellular macromolecule biosynthesis" EXACT [GOC:mah]
+synonym: "cellular macromolecule formation" EXACT [GOC:mah]
+synonym: "cellular macromolecule synthesis" EXACT [GOC:mah]
+is_a: GO:0044249 ! cellular biosynthetic process
+is_a: GO:0044260 ! cellular macromolecule metabolic process
+
+
+[Term]
+id: GO:0035138
+name: pectoral fin morphogenesis
+namespace: biological_process
+def: "The process in which the anatomical structures of the pectoral fin are generated and organized. Pectoral fins are bilaterally paired fins mounted laterally and located behind the gill covers of fish. These fins are used for lateral mobility and propulsion." [GOC:dgh]
+
+[Term]
+id: GO:0035269
+name: protein O-linked mannosylation
+namespace: biological_process
+def: "The transfer of mannose from dolichyl activated mannose to the hydroxyl group of a seryl or threonyl residue of a protein acceptor molecule, to form an O-linked protein-sugar linkage." [GOC:bf, PMID:9878797]
+subset: gosubset_prok
+synonym: "protein amino acid O-linked mannosylation" EXACT [GOC:bf]
+is_a: GO:0006493 ! protein O-linked glycosylation
+
+[Term]
+id: GO:0043009
+name: chordate embryonic development
+namespace: biological_process
+def: "The process whose specific outcome is the progression of the embryo over time, from zygote formation through a stage including a notochord and neural tube until birth or egg hatching." [GOC:mtg_sensu]
+
+[Term]
+id: GO:0043412
+name: macromolecule modification
+namespace: biological_process
+def: "The covalent alteration of one or more monomeric units in a polypeptide, polynucleotide, polysaccharide, or other biological macromolecule, resulting in a change in its properties." [GOC:go_curators]
+subset: goslim_pir
+subset: gosubset_prok
+
+[Term]
+id: GO:0043413
+name: macromolecule glycosylation
+namespace: biological_process
+def: "The covalent attachment of a glycosyl residue to one or more monomeric units in a polypeptide, polynucleotide, polysaccharide, or other biological macromolecule." [GOC:jl]
+subset: gosubset_prok
+is_a: GO:0043412 ! macromolecule modification
+
+[Term]
+id: GO:0044237
+name: cellular metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways by which individual cells transform chemical substances." [GOC:go_curators]
+subset: goslim_pir
+subset: gosubset_prok
+synonym: "cellular metabolism" EXACT []
+synonym: "intermediary metabolism" RELATED [GOC:mah]
+is_a: GO:0008152 ! metabolic process
+is_a: GO:0009987 ! cellular process
+
+[Term]
+id: GO:0044249
+name: cellular biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of substances, carried out by individual cells." [GOC:jl]
+subset: gosubset_prok
+synonym: "cellular anabolism" EXACT []
+synonym: "cellular biosynthesis" EXACT []
+synonym: "cellular formation" EXACT []
+synonym: "cellular synthesis" EXACT []
+is_a: GO:0044237 ! cellular metabolic process
+
+[Term]
+id: GO:0044260
+name: cellular macromolecule metabolic process
+namespace: biological_process
+alt_id: GO:0034960
+def: "The chemical reactions and pathways involving macromolecules, any molecule of high relative molecular mass, the structure of which essentially comprises the multiple repetition of units derived, actually or conceptually, from molecules of low relative molecular mass, as carried out by individual cells." [CHEBI:33694, GOC:mah]
+subset: gosubset_prok
+synonym: "cellular biopolymer metabolic process" EXACT [GOC:mtg_chebi_dec09]
+synonym: "cellular macromolecule metabolism" EXACT []
+is_a: GO:0044237 ! cellular metabolic process
+
+[Term]
+id: GO:0044699
+name: single-organism process
+namespace: biological_process
+def: "A biological process that involves only one organism." [GOC:jl]
+synonym: "single organism process" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0044710
+name: single-organism metabolic process
+namespace: biological_process
+def: "A metabolic process - chemical reactions and pathways, including anabolism and catabolism, by which living organisms transform chemical substances - which involves a single organism." [GOC:jl]
+is_a: GO:0008152 ! metabolic process
+is_a: GO:0044699 ! single-organism process
+
+[Term]
+id: GO:0044711
+name: single-organism biosynthetic process
+namespace: biological_process
+def: "A biosynthetic process - chemical reactions and pathways resulting in the formation of substances - involving a single organism." [GOC:jl]
+is_a: GO:0044710 ! single-organism metabolic process
+
+[Term]
+id: GO:0044723
+name: single-organism carbohydrate metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving carbohydrates, occurring within a single organism." [GOC:jl]
+is_a: GO:0044710 ! single-organism metabolic process
+
+[Term]
+id: GO:0044870
+name: modulation by host of viral glycoprotein metabolic process
+namespace: biological_process
+def: "A process in which a host organism modulates the frequency, rate or extent of viral glycoprotein metabolic process." [GOC:jl]
+is_a: GO:0044788 ! modulation by host of viral process
+is_a: GO:1903018 ! regulation of glycoprotein metabolic process
+relationship: regulates GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:0044871
+name: negative regulation by host of viral glycoprotein metabolic process
+namespace: biological_process
+def: "A process in which a host organism stops, prevents or reduces the frequency, rate or extent of viral glycoprotein metabolic process." [GOC:jl]
+is_a: GO:0044793 ! negative regulation by host of viral process
+is_a: GO:0044870 ! modulation by host of viral glycoprotein metabolic process
+is_a: GO:1903019 ! negative regulation of glycoprotein metabolic process
+relationship: negatively_regulates GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:0047464
+name: heparosan-N-sulfate-glucuronate 5-epimerase activity
+namespace: molecular_function
+def: "Catalysis of the reaction: heparosan-N-sulfate D-glucuronate = heparosan-N-sulfate L-iduronate." [EC:5.1.3.17, MetaCyc:5.1.3.17-RXN]
+synonym: "C-5 uronosyl epimerase activity" EXACT [EC:5.1.3.17]
+synonym: "D-glucuronyl C-5 epimerase activity" EXACT [EC:5.1.3.17]
+synonym: "heparosan epimerase activity" EXACT [EC:5.1.3.17]
+synonym: "heparosan-N-sulfate-D-glucuronosyl 5-epimerase activity" EXACT [EC:5.1.3.17]
+synonym: "heparosan-N-sulphate-glucuronate 5-epimerase activity" EXACT []
+synonym: "poly[(1,4)-beta-D-glucuronosyl-(1,4)-N-sulfo-alpha-D-glucosaminyl] glucurono-5-epimerase activity" EXACT [EC:5.1.3.17]
+synonym: "polyglucuronate epimerase activity" EXACT [EC:5.1.3.17]
+xref: EC:5.1.3.17
+xref: MetaCyc:5.1.3.17-RXN
+xref: RHEA:20200
+
+[Term]
+id: GO:0047756
+name: chondroitin 4-sulfotransferase activity
+namespace: molecular_function
+def: "Catalysis of the reaction: 3'-phosphoadenosine 5'-phosphosulfate + chondroitin = adenosine 3',5'-bisphosphate + chondroitin 4'-sulfate." [EC:2.8.2.5, MetaCyc:CHONDROITIN-4-SULFOTRANSFERASE-RXN]
+synonym: "3'-phosphoadenylyl-sulfate:chondroitin 4'-sulfotransferase activity" EXACT [EC:2.8.2.5]
+synonym: "chondroitin 4-sulphotransferase activity" EXACT []
+xref: EC:2.8.2.5
+xref: MetaCyc:CHONDROITIN-4-SULFOTRANSFERASE-RXN
+
+[Term]
+id: GO:0048675
+name: axon extension
+namespace: biological_process
+alt_id: GO:0048676
+def: "Long distance growth of a single axon process involved in cellular development." [GOC:BHF, GOC:dgh, GOC:dph, GOC:jid, GOC:lm, GOC:rl]
+synonym: "axon extension involved in development" EXACT []
+
+
+[Term]
+id: GO:0048701
+name: embryonic cranial skeleton morphogenesis
+namespace: biological_process
+def: "The process in which the anatomical structures of the cranial skeleton are generated and organized during the embryonic phase." [GOC:dsf, GOC:jid, PMID:16049113]
+synonym: "embryonic cranium morphogenesis" EXACT []
+
+[Term]
+id: GO:0048702
+name: embryonic neurocranium morphogenesis
+namespace: biological_process
+def: "The process in which the anatomical structures of the neurocranium are generated and organized during the embryonic phase. The neurocranium is the portion of the vertebrate skull surrounding the brain." [GOC:dsf, GOC:jid, PMID:16049113]
+synonym: "embryonic braincase morphogenesis" EXACT []
+synonym: "embryonic chondrocranium morphogenesis" EXACT [GOC:dph]
+
+[Term]
+id: GO:0048703
+name: embryonic viscerocranium morphogenesis
+namespace: biological_process
+def: "The process in which the anatomical structures of the viscerocranium are generated and organized during the embryonic phase. The viscerocranium is the part of the skull comprising the facial bones." [GOC:dsf, GOC:jid, PMID:16049113]
+synonym: "embryonic pharyngeal skeleton morphogenesis" EXACT []
+
+[Term]
+id: GO:0048747
+name: muscle fiber development
+namespace: biological_process
+def: "The process whose specific outcome is the progression of the muscle fiber over time, from its formation to the mature structure. In skeletal muscle, fibers are formed by the maturation of myotubes. They can be classed as slow, intermediate/fast or fast." [GOC:dph, GOC:jid, GOC:lm, GOC:mtg_muscle]
+synonym: "muscle fibre development" EXACT []
+synonym: "myofiber development" EXACT []
+synonym: "myofibre development" EXACT []
+
+[Term]
+id: GO:0048840
+name: otolith development
+namespace: biological_process
+def: "The process whose specific outcome is the progression of the otolith over time, from its formation to the mature structure." [GOC:sr]
+
+[Term]
+id: GO:0048854
+name: brain morphogenesis
+namespace: biological_process
+def: "The process in which the anatomical structures of the brain are generated and organized. The brain is one of the two components of the central nervous system and is the center of thought and emotion. It is responsible for the coordination and control of bodily activities and the interpretation of information from the senses (sight, hearing, smell, etc.)." [GOC:dgh, GOC:jid]
+
+[Term]
+id: GO:0050650
+name: chondroitin sulfate proteoglycan biosynthetic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of chondroitin sulfate proteoglycan, any glycoprotein whose glycosaminoglycan units are chondroitin sulfate. Chondroitin sulfates are a group of 10-60 kDa glycosaminoglycans, widely distributed in cartilage and other mammalian connective tissues; the repeat units consist of beta-(1,4)-linked D-glucuronyl beta-(1,3)-N-acetyl-D-galactosamine sulfate." [GOC:ai]
+subset: gosubset_prok
+synonym: "chondroitin sulfate proteoglycan anabolism" EXACT []
+synonym: "chondroitin sulfate proteoglycan biosynthesis" EXACT []
+synonym: "chondroitin sulfate proteoglycan formation" EXACT []
+synonym: "chondroitin sulfate proteoglycan synthesis" EXACT []
+synonym: "chondroitin sulphate proteoglycan biosynthesis" EXACT []
+synonym: "chondroitin sulphate proteoglycan biosynthetic process" EXACT []
+is_a: GO:0006024 ! glycosaminoglycan biosynthetic process
+is_a: GO:0030166 ! proteoglycan biosynthetic process
+is_a: GO:0050654 ! chondroitin sulfate proteoglycan metabolic process
+
+[Term]
+id: GO:0050654
+name: chondroitin sulfate proteoglycan metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving chondroitin sulfate proteoglycan, any glycoprotein whose glycosaminoglycan units are chondroitin sulfate. Chondroitin sulfates are a group of 10-60 kDa glycosaminoglycans, widely distributed in cartilage and other mammalian connective tissues; the repeat units consist of beta-(1,4)-linked D-glucuronyl beta-(1,3)-N-acetyl-D-galactosamine sulfate." [GOC:ai]
+subset: gosubset_prok
+synonym: "chondroitin sulfate proteoglycan metabolism" EXACT []
+synonym: "chondroitin sulphate proteoglycan metabolic process" EXACT []
+synonym: "chondroitin sulphate proteoglycan metabolism" EXACT []
+is_a: GO:0006029 ! proteoglycan metabolic process
+
+[Term]
+id: GO:0051246
+name: regulation of protein metabolic process
+namespace: biological_process
+def: "Any process that modulates the frequency, rate or extent of the chemical reactions and pathways involving a protein." [GOC:ai]
+subset: gosubset_prok
+synonym: "regulation of protein metabolism" EXACT []
+is_a: GO:0060255 ! regulation of macromolecule metabolic process
+relationship: regulates GO:0019538 ! protein metabolic process
+
+[Term]
+id: GO:0051541
+name: elastin metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving elastin, a glycoprotein which is randomly coiled and crosslinked to form elastic fibers that are found in connective tissue." [http://www.onelook.com]
+synonym: "elastin metabolism" EXACT []
+is_a: GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:0060028
+name: convergent extension involved in axis elongation
+namespace: biological_process
+def: "The morphogenetic process in which an epithelium narrows along one axis and lengthens in a perpendicular axis contributing to the lengthening of the axis of an organism." [GOC:dph, PMID:12062082]
+
+[Term]
+id: GO:0060049
+name: regulation of protein glycosylation
+namespace: biological_process
+def: "Any process that modulates the frequency, rate or extent of protein glycosylation. Protein glycosylation is the addition of a carbohydrate or carbohydrate derivative unit to a protein amino acid, e.g. the addition of glycan chains to proteins." [GOC:dms, GOC:dph, GOC:pr]
+synonym: "regulation of protein amino acid glycosylation" EXACT [GOC:bf]
+is_a: GO:0010559 ! regulation of glycoprotein biosynthetic process
+relationship: regulates GO:0006486 ! protein glycosylation
+
+[Term]
+id: GO:0060255
+name: regulation of macromolecule metabolic process
+namespace: biological_process
+def: "Any process that modulates the frequency, rate or extent of the chemical reactions and pathways involving macromolecules, any molecule of high relative molecular mass, the structure of which essentially comprises the multiple repetition of units derived, actually or conceptually, from molecules of low relative molecular mass." [GOC:dph, GOC:tb]
+subset: gosubset_prok
+is_a: GO:0019222 ! regulation of metabolic process
+
+[Term]
+id: GO:0061462
+name: protein localization to lysosome
+namespace: biological_process
+def: "A process in which a protein is transported to, or maintained in, a location within a lysosome." [GOC:dph]
+is_a: GO:0072665 ! protein localization to vacuole
+
+[Term]
+id: GO:0072665
+name: protein localization to vacuole
+namespace: biological_process
+def: "A process in which a protein is transported to, or maintained at, a location in a vacuole." [GOC:ecd]
+synonym: "protein localisation to vacuole" EXACT [GOC:mah]
+is_a: GO:0033365 ! protein localization to organelle
+
+[Term]
+id: GO:0090171
+name: chondrocyte morphogenesis
+namespace: biological_process
+def: "The process in which the structures of a chondrocyte are generated and organized. This process occurs while the initially relatively unspecialized cell is acquiring the specialized features of a chondrocyte." [GOC:ascb_2009, GOC:dph, GOC:tb]
+
+[Term]
+id: GO:1903018
+name: regulation of glycoprotein metabolic process
+namespace: biological_process
+def: "Any process that modulates the frequency, rate or extent of glycoprotein metabolic process." [GO_REF:0000058, GOC:BHF, GOC:rl, GOC:TermGenie, PMID:23544079]
+comment: human serum amyloid P component (SAP) P02743 inhibits viral neuraminidase, NA (exo-alpha-sialidase activity) and thus the metabolism of glycoproteins, demonstrated in Figure 4A PMID:23544079, (IDA), the negative regulation term would be applied to this protein
+synonym: "regulation of glycoprotein metabolism" EXACT [GOC:TermGenie]
+is_a: GO:0051246 ! regulation of protein metabolic process
+relationship: regulates GO:0009100 ! glycoprotein metabolic process
+
+[Term]
+id: GO:1903019
+name: negative regulation of glycoprotein metabolic process
+namespace: biological_process
+def: "Any process that stops, prevents or reduces the frequency, rate or extent of glycoprotein metabolic process." [GO_REF:0000058, GOC:BHF, GOC:rl, GOC:TermGenie, PMID:23544079]
+comment: human serum amyloid P component (SAP) P02743 inhibits viral neuraminidase, NA (exo-alpha-sialidase activity) and thus the metabolism of glycoproteins, demonstrated in Figure 4A PMID:23544079, (IDA), the negative regulation term would be applied to this protein
+synonym: "down regulation of glycoprotein metabolic process" EXACT [GOC:TermGenie]
+synonym: "down regulation of glycoprotein metabolism" EXACT [GOC:TermGenie]
+synonym: "down-regulation of glycoprotein metabolic process" EXACT [GOC:TermGenie]
+synonym: "down-regulation of glycoprotein metabolism" EXACT [GOC:TermGenie]
+synonym: "downregulation of glycoprotein metabolic process" EXACT [GOC:TermGenie]
+synonym: "downregulation of glycoprotein metabolism" EXACT [GOC:TermGenie]
+synonym: "inhibition of glycoprotein metabolic process" NARROW [GOC:TermGenie]
+synonym: "inhibition of glycoprotein metabolism" NARROW [GOC:TermGenie]
+synonym: "negative regulation of glycoprotein metabolism" EXACT [GOC:TermGenie]
+is_a: GO:0031324 ! negative regulation of cellular metabolic process
+is_a: GO:0051248 ! negative regulation of protein metabolic process
+is_a: GO:1903018 ! regulation of glycoprotein metabolic process
+relationship: negatively_regulates GO:0009100 ! glycoprotein metabolic process
+
+[Typedef]
+id: negatively_regulates
+name: negatively regulates
+namespace: external
+xref: RO:0002212
+is_a: regulates ! regulates
+transitive_over: part_of ! part of
+
+[Typedef]
+id: never_in_taxon
+name: never_in_taxon
+namespace: external
+xref: RO:0002161
+is_metadata_tag: true
+is_class_level: true
+
+[Typedef]
+id: part_of
+name: part of
+namespace: external
+xref: BFO:0000050
+is_transitive: true
+
+[Typedef]
+id: positively_regulates
+name: positively regulates
+namespace: external
+xref: RO:0002213
+holds_over_chain: negatively_regulates negatively_regulates
+is_a: regulates ! regulates
+transitive_over: part_of ! part of
+
+[Typedef]
+id: regulates
+name: regulates
+namespace: external
+xref: RO:0002211
+is_transitive: true
+transitive_over: part_of ! part of
+
