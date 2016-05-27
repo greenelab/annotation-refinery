@@ -28,7 +28,8 @@ DB_REMAP = {
 
 
 def get_filtered_annotations(assoc_file, accepted_evcodes=None,
-                             remove_leading_gene_id=None):
+                             remove_leading_gene_id=None,
+                             pseudomonas_symbol=None):
     """
     This function reads in the association file and returns a list of
     annotations. Only annotations that have evidence codes in
@@ -75,6 +76,9 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None,
 
         if xrdb in DB_REMAP:
             xrdb = DB_REMAP[xrdb]
+
+        if pseudomonas_symbol:
+            xrdb = 'Symbol'
 
         # These next few lines are needed for processing
         # Arabidopsis annotations
@@ -184,13 +188,18 @@ def process_go_terms(species_ini_file, base_download_folder):
     evcodes = species_file.get('GO', 'EVIDENCE_CODES')
     evcodes = evcodes.replace(' ', '').split(',')
 
+    pseudomonas_symbol = None
+    if species_file.has_option('GO', 'PSEUDOMONAS_SYMBOL'):
+        pseudomonas_symbol = species_file.getboolean('GO', 'PSEUDOMONAS_SYMBOL')
+
     remove_leading_gene_id = False
     if species_file.has_option('GO', 'REMOVE_LEADING_GENE_ID'):
         remove_leading_gene_id = species_file.getboolean(
             'GO', 'REMOVE_LEADING_GENE_ID')
 
     annotations = get_filtered_annotations(
-        assoc_file, evcodes, remove_leading_gene_id=remove_leading_gene_id)
+        assoc_file, evcodes, remove_leading_gene_id=remove_leading_gene_id,
+        pseudomonas_symbol=pseudomonas_symbol)
 
     gene_ontology = go()
     loaded_obo_bool = gene_ontology.load_obo(obo_file)
@@ -244,8 +253,12 @@ def process_go_terms(species_ini_file, base_download_folder):
 
         for annotation in term.annotations:
             if annotation.gid not in go_term['annotations']:
+                # If annotation.gid is not already a key in the dictionary,
+                # make it one and initialize list. Else, the key and list
+                # already exist.
                 go_term['annotations'][annotation.gid] = []
-            elif annotation.ref is not None:
+
+            if annotation.ref is not None:
                 go_term['annotations'][annotation.gid].append(annotation.ref)
 
             if annotation.xdb is not None:

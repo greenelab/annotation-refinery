@@ -1,0 +1,129 @@
+!GOC Validation Date: 04/25/2016 $
+!Submission Date: 4/25/2016
+!
+! The above "Submission Date" is when the annotation project provided
+! this file to the Gene Ontology Consortium (GOC).  The "GOC Validation
+! Date" indicates when this file was last changed as a result of a GOC
+! validation and filtering process.  
+!
+! Note: The contents of this file may differ from that submitted to the
+! GOC. The identifiers and syntax of the file have been checked, rows of
+! data not meeting the standards set by the GOC have been removed. This
+! file may also have annotations removed because the annotations for the
+! listed Taxonomy identifier are only allowed in a file provided by
+! another annotation project.  The original submitted file is available from:
+!  http://www.geneontology.org/gene-associations/submission/
+!
+! For information on which taxon are allowed in which files please see:
+!  http://www.geneontology.org/GO.annotation.shtml#script
+!
+!gaf-version: 2.0
+!Project_name: The Zebrafish Information Network
+!URL: http://www.zfin.org/
+!Contact Email: zfinadmin@zfin.org
+!Funding: NIH (P41 HG002659)
+!gaf_version: 2.1
+!Version: 1.445
+!Date: 2016/04/24
+! 
+ZFIN	ZDB-GENE-030131-3222	tmem165		GO:0051216	ZFIN:ZDB-PUB-150123-8|PMID:25609749	IMP	ZFIN:ZDB-MRPHLNO-151002-2	P	transmembrane protein 165	si:ch211-278f21.2|tparl|wu:fc31a09|zgc:92342	gene_product	taxon:7955	20151009	ZFIN		
+ZFIN	ZDB-GENE-030131-3222	tmem165		GO:0006487	ZFIN:ZDB-PUB-150123-8|PMID:25609749	IMP	ZFIN:ZDB-MRPHLNO-151002-2	P	transmembrane protein 165	si:ch211-278f21.2|tparl|wu:fc31a09|zgc:92342	gene_product	taxon:7955	20151009	ZFIN		
+ZFIN	ZDB-GENE-030131-3222	tmem165		GO:0002062	ZFIN:ZDB-PUB-150123-8|PMID:25609749	IMP	ZFIN:ZDB-MRPHLNO-151002-2	P	transmembrane protein 165	si:ch211-278f21.2|tparl|wu:fc31a09|zgc:92342	gene_product	taxon:7955	20151009	ZFIN		
+ZFIN	ZDB-GENE-030131-3222	tmem165		GO:0060536	ZFIN:ZDB-PUB-150123-8|PMID:25609749	IMP	ZFIN:ZDB-MRPHLNO-151002-2	P	transmembrane protein 165	si:ch211-278f21.2|tparl|wu:fc31a09|zgc:92342	gene_product	taxon:7955	20151009	ZFIN		
+ZFIN	ZDB-GENE-030131-3222	tmem165		GO:0048703	ZFIN:ZDB-PUB-150123-8|PMID:25609749	IMP	ZFIN:ZDB-MRPHLNO-151002-2	P	transmembrane protein 165	si:ch211-278f21.2|tparl|wu:fc31a09|zgc:92342	gene_product	taxon:7955	20151009	ZFIN		
+ZFIN	ZDB-GENE-030131-3222	tmem165		GO:0001649	ZFIN:ZDB-PUB-150123-8|PMID:25609749	IMP	ZFIN:ZDB-MRPHLNO-151002-2	P	transmembrane protein 165	si:ch211-278f21.2|tparl|wu:fc31a09|zgc:92342	gene_product	taxon:7955	20151009	ZFIN		
+ZFIN	ZDB-GENE-041124-2	extl3		GO:0030516	ZFIN:ZDB-PUB-041228-6|PMID:15603738	IMP	ZFIN:ZDB-GENO-980202-1172	P	exostosin-like glycosyltransferase 3	box|boxer|im:7141548	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0030516	ZFIN:ZDB-PUB-041228-6|PMID:15603738	IMP	ZFIN:ZDB-GENO-980202-872	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0015012	ZFIN:ZDB-PUB-041228-6|PMID:15603738	IMP	ZFIN:ZDB-GENO-980202-872	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0035138	ZFIN:ZDB-PUB-041228-6|PMID:15603738	IMP	ZFIN:ZDB-GENO-980202-872	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0050509	ZFIN:ZDB-PUB-041228-6|PMID:15603738	ISS	UniProtKB:Q93063	F	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-041124-2	extl3		GO:0015012	ZFIN:ZDB-PUB-041228-6|PMID:15603738	IMP	ZFIN:ZDB-GENO-980202-1172	P	exostosin-like glycosyltransferase 3	box|boxer|im:7141548	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-041124-2	extl3		GO:0035138	ZFIN:ZDB-PUB-041228-6|PMID:15603738	IMP	ZFIN:ZDB-GENO-980202-1172	P	exostosin-like glycosyltransferase 3	box|boxer|im:7141548	gene_product	taxon:7955	20050126	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0030206	ZFIN:ZDB-PUB-100317-28|PMID:20226781	IMP	ZFIN:ZDB-GENO-100709-2,ZFIN:ZDB-GENO-100709-3	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20100729	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0030166	ZFIN:ZDB-PUB-100317-28|PMID:20226781	IMP	ZFIN:ZDB-GENO-100709-2,ZFIN:ZDB-GENO-100709-3	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20100729	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0015012	ZFIN:ZDB-PUB-100317-28|PMID:20226781	IMP	ZFIN:ZDB-GENO-100709-2,ZFIN:ZDB-GENO-100709-3	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20100729	ZFIN		
+ZFIN	ZDB-GENE-010102-1	dcn		GO:0050654	ZFIN:ZDB-PUB-090217-33|PMID:19211552	IDA		P	decorin	DC	gene_product	taxon:7955	20090513	ZFIN		
+ZFIN	ZDB-GENE-010102-1	dcn		GO:0060028	ZFIN:ZDB-PUB-090217-33|PMID:19211552	IMP	ZFIN:ZDB-MRPHLNO-090513-5	P	decorin	DC	gene_product	taxon:7955	20090514	ZFIN		
+ZFIN	ZDB-GENE-010102-1	dcn		GO:0051216	ZFIN:ZDB-PUB-090217-33|PMID:19211552	IMP	ZFIN:ZDB-MRPHLNO-090513-6	P	decorin	DC	gene_product	taxon:7955	20090514	ZFIN		
+ZFIN	ZDB-GENE-010102-1	dcn		GO:0060028	ZFIN:ZDB-PUB-090217-33|PMID:19211552	IMP	ZFIN:ZDB-MRPHLNO-090513-6	P	decorin	DC	gene_product	taxon:7955	20090514	ZFIN				
+ZFIN	ZDB-GENE-030131-9631	ogt.1		GO:0016262	ZFIN:ZDB-PUB-050930-10|PMID:16188232	IDA		F	O-linked N-acetylglucosamine (GlcNAc) transferase, tandem duplicate 1	copy I|fm81g08|ogt|ogta|wu:fc12b01|wu:fm81g08	gene_product	taxon:7955	20051125	ZFIN		
+ZFIN	ZDB-GENE-030131-9631	ogt.1		GO:0006493	ZFIN:ZDB-PUB-050930-10|PMID:16188232	IDA		P	O-linked N-acetylglucosamine (GlcNAc) transferase, tandem duplicate 1	copy I|fm81g08|ogt|ogta|wu:fc12b01|wu:fm81g08	gene_product	taxon:7955	20051128	ZFIN		
+ZFIN	ZDB-GENE-121001-5	b4gat1		GO:0048747	ZFIN:ZDB-PUB-130208-6|PMID:23359570	IMP		P	beta-1,4-glucuronyltransferase 1	b3gnt1	gene_product	taxon:7955	20130521	ZFIN		
+ZFIN	ZDB-GENE-121001-5	b4gat1		GO:0006486	ZFIN:ZDB-PUB-130208-6|PMID:23359570	IMP	ZFIN:ZDB-MRPHLNO-130521-2	P	beta-1,4-glucuronyltransferase 1	b3gnt1	gene_product	taxon:7955	20130521	ZFIN		
+ZFIN	ZDB-GENE-040801-234	gmppb		GO:0048747	ZFIN:ZDB-PUB-130709-76|PMID:23768512	IMP	ZFIN:ZDB-MRPHLNO-130828-1	P	GDP-mannose pyrophosphorylase B	cb1066|fc79b10|wu:fc79b10|zgc:92026	gene_product	taxon:7955	20130904	ZFIN		
+ZFIN	ZDB-GENE-040801-234	gmppb		GO:0006486	ZFIN:ZDB-PUB-130709-76|PMID:23768512	IMP	ZFIN:ZDB-MRPHLNO-130828-1	P	GDP-mannose pyrophosphorylase B	cb1066|fc79b10|wu:fc79b10|zgc:92026	gene_product	taxon:7955	20130904	ZFIN		
+ZFIN	ZDB-GENE-040724-125	fam20b		GO:0030166	ZFIN:ZDB-PUB-110914-16|PMID:21901110	IMP	ZFIN:ZDB-GENO-111017-4	P	family with sequence similarity 20, member B (H. sapiens)	si:ch211-195o19.3|unm b1127|unm_b1127|zgc:136944	gene_product	taxon:7955	20111019	ZFIN		
+ZFIN	ZDB-GENE-111017-2	xylt1		GO:0048701	ZFIN:ZDB-PUB-110914-16|PMID:21901110	IMP	ZFIN:ZDB-GENO-111017-5	P	xylosyltransferase I	unm b1128|unm_b1128	gene_product	taxon:7955	20111019	ZFIN		
+ZFIN	ZDB-GENE-111017-2	xylt1		GO:0030166	ZFIN:ZDB-PUB-110914-16|PMID:21901110	IMP	ZFIN:ZDB-GENO-111017-5	P	xylosyltransferase I	unm b1128|unm_b1128	gene_product	taxon:7955	20111019	ZFIN		
+ZFIN	ZDB-GENE-040724-125	fam20b		GO:0048701	ZFIN:ZDB-PUB-110914-16|PMID:21901110	IMP	ZFIN:ZDB-GENO-111017-4	P	family with sequence similarity 20, member B (H. sapiens)	si:ch211-195o19.3|unm b1127|unm_b1127|zgc:136944	gene_product	taxon:7955	20111019	ZFIN		
+ZFIN	ZDB-GENE-030722-6	pmm2		GO:0006487	ZFIN:ZDB-PUB-120909-7|PMID:22956764	IMP	ZFIN:ZDB-MRPHLNO-121119-5	P	phosphomannomutase 2	cb626	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-050904-6	mpi		GO:0090171	ZFIN:ZDB-PUB-120909-7|PMID:22956764	IGI	ZFIN:ZDB-MRPHLNO-121119-5,ZFIN:ZDB-MRPHLNO-121127-5	P	mannose phosphate isomerase	im:7140016|zgc:110773	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-030722-6	pmm2		GO:0048701	ZFIN:ZDB-PUB-120909-7|PMID:22956764	IMP	ZFIN:ZDB-MRPHLNO-121119-5	P	phosphomannomutase 2	cb626	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-030722-6	pmm2		GO:0090171	ZFIN:ZDB-PUB-120909-7|PMID:22956764	IMP	ZFIN:ZDB-MRPHLNO-121119-5	P	phosphomannomutase 2	cb626	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-030722-6	pmm2		GO:0022008	ZFIN:ZDB-PUB-120909-7|PMID:22956764	IMP	ZFIN:ZDB-MRPHLNO-121119-5	P	phosphomannomutase 2	cb626	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-030722-6	pmm2		GO:0090171	ZFIN:ZDB-PUB-120909-7|PMID:22956764	IGI	ZFIN:ZDB-MRPHLNO-121119-5,ZFIN:ZDB-MRPHLNO-121127-5	P	phosphomannomutase 2	cb626	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-050522-358	b3galnt2		GO:0048747	ZFIN:ZDB-PUB-130313-10|PMID:23453667	IMP	ZFIN:ZDB-MRPHLNO-130625-2	P	beta-1,3-N-acetylgalactosaminyltransferase 2	zgc:112351	gene_product	taxon:7955	20130627	ZFIN		
+ZFIN	ZDB-GENE-050522-358	b3galnt2		GO:0048747	ZFIN:ZDB-PUB-130313-10|PMID:23453667	IMP	ZFIN:ZDB-MRPHLNO-130625-3	P	beta-1,3-N-acetylgalactosaminyltransferase 2	zgc:112351	gene_product	taxon:7955	20130627	ZFIN		
+ZFIN	ZDB-GENE-050522-358	b3galnt2		GO:0006486	ZFIN:ZDB-PUB-130313-10|PMID:23453667	IMP	ZFIN:ZDB-MRPHLNO-130625-2	P	beta-1,3-N-acetylgalactosaminyltransferase 2	zgc:112351	gene_product	taxon:7955	20130627	ZFIN		
+ZFIN	ZDB-GENE-030131-4714	gnptab		GO:0003976	ZFIN:ZDB-PUB-141217-9|PMID:25505245	IMP		F	N-acetylglucosamine-1-phosphate transferase, alpha and beta subunits	si:ch211-234f20.3|wu:fd55d09|zgc:122985|zgc:158502	gene_product	taxon:7955	20150306	UniProt		
+ZFIN	ZDB-GENE-030131-4714	gnptab		GO:0016256	ZFIN:ZDB-PUB-141217-9|PMID:25505245	IMP		P	N-acetylglucosamine-1-phosphate transferase, alpha and beta subunits	si:ch211-234f20.3|wu:fd55d09|zgc:122985|zgc:158502	gene_product	taxon:7955	20150306	UniProt			
+ZFIN	ZDB-GENE-030131-5186	csgalnact2		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-MRPHLNO-121011-1,ZFIN:ZDB-MRPHLNO-121129-1	P	chondroitin sulfate N-acetylgalactosaminyltransferase 2	mp:zf637-2-001473|si:dkey-192p21.4|wu:fb98d03|zf637-2-001473	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121129-2	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0030198	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-GENO-121010-7,ZFIN:ZDB-GENO-121129-2	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-GENO-121010-7,ZFIN:ZDB-GENO-121129-2	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-030131-3127	chsy1		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-MRPHLNO-050218-1,ZFIN:ZDB-MRPHLNO-110301-2	P	chondroitin sulfate synthase 1	chys1|wu:fc27h05|wu:fc27h06|zgc:64191	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-121129-1	csgalnact1a		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-MRPHLNO-121011-1,ZFIN:ZDB-MRPHLNO-121129-1	P	chondroitin sulfate N-acetylgalactosaminyltransferase 1a	csgalnact1	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-030131-5186	csgalnact2		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-MRPHLNO-121011-1,ZFIN:ZDB-MRPHLNO-121129-1	P	chondroitin sulfate N-acetylgalactosaminyltransferase 2	mp:zf637-2-001473|si:dkey-192p21.4|wu:fb98d03|zf637-2-001473	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-3	b3gat3		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121129-1	P	beta-1,3-glucuronyltransferase 3 (glucuronosyltransferase I)	CHUNP6865|beta-1,3-glucuronyltransferase 3|fe01c06|wu:fe01c06|zgc:112070	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121129-2	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-GENO-121010-7,ZFIN:ZDB-GENO-121129-2	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-GENO-121010-7,ZFIN:ZDB-GENO-121129-2	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-041124-2	extl3		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121010-6	P	exostosin-like glycosyltransferase 3	box|boxer|im:7141548	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-121129-1	csgalnact1a		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-MRPHLNO-121011-1,ZFIN:ZDB-MRPHLNO-121129-1	P	chondroitin sulfate N-acetylgalactosaminyltransferase 1a	csgalnact1	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-3	b3gat3		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121129-1	P	beta-1,3-glucuronyltransferase 3 (glucuronosyltransferase I)	CHUNP6865|beta-1,3-glucuronyltransferase 3|fe01c06|wu:fe01c06|zgc:112070	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0030198	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-GENO-121010-7,ZFIN:ZDB-GENO-121129-2	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IGI	ZFIN:ZDB-GENO-121010-7,ZFIN:ZDB-GENO-121129-2	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0015012	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121010-7	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-041124-2	extl3		GO:0050650	ZFIN:ZDB-PUB-120809-5|PMID:22869369	IMP	ZFIN:ZDB-GENO-121010-6	P	exostosin-like glycosyltransferase 3	box|boxer|im:7141548	gene_product	taxon:7955	20121207	ZFIN		
+ZFIN	ZDB-GENE-060628-3	b4galt5		GO:0009950	ZFIN:ZDB-PUB-060508-14|PMID:16672343	IMP	ZFIN:ZDB-MRPHLNO-060628-3	P	UDP-Gal:betaGlcNAc beta 1,4- galactosyltransferase, polypeptide 5		gene_product	taxon:7955	20060629	ZFIN		
+ZFIN	ZDB-GENE-060628-3	b4galt5		GO:0030513	ZFIN:ZDB-PUB-060508-14|PMID:16672343	IMP	ZFIN:ZDB-MRPHLNO-060628-1	P	UDP-Gal:betaGlcNAc beta 1,4- galactosyltransferase, polypeptide 5		gene_product	taxon:7955	20060629	ZFIN		
+ZFIN	ZDB-GENE-060628-3	b4galt5		GO:0009950	ZFIN:ZDB-PUB-060508-14|PMID:16672343	IMP	ZFIN:ZDB-MRPHLNO-060628-1	P	UDP-Gal:betaGlcNAc beta 1,4- galactosyltransferase, polypeptide 5		gene_product	taxon:7955	20060629	ZFIN		
+ZFIN	ZDB-GENE-060628-3	b4galt5		GO:0048840	ZFIN:ZDB-PUB-060508-14|PMID:16672343	IMP	ZFIN:ZDB-MRPHLNO-060628-1	P	UDP-Gal:betaGlcNAc beta 1,4- galactosyltransferase, polypeptide 5		gene_product	taxon:7955	20060629	ZFIN		
+ZFIN	ZDB-GENE-060628-3	b4galt5		GO:0009950	ZFIN:ZDB-PUB-060508-14|PMID:16672343	IMP	ZFIN:ZDB-MRPHLNO-060628-2	P	UDP-Gal:betaGlcNAc beta 1,4- galactosyltransferase, polypeptide 5		gene_product	taxon:7955	20060629	ZFIN		
+ZFIN	ZDB-GENE-060628-3	b4galt5		GO:0030166	ZFIN:ZDB-PUB-060508-14|PMID:16672343	IMP	ZFIN:ZDB-MRPHLNO-060628-1	P	UDP-Gal:betaGlcNAc beta 1,4- galactosyltransferase, polypeptide 5		gene_product	taxon:7955	20060629	ZFIN		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0048854	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IMP	ZFIN:ZDB-MRPHLNO-120629-1	P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0060049	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IGI	ZFIN:ZDB-MRPHLNO-110418-2,ZFIN:ZDB-MRPHLNO-120629-1	P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0035269	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IMP		P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120629	UniProtKB		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0048747	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IMP	ZFIN:ZDB-MRPHLNO-120629-1	P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0060049	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IMP	ZFIN:ZDB-MRPHLNO-120629-1	P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-070410-96	fktn		GO:0060049	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IGI	ZFIN:ZDB-MRPHLNO-110418-1,ZFIN:ZDB-MRPHLNO-120629-1	P	fukutin	fcmd|im:7163166|zgc:162828	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0048747	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IMP	ZFIN:ZDB-MRPHLNO-120629-2	P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-061110-16	ispd		GO:0060049	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IGI	ZFIN:ZDB-MRPHLNO-110418-1,ZFIN:ZDB-MRPHLNO-120629-1	P	isoprenoid synthase domain containing	sb:eu371|zgc:154151	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-070412-4	fkrp		GO:0060049	ZFIN:ZDB-PUB-120424-27|PMID:22522421	IGI	ZFIN:ZDB-MRPHLNO-110418-2,ZFIN:ZDB-MRPHLNO-120629-1	P	fukutin related protein	zgc:162829	gene_product	taxon:7955	20120703	ZFIN		
+ZFIN	ZDB-GENE-070112-1002	pomt2		GO:0004169	ZFIN:ZDB-PUB-100518-14|PMID:20466645	IGI	ZFIN:ZDB-GENE-060929-966	F	protein-O-mannosyltransferase 2	im:7153045|zgc:158749	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-060929-966	pomt1		GO:0035269	ZFIN:ZDB-PUB-100518-14|PMID:20466645	IGI	ZFIN:ZDB-GENE-070112-1002	P	protein-O-mannosyltransferase 1	zgc:153731	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-060929-966	pomt1		GO:0004169	ZFIN:ZDB-PUB-100518-14|PMID:20466645	IGI	ZFIN:ZDB-GENE-070112-1002	F	protein-O-mannosyltransferase 1	zgc:153731	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-070112-1002	pomt2		GO:0035269	ZFIN:ZDB-PUB-100518-14|PMID:20466645	IGI	ZFIN:ZDB-GENE-060929-966	P	protein-O-mannosyltransferase 2	im:7153045|zgc:158749	gene_product	taxon:7955	20121127	ZFIN		
+ZFIN	ZDB-GENE-040630-9	glcea		GO:0047464	ZFIN:ZDB-PUB-050920-1|PMID:16156897	IGI	ZFIN:ZDB-GENE-040630-8	F	glucuronic acid epimerase a	glcel|sb:eu394|zgc:136701	gene_product	taxon:7955	20051024	ZFIN		
+ZFIN	ZDB-GENE-040630-9	glcea		GO:0030201	ZFIN:ZDB-PUB-050920-1|PMID:16156897	IGI	ZFIN:ZDB-GENE-040630-8	P	glucuronic acid epimerase a	glcel|sb:eu394|zgc:136701	gene_product	taxon:7955	20051024	ZFIN		
+ZFIN	ZDB-GENE-040630-9	glcea		GO:0016021	ZFIN:ZDB-PUB-050920-1|PMID:16156897	ISS		C	glucuronic acid epimerase a	glcel|sb:eu394|zgc:136701	gene_product	taxon:7955	20051024	ZFIN		
+ZFIN	ZDB-GENE-040630-9	glcea		GO:0009950	ZFIN:ZDB-PUB-050920-1|PMID:16156897	IGI	ZFIN:ZDB-GENE-040630-8	P	glucuronic acid epimerase a	glcel|sb:eu394|zgc:136701	gene_product	taxon:7955	20051024	ZFIN		
+ZFIN	ZDB-GENE-011119-1	gpc4		GO:0030166	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-070906-1	P	glypican 4	chunp6920|fc47a08|fe05f10|gpc4/6|gpc6|kny|knypek|wu:fc47a08|wu:fe05f10	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0051216	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-980202-872	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-011119-1	gpc4		GO:0051216	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-070906-1	P	glypican 4	chunp6920|fc47a08|fe05f10|gpc4/6|gpc6|kny|knypek|wu:fc47a08|wu:fe05f10	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-020419-3	b3gat3		GO:0051216	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-100414-13	P	beta-1,3-glucuronyltransferase 3 (glucuronosyltransferase I)	CHUNP6865|beta-1,3-glucuronyltransferase 3|fe01c06|wu:fe01c06|zgc:112070	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-020419-3	b3gat3		GO:0030166	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-100414-13	P	beta-1,3-glucuronyltransferase 3 (glucuronosyltransferase I)	CHUNP6865|beta-1,3-glucuronyltransferase 3|fe01c06|wu:fe01c06|zgc:112070	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0001503	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-980202-872	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-050213-1	slc35b2		GO:0030166	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-980202-1001	P	solute carrier family 35 (adenosine 3'-phospho 5'-phosphosulfate transporter), member B2	papst1|pic|pinscher|zgc:64182|zgc:77349	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-050213-1	slc35b2		GO:0051216	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-980202-1001	P	solute carrier family 35 (adenosine 3'-phospho 5'-phosphosulfate transporter), member B2	papst1|pic|pinscher|zgc:64182|zgc:77349	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0051216	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-100414-6	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-041124-3	ext2		GO:0030166	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-980202-872	P	exostosin glycosyltransferase 2	dackel|dak|ext2a|fc14g07|wu:fc14g07	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0030166	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-100414-6	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-050213-1	slc35b2		GO:0001503	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-980202-1001	P	solute carrier family 35 (adenosine 3'-phospho 5'-phosphosulfate transporter), member B2	papst1|pic|pinscher|zgc:64182|zgc:77349	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-020419-37	uxs1		GO:0001503	ZFIN:ZDB-PUB-110110-31|PMID:21294126	IMP	ZFIN:ZDB-GENO-100414-6	P	UDP-glucuronate decarboxylase 1	CHUNP6891|fj36b08|wu:fj36b08|zgc:91980	gene_product	taxon:7955	20120118	ZFIN		
+ZFIN	ZDB-GENE-040315-1	chst11		GO:0047756	ZFIN:ZDB-PUB-090112-5|PMID:19125692	IDA		F	carbohydrate (chondroitin 4) sulfotransferase 11	C4ST-1	gene_product	taxon:7955	20090505	ZFIN		
+ZFIN	ZDB-GENE-040315-1	chst11		GO:0030206	ZFIN:ZDB-PUB-090112-5|PMID:19125692	IMP	ZFIN:ZDB-MRPHLNO-090417-2	P	carbohydrate (chondroitin 4) sulfotransferase 11	C4ST-1	gene_product	taxon:7955	20090803	ZFIN		
+ZFIN	ZDB-GENE-040315-1	chst11		GO:0007517	ZFIN:ZDB-PUB-090112-5|PMID:19125692	IMP	ZFIN:ZDB-MRPHLNO-090417-2	P	carbohydrate (chondroitin 4) sulfotransferase 11	C4ST-1	gene_product	taxon:7955	20090818	ZFIN		
+ZFIN	ZDB-GENE-040315-1	chst11		GO:0008045	ZFIN:ZDB-PUB-090112-5|PMID:19125692	IMP	ZFIN:ZDB-MRPHLNO-090417-2	P	carbohydrate (chondroitin 4) sulfotransferase 11	C4ST-1	gene_product	taxon:7955	20090818	ZFIN		
+ZFIN	ZDB-GENE-070622-2	ghrl		GO:0007507	ZFIN:ZDB-PUB-090310-14|PMID:19264876	IMP	ZFIN:ZDB-MRPHLNO-090819-1	P	ghrelin/obestatin prepropeptide		gene_product	taxon:7955	20090820	ZFIN		
+ZFIN	ZDB-GENE-070622-2	ghrl		GO:0043009	ZFIN:ZDB-PUB-090310-14|PMID:19264876	IMP	ZFIN:ZDB-MRPHLNO-090819-1	P	ghrelin/obestatin prepropeptide		gene_product	taxon:7955	20090820	ZFIN		
