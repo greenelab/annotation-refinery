@@ -498,6 +498,37 @@ class GO_Test(unittest.TestCase):
 
         self.assertEqual(annotations, desired_annotations)
 
+    def testPseudomonasSymbol(self):
+        """
+        Test to check that the output of Pseudomonas GO test files is what
+        we expect, and that the 'xrdb' is 'Symbol', not 'PseudoCAP'.
+        """
+        test_ini_file = 'test_files/test_pseudomonas.ini'
+        go_terms = process_go.process_go_terms(test_ini_file, 'test_files/')
+
+        desired_go_term = None
+        for term in go_terms:
+            if term['title'] == 'GO-BP-0015838:amino-acid betaine transport':
+                desired_go_term = term
+
+        desired_go_term_info = {
+            'title': 'GO-BP-0015838:amino-acid betaine transport',
+            'abstract':
+                'The directed movement of betaine, the N-trimethyl derivative '
+                'of an amino acid, into, out of or within a cell, or between '
+                'cells, by means of some agent such as a transporter or pore. '
+                'Annotations are propagated through transitive closure as '
+                'recommended by the GO Consortium. Only annotations with '
+                'evidence coded as EXP, IDA, IPI, IMP, IGI or IEP '
+                'are included.',
+            'organism': 'Pseudomonas aeruginosa',
+            'xrdb': 'Symbol',
+            'slug': 'go0015838-pseudomonas-aeruginosa',
+            'annotations': {'PA3236': ['19919675'], 'PA5388': ['19919675']}
+        }
+
+        self.assertEqual(desired_go_term, desired_go_term_info)
+
 
 class DO_Test(unittest.TestCase):
     """

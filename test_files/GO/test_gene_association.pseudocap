@@ -1,0 +1,26 @@
+!GOC Validation Date: 02/06/2015 $
+!Submission Date: 8/26/2014
+!
+! The above "Submission Date" is when the annotation project provided
+! this file to the Gene Ontology Consortium (GOC).  The "GOC Validation
+! Date" indicates when this file was last changed as a result of a GOC
+! validation and filtering process.  
+!
+! Note: The contents of this file may differ from that submitted to the
+! GOC. The identifiers and syntax of the file have been checked, rows of
+! data not meeting the standards set by the GOC have been removed. This
+! file may also have annotations removed because the annotations for the
+! listed Taxonomy identifier are only allowed in a file provided by
+! another annotation project.  The original submitted file is available from:
+!  http://www.geneontology.org/gene-associations/submission/
+!
+! For information on which taxon are allowed in which files please see:
+!  http://www.geneontology.org/GO.annotation.shtml#script
+!
+!gaf-version: 2.0
+!Project_name: Pseudomonas Community Annotation Project (PseudoCAP)
+!URL: http://www.pseudomonas.com
+!Contact Email: pseudocap-mail@sfu.ca
+!Funding: Cystic Fibrosis Foundation, Therapeutics
+PseudoCAP	PA3236	betX		GO:0031460	PMID:19919675	IMP		P	BetX	BetX|betX|betaine-specific binding protein	protein	taxon:208964	20140826	PseudoCAP				
+PseudoCAP	PA5388	caiX		GO:0015879	PMID:19919675	IMP		P	CaiX	CaiX|caiX|carnitine-specific binding protein	protein	taxon:208964	20140826	PseudoCAP		
