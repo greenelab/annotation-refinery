@@ -29,7 +29,7 @@ DB_REMAP = {
 
 def get_filtered_annotations(assoc_file, accepted_evcodes=None,
                              remove_leading_gene_id=None,
-                             pseudomonas_symbol=None):
+                             use_symbol=None, tax_id=None):
     """
     This function reads in the association file and returns a list of
     annotations. Only annotations that have evidence codes in
@@ -68,8 +68,13 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None,
             continue
 
         toks = line.strip().split('\t')
-        (xrdb, xrid, details, goid, refstring, ev_code, date) = (
-            toks[0], toks[1], toks[3], toks[4], toks[5], toks[6], toks[13])
+
+        (xrdb, xrid, details, goid, refstring, ev_code, taxon, date) = (
+            toks[0], toks[1], toks[3], toks[4], toks[5], toks[6],
+            toks[12].split(':')[1], toks[13])
+
+        if tax_id and (tax_id != taxon):
+            continue
 
         if remove_leading_gene_id:
             xrid = xrid.split(':')[1]
@@ -77,8 +82,10 @@ def get_filtered_annotations(assoc_file, accepted_evcodes=None,
         if xrdb in DB_REMAP:
             xrdb = DB_REMAP[xrdb]
 
-        if pseudomonas_symbol:
+        if use_symbol:
             xrdb = 'Symbol'
+            if toks[0] == 'UniProtKB':
+                xrid = toks[2]
 
         # These next few lines are needed for processing
         # Arabidopsis annotations
@@ -175,31 +182,49 @@ def process_go_terms(species_ini_file, base_download_folder):
 
     organism = species_file.get('species_info', 'SCIENTIFIC_NAME')
     sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
+    taxonomy_id = species_file.get('species_info', 'TAXONOMY_ID')
+
+    # The default is not to filter annotations by taxonomy ID
+    filter_by_tax_id = None
+    if species_file.has_option('species_info', 'FILTER_BY_TAXONOMY_ID'):
+        filter_by_tax_id = species_file.getboolean('species_info',
+                                                   'FILTER_BY_TAXONOMY_ID')
 
     obo_url = urlsplit(species_file.get('GO', 'GO_OBO_URL'))
-    assoc_file_url = urlsplit(species_file.get('GO', 'ASSOC_FILE_URL'))
-
     obo_filename = os.path.basename(obo_url.path)
-    assoc_filename = os.path.basename(assoc_file_url.path)
-
     obo_file = os.path.join(base_download_folder, obo_filename)
-    assoc_file = os.path.join(sd_folder, 'GO', assoc_filename)
+
+    assoc_file_urls = [urlsplit(x) for x in
+                       species_file.get('GO', 'ASSOC_FILE_URLS')
+                       .replace(' ', '').replace('\n', '').split(',')]
+    assoc_filenames = [os.path.basename(x.path) for x in assoc_file_urls]
+    assoc_files = [os.path.join(sd_folder, 'GO', x) for x in assoc_filenames]
 
     evcodes = species_file.get('GO', 'EVIDENCE_CODES')
     evcodes = evcodes.replace(' ', '').split(',')
 
-    pseudomonas_symbol = None
-    if species_file.has_option('GO', 'PSEUDOMONAS_SYMBOL'):
-        pseudomonas_symbol = species_file.getboolean('GO', 'PSEUDOMONAS_SYMBOL')
+    use_symbol = None
+    if species_file.has_option('GO', 'USE_SYMBOL'):
+        use_symbol = species_file.getboolean('GO', 'USE_SYMBOL')
 
     remove_leading_gene_id = False
     if species_file.has_option('GO', 'REMOVE_LEADING_GENE_ID'):
         remove_leading_gene_id = species_file.getboolean(
             'GO', 'REMOVE_LEADING_GENE_ID')
 
-    annotations = get_filtered_annotations(
-        assoc_file, evcodes, remove_leading_gene_id=remove_leading_gene_id,
-        pseudomonas_symbol=pseudomonas_symbol)
+    annotations = []
+    for assoc_file in assoc_files:
+        if filter_by_tax_id:
+            new_annotations = get_filtered_annotations(
+                assoc_file, evcodes,
+                remove_leading_gene_id=remove_leading_gene_id,
+                use_symbol=use_symbol, tax_id=taxonomy_id)
+        else:
+            new_annotations = get_filtered_annotations(
+                assoc_file, evcodes,
+                remove_leading_gene_id=remove_leading_gene_id,
+                use_symbol=use_symbol)
+        annotations.extend(new_annotations)
 
     gene_ontology = go()
     loaded_obo_bool = gene_ontology.load_obo(obo_file)
