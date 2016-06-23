@@ -43,8 +43,8 @@ def main(ini_file_path):
 
     process_to = main_config_file.get('main', 'PROCESS_TO')
 
-    if main_config_file.has_option('main', 'PUBLIC'):
-        tribe_public = main_config_file.getboolean('main', 'PUBLIC')
+    if main_config_file.has_option('main', 'TRIBE_PUBLIC'):
+        tribe_public = main_config_file.getboolean('main', 'TRIBE_PUBLIC')
     else:
         tribe_public = False
 
