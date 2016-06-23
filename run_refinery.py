@@ -7,7 +7,7 @@ from download_files import download_all_files
 from process_kegg import process_kegg_sets
 from process_go import process_go_terms
 from process_do import process_do_terms
-from loader import load_to_tribe
+from loader import load_to_tribe, return_as_json, write_json_file
 
 # Import and set logger
 import logging
@@ -15,24 +15,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-if __name__ == "__main__":
-
-    # Logging level can be input as an argument to logging.basicConfig()
-    # function to get more logging output (e.g. level=logging.INFO)
-    # The default level is logging.WARNING
-    logging.basicConfig()
-
-    parser = argparse.ArgumentParser(
-        description='Package to download and process knowledge in annotations '
-        'databases, convert to JSON, and save to Tribe webserver if desired.')
-
-    parser.add_argument(
-        '-i', '--INI_file', required=True, dest='ini_file_path',
-        help='Main INI configuration file containing settings to run refinery.'
-        ' Please consult our README for additional documentation.')
-
-    args = parser.parse_args()
-    ini_file_path = args.ini_file_path
+def main(ini_file_path):
 
     if not os.path.isfile(ini_file_path):
         logger.error('Main INI configuration file not found in this path: ' +
@@ -59,6 +42,11 @@ if __name__ == "__main__":
         secrets_file = main_config_file.get('main', 'SECRETS_FILE')
 
     process_to = main_config_file.get('main', 'PROCESS_TO')
+
+    if main_config_file.has_option('main', 'PUBLIC'):
+        tribe_public = main_config_file.getboolean('main', 'PUBLIC')
+    else:
+        tribe_public = False
 
     species_dir = main_config_file.get('species files', 'SPECIES_DIR')
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
@@ -92,4 +80,37 @@ if __name__ == "__main__":
 
         if process_to == 'Tribe':
             for geneset in all_genesets:
+                geneset['public'] = tribe_public
                 load_to_tribe(ini_file_path, geneset)
+
+        elif process_to == 'Python list':
+            return all_genesets
+
+        elif process_to == 'JSON':
+            return return_as_json(all_genesets)
+
+        elif process_to == 'JSON file':
+            json_filepath = main_config_file.get('main', 'JSON_FILE')
+            write_json_file(all_genesets, json_filepath)
+
+
+if __name__ == "__main__":
+
+    # Logging level can be input as an argument to logging.basicConfig()
+    # function to get more logging output (e.g. level=logging.INFO)
+    # The default level is logging.WARNING
+    logging.basicConfig()
+
+    parser = argparse.ArgumentParser(
+        description='Package to download and process knowledge in annotations '
+        'databases, convert to JSON, and save to Tribe webserver if desired.')
+
+    parser.add_argument(
+        '-i', '--INI_file', required=True, dest='ini_file_path',
+        help='Main INI configuration file containing settings to run refinery.'
+        ' Please consult our README for additional documentation.')
+
+    args = parser.parse_args()
+    ini_file_path = args.ini_file_path
+
+    main(ini_file_path)
