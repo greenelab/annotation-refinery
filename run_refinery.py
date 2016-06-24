@@ -103,7 +103,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description='Package to download and process knowledge in annotations '
-        'databases, convert to JSON, and save to Tribe webserver if desired.')
+        'databases, convert to JSON, output as a Python list or save to Tribe'
+        ' webserver if desired.')
 
     parser.add_argument(
         '-i', '--INI_file', required=True, dest='ini_file_path',
