@@ -284,7 +284,7 @@ def process_go_terms(species_ini_file, base_download_folder):
                 go_term['annotations'][annotation.gid] = []
 
             if annotation.ref is not None:
-                go_term['annotations'][annotation.gid].append(annotation.ref)
+                go_term['annotations'][annotation.gid].append(int(annotation.ref))
 
             if annotation.xdb is not None:
                 if go_term_xrdb and go_term_xrdb != annotation.xdb:
