@@ -43,10 +43,17 @@ def main(ini_file_path):
 
     process_to = main_config_file.get('main', 'PROCESS_TO')
 
-    if main_config_file.has_option('main', 'TRIBE_PUBLIC'):
-        tribe_public = main_config_file.getboolean('main', 'TRIBE_PUBLIC')
+    if main_config_file.has_option('Tribe parameters', 'TRIBE_PUBLIC'):
+        tribe_public = main_config_file.getboolean('Tribe parameters',
+                                                   'TRIBE_PUBLIC')
     else:
         tribe_public = False
+
+    if main_config_file.has_option('Tribe parameters', 'CREATE_NEW_VERSIONS'):
+        new_tribe_versions = main_config_file.getboolean('Tribe parameters',
+                                                         'CREATE_NEW_VERSIONS')
+    else:
+        new_tribe_versions = False
 
     species_dir = main_config_file.get('species files', 'SPECIES_DIR')
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
@@ -81,7 +88,8 @@ def main(ini_file_path):
         if process_to == 'Tribe':
             for geneset in all_genesets:
                 geneset['public'] = tribe_public
-                load_to_tribe(ini_file_path, geneset)
+                load_to_tribe(ini_file_path, geneset,
+                              create_new_versions=new_tribe_versions)
 
         elif process_to == 'Python list':
             return all_genesets
