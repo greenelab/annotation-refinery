@@ -155,7 +155,9 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
             old_annotations = {}
             for annotation in annotations:
                 gene = annotation['gene']['entrezid']
-                old_annotations[gene] = set(annotation['pubs'])
+                old_annotations[gene] = set()
+                for pub in annotation['pubs']:
+                    old_annotations[gene].add(pub['pmid'])
 
             gene_list = geneset_info['annotations'].keys()
             translate_response = translate_gene_ids(tribe_url, gene_list,
@@ -179,11 +181,10 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
                         logger.warning('There was more than one Entrez ID '
                                        'found for gene %s', gene)
                     gene = gene_entrezids[gene][0]
+                    pub_set_annotations[gene] = set(publist)
                 else:
                     logger.warning('No Entrez IDs were found for gene %s',
                                    gene)
-
-                pub_set_annotations[gene] = set(publist)
 
             if pub_set_annotations != old_annotations:
                 # Annotations have changed
