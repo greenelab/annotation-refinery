@@ -227,4 +227,3 @@ def return_as_json(geneset_info):
 def write_json_file(geneset_info, json_filename):
     with open(json_filename, "w") as outfile:
         json.dump(geneset_info, outfile, indent=4)
-    return True
