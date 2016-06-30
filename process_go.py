@@ -184,24 +184,23 @@ def process_go_terms(species_ini_file, base_download_folder):
     sd_folder = species_file.get('species_info', 'SPECIES_DOWNLOAD_FOLDER')
     taxonomy_id = species_file.get('species_info', 'TAXONOMY_ID')
 
-    # The default is not to filter annotations by taxonomy ID
-    filter_by_tax_id = None
-    if species_file.has_option('species_info', 'FILTER_BY_TAXONOMY_ID'):
-        filter_by_tax_id = species_file.getboolean('species_info',
-                                                   'FILTER_BY_TAXONOMY_ID')
-
     obo_url = urlsplit(species_file.get('GO', 'GO_OBO_URL'))
     obo_filename = os.path.basename(obo_url.path)
     obo_file = os.path.join(base_download_folder, obo_filename)
 
-    assoc_file_urls = [urlsplit(x) for x in
-                       species_file.get('GO', 'ASSOC_FILE_URLS')
-                       .replace(' ', '').replace('\n', '').split(',')]
-    assoc_filenames = [os.path.basename(x.path) for x in assoc_file_urls]
+    # Get whatever is saved in the ASSOC_FILE_URLS option minus any
+    # whitespace characters.
+    assoc_file_urls = re.sub(
+        r'\s', '', species_file.get('GO', 'ASSOC_FILE_URLS'))
+
+    # Convert this line into a list of urls, splitting by comma (','),
+    # and then make a list with the filenames in each of these urls.
+    assoc_file_url_list = [urlsplit(x) for x in assoc_file_urls.split(',')]
+    assoc_filenames = [os.path.basename(x.path) for x in assoc_file_url_list]
     assoc_files = [os.path.join(sd_folder, 'GO', x) for x in assoc_filenames]
 
     evcodes = species_file.get('GO', 'EVIDENCE_CODES')
-    evcodes = evcodes.replace(' ', '').split(',')
+    evcodes = re.sub(r'\s', '', evcodes).split(',')
 
     use_symbol = None
     if species_file.has_option('GO', 'USE_SYMBOL'):
@@ -214,16 +213,11 @@ def process_go_terms(species_ini_file, base_download_folder):
 
     annotations = []
     for assoc_file in assoc_files:
-        if filter_by_tax_id:
-            new_annotations = get_filtered_annotations(
-                assoc_file, evcodes,
-                remove_leading_gene_id=remove_leading_gene_id,
-                use_symbol=use_symbol, tax_id=taxonomy_id)
-        else:
-            new_annotations = get_filtered_annotations(
-                assoc_file, evcodes,
-                remove_leading_gene_id=remove_leading_gene_id,
-                use_symbol=use_symbol)
+        new_annotations = get_filtered_annotations(
+            assoc_file, evcodes,
+            remove_leading_gene_id=remove_leading_gene_id,
+            use_symbol=use_symbol, tax_id=taxonomy_id)
+
         annotations.extend(new_annotations)
 
     gene_ontology = go()
@@ -284,7 +278,8 @@ def process_go_terms(species_ini_file, base_download_folder):
                 go_term['annotations'][annotation.gid] = []
 
             if annotation.ref is not None:
-                go_term['annotations'][annotation.gid].append(int(annotation.ref))
+                go_term['annotations'][annotation.gid].append(
+                    int(annotation.ref))
 
             if annotation.xdb is not None:
                 if go_term_xrdb and go_term_xrdb != annotation.xdb:

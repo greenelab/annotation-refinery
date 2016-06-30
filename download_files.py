@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 from ConfigParser import SafeConfigParser
 
 from utils import check_create_folder, download_from_url
@@ -50,8 +51,8 @@ def download_all_files(species_ini_file, base_download_folder,
             go_dir = os.path.join(sd_folder, 'GO')
             check_create_folder(go_dir)
 
-            goa_urls = (species_file.get('GO', 'ASSOC_FILE_URLS')
-                        .replace(' ', '').replace('\n', '').split(','))
+            goa_urls = species_file.get('GO', 'ASSOC_FILE_URLS')
+            goa_urls = re.sub(r'\s', '', goa_urls).split(',')
 
             for goa_url in goa_urls:
                 download_from_url(goa_url, go_dir)
