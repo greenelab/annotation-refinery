@@ -278,8 +278,13 @@ def process_go_terms(species_ini_file, base_download_folder):
                 go_term['annotations'][annotation.gid] = []
 
             if annotation.ref is not None:
-                go_term['annotations'][annotation.gid].append(
-                    int(annotation.ref))
+                try:
+                    go_term['annotations'][annotation.gid].append(
+                        int(annotation.ref))
+                except ValueError:
+                    logger.error('Pubmed ID %s for GO term %s could not be '
+                                 'converted to an integer.', annotation.ref,
+                                 term_id)
 
             if annotation.xdb is not None:
                 if go_term_xrdb and go_term_xrdb != annotation.xdb:
