@@ -144,13 +144,14 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
 
             try:
                 annotations = gs_response['tip']['annotations']
-            except KeyError:
+            except (KeyError, TypeError):
                 # There was no 'tip' version for this geneset, create
                 # first version.
                 geneset_info['geneset'] = gs_response['resource_uri']
                 geneset_info['description'] = 'Adding annotations.'
                 response = create_remote_version(access_token, geneset_info,
                                                  tribe_url)
+                return response
 
             old_annotations = {}
             for annotation in annotations:
@@ -215,15 +216,9 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
     else:
         response = create_remote_geneset(access_token, geneset_info,
                                          tribe_url)
-
     return response
-
-
-def return_as_json(geneset_info):
-    geneset_json = json.dumps(geneset_info)
-    return geneset_json
 
 
 def write_json_file(geneset_info, json_filename):
     with open(json_filename, "w") as outfile:
-        json.dump(geneset_info, outfile, indent=4)
+        json.dump(geneset_info, outfile, indent=2)
