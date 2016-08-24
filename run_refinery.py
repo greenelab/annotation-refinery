@@ -7,12 +7,59 @@ from download_files import download_all_files
 from process_kegg import process_kegg_sets
 from process_go import process_go_terms
 from process_do import process_do_terms
-from loader import load_to_tribe, return_as_json, write_json_file
+from loader import load_to_tribe, write_json_file
 
 # Import and set logger
 import logging
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+
+def process_all_organism_genesets(organism_ini_file, download_folder,
+                                  secrets_file=None):
+    """
+    Downloads and processes files for all geneset types (such as GO and
+    KEGG) specified in the .ini config file for a given organism.
+
+    Arguments:
+    organism_ini_file -- A string, location of the INI configuration
+    file for an organism.
+
+    download_folder -- A string, location of the folder where all files
+    containing geneset info (downloaded from GO, KEGG, etc. servers) will
+    be saved to.
+
+    secrets_file (Optional) -- A string of the secrets.ini file location.
+    This is optional, but it must be included if the files required
+    to process any genesets specified in the organism_ini_file require
+    a password or a secret API key to be downloaded.
+
+    Returns:
+    all_genesets -- A Python list of all the genesets specified to be
+    processed in the organism_ini_file. Each geneset in this list is a
+    Python dictionary.
+    """
+
+    download_all_files(organism_ini_file, download_folder,
+                       secrets_location=secrets_file)
+    all_genesets = []
+
+    species_config_file = SafeConfigParser()
+    species_config_file.read(organism_ini_file)
+
+    if species_config_file.has_section('GO'):
+        all_go_terms = process_go_terms(organism_ini_file, download_folder)
+        all_genesets.extend(all_go_terms)
+
+    if species_config_file.has_section('KEGG'):
+        all_kegg_sets = process_kegg_sets(organism_ini_file, download_folder)
+        all_genesets.extend(all_kegg_sets)
+
+    if species_config_file.has_section('DO'):
+        all_do_terms = process_do_terms(organism_ini_file)
+        all_genesets.extend(all_do_terms)
+
+    return all_genesets
 
 
 def main(ini_file_path):
@@ -65,37 +112,17 @@ def main(ini_file_path):
         # Build full path of species_file
         species_file = os.path.join(species_dir, species_file)
 
-        download_all_files(species_file, download_folder,
-                           secrets_location=secrets_file)
-
-        all_genesets = []
+        all_genesets = process_all_organism_genesets(
+            species_file, download_folder, secrets_file)
 
         species_config_file = SafeConfigParser()
         species_config_file.read(species_file)
-
-        if species_config_file.has_section('GO'):
-            all_go_terms = process_go_terms(species_file, download_folder)
-            all_genesets.extend(all_go_terms)
-
-        if species_config_file.has_section('KEGG'):
-            all_kegg_sets = process_kegg_sets(species_file, download_folder)
-            all_genesets.extend(all_kegg_sets)
-
-        if species_config_file.has_section('DO'):
-            all_do_terms = process_do_terms(species_file)
-            all_genesets.extend(all_do_terms)
 
         if process_to == 'Tribe':
             for geneset in all_genesets:
                 geneset['public'] = tribe_public
                 load_to_tribe(ini_file_path, geneset,
                               create_new_versions=new_tribe_versions)
-
-        elif process_to == 'Python list':
-            return all_genesets
-
-        elif process_to == 'JSON':
-            return return_as_json(all_genesets)
 
         elif process_to == 'JSON file':
             json_filepath = main_config_file.get('main', 'JSON_FILE')
