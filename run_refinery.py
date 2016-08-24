@@ -109,24 +109,22 @@ def main(ini_file_path):
     species_files = [filename.strip() for filename in species_files.split(',')]
 
     for species_file in species_files:
-        # Build full path of species_file
+
+        # Build full species_file path
         species_file = os.path.join(species_dir, species_file)
 
-        all_genesets = process_all_organism_genesets(
+        all_org_genesets = process_all_organism_genesets(
             species_file, download_folder, secrets_file)
 
-        species_config_file = SafeConfigParser()
-        species_config_file.read(species_file)
-
         if process_to == 'Tribe':
-            for geneset in all_genesets:
+            for geneset in all_org_genesets:
                 geneset['public'] = tribe_public
                 load_to_tribe(ini_file_path, geneset,
                               create_new_versions=new_tribe_versions)
 
         elif process_to == 'JSON file':
             json_filepath = main_config_file.get('main', 'JSON_FILE')
-            write_json_file(all_genesets, json_filepath)
+            write_json_file(all_org_genesets, json_filepath)
 
 
 if __name__ == "__main__":
