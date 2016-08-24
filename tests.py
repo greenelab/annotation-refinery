@@ -814,7 +814,7 @@ class LoaderTest(unittest.TestCase):
 
         geneset_response = loader.load_to_tribe(self.main_config_file,
                                                 selected_kegg_term,
-                                                create_new_versions=True)
+                                                prefer_update=True)
 
         self.assertEqual(
             geneset_response['title'], 'KEGG-Pathway-hsa00020: Citrate cycle '
@@ -829,7 +829,7 @@ class LoaderTest(unittest.TestCase):
 
         version_response = loader.load_to_tribe(self.main_config_file,
                                                 selected_kegg_term,
-                                                create_new_versions=True)
+                                                prefer_update=True)
 
         self.assertEqual(len(version_response['annotations']), 11)
 
@@ -841,7 +841,7 @@ class LoaderTest(unittest.TestCase):
         selected_go_term = self.go_terms[1]
 
         geneset_response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, create_new_versions=True)
+            self.main_config_file, selected_go_term, prefer_update=True)
 
         self.assertEqual(geneset_response['title'],
                          'GO-BP-0000007:european team')
@@ -852,7 +852,7 @@ class LoaderTest(unittest.TestCase):
             'A0A024R214': [], 'A0A024QZP7': [], 'A0A024R216': []}
 
         version_response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, create_new_versions=True)
+            self.main_config_file, selected_go_term, prefer_update=True)
 
         self.assertEqual(len(version_response['annotations']), 3)
 
@@ -864,7 +864,7 @@ class LoaderTest(unittest.TestCase):
         selected_do_term = self.do_terms[1]
 
         geneset_response = loader.load_to_tribe(
-            self.main_config_file, selected_do_term, create_new_versions=True)
+            self.main_config_file, selected_do_term, prefer_update=True)
 
         self.assertEqual(geneset_response['title'],
                          'DO-0014667:disease of metabolism')
@@ -875,7 +875,7 @@ class LoaderTest(unittest.TestCase):
             4160: [], 8431: [], 51738: [], 5443: [], 6492: [], 4321: []}
 
         version_response = loader.load_to_tribe(
-            self.main_config_file, selected_do_term, create_new_versions=True)
+            self.main_config_file, selected_do_term, prefer_update=True)
 
         self.assertEqual(len(version_response['annotations']), 6)
 
@@ -894,7 +894,7 @@ class LoaderTest(unittest.TestCase):
         selected_go_term = self.go_terms[2]
 
         geneset_response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, create_new_versions=True)
+            self.main_config_file, selected_go_term, prefer_update=True)
 
         self.assertEqual(geneset_response['title'],
                          'GO-BP-0000005:premier league')
@@ -902,7 +902,7 @@ class LoaderTest(unittest.TestCase):
 
         # Do not change the annotations, just try to save to Tribe again
         response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, create_new_versions=True)
+            self.main_config_file, selected_go_term, prefer_update=True)
 
         self.assertEqual(response['status_code'], 409)
         self.assertEqual(

@@ -96,11 +96,11 @@ def main(ini_file_path):
     else:
         tribe_public = False
 
-    if main_config_file.has_option('Tribe parameters', 'CREATE_NEW_VERSIONS'):
-        new_tribe_versions = main_config_file.getboolean('Tribe parameters',
-                                                         'CREATE_NEW_VERSIONS')
+    if main_config_file.has_option('Tribe parameters', 'PREFER_UPDATE'):
+        prefer_update = main_config_file.getboolean('Tribe parameters',
+                                                    'PREFER_UPDATE')
     else:
-        new_tribe_versions = False
+        prefer_update = False
 
     species_dir = main_config_file.get('species files', 'SPECIES_DIR')
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
@@ -120,7 +120,7 @@ def main(ini_file_path):
             for geneset in all_org_genesets:
                 geneset['public'] = tribe_public
                 load_to_tribe(ini_file_path, geneset,
-                              create_new_versions=new_tribe_versions)
+                              prefer_update=prefer_update)
 
         elif process_to == 'JSON file':
             json_filepath = main_config_file.get('main', 'JSON_FILE')
