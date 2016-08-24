@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
+def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
     """
     This function takes the passed geneset data (in the geneset_info
     dictionary) and attempts to create a new geneset or version
@@ -50,7 +50,7 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
         'slug': 'doid0014667-homo-sapiens'
      }
 
-    create_new_versions -- Boolean keyword argument. If False, this function
+    prefer_update -- Boolean keyword argument. If False, this function
     will not try to create new versions of already existing genesets - it will
     attempt to create a geneset in Tribe from the geneset_info and fail if
     the geneset (with the same title and creator username) already exists.
@@ -128,7 +128,7 @@ def load_to_tribe(main_config_file, geneset_info, create_new_versions=False):
     access_token = obtain_token_using_credentials(
         username, password, tribe_id, tribe_secret, access_token_url)
 
-    if create_new_versions:
+    if prefer_update:
 
         gs_url = tribe_url + '/api/v1/geneset/' + username + '/' + \
             geneset_info['slug']
