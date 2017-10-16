@@ -16,8 +16,8 @@ the main directory to run:
 1. A ``main_config.ini`` file with the main configuration settings, and
 
 2. At least one ``<species>.ini`` file, which will contain the locations of
-   the desired annotation files for that species, amon other things. Users can
-   add configuration files in the main directory for as many species as
+   the desired annotation files for that species, among other things. Users
+   can add configuration files in the main directory for as many species as
    they want the refinery to process.
 
 
@@ -30,8 +30,8 @@ The Main Configuration File
 
 The main configuration file includes settings like the location(s) of the
 species file(s), where the output of the refinery (the processed genesets)
-should be loaded to, where annotation files should be downloaded to, 
-and optionally, the location of the secrets file.
+should be uploaded to, the name of the base directory for all the downloaded
+files, and optionally, the location of the secrets file.
 
 .. code-block::
 
@@ -40,8 +40,8 @@ and optionally, the location of the secrets file.
     PROCESS_TO: Tribe
 
 
-    # All other download folders in this files should be folders within
-    # this root folder
+    # All other download folders specified in the configuration files should
+    # be subdirectories of this folder.
     [download_folder]
     BASE_DOWNLOAD_FOLDER: download_files
 
@@ -67,6 +67,9 @@ downloaded.
     [species_info]
     SCIENTIFIC_NAME: Homo sapiens
     TAXONOMY_ID: 9606
+
+    # *Note: This should be a subdirectory of the BASE_DOWNLOAD_FOLDER
+    # specified in the main_config.ini file.
     SPECIES_DOWNLOAD_FOLDER: download_files/Human
 
 

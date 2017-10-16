@@ -61,6 +61,12 @@ def download_from_url(url, download_folder, file_name=None):
     try:
         if url.startswith('ftp'):
             urllib.urlretrieve(url, target_filename)
+
+            # Because this is an FTP connection, we need to clear the
+            # cache from previous calls. For more info, see:
+            # https://stackoverflow.com/questions/44733710/downloading-second-file-from-ftp-fails
+            # https://docs.python.org/2/library/urllib.html#urllib.urlcleanup
+            urllib.urlcleanup()
             return True
 
         else:
