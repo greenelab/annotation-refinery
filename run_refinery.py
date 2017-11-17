@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import argparse
 from ConfigParser import SafeConfigParser
 
@@ -7,7 +8,7 @@ from download_files import download_all_files
 from process_kegg import process_kegg_sets
 from process_go import process_go_terms
 from process_do import process_do_terms
-from loader import load_to_tribe, write_json_file
+from tribe_loader import get_oauth_token, load_to_tribe, get_changed_genesets
 
 # Import and set logger
 import logging
@@ -40,24 +41,41 @@ def process_all_organism_genesets(organism_ini_file, download_folder,
     Python dictionary.
     """
 
+    logger.info('Starting to download all files for organism "*.ini" file %s',
+                organism_ini_file)
     download_all_files(organism_ini_file, download_folder,
                        secrets_location=secrets_file)
+    logger.info('Finished downloading all files for organism "*.ini" file %s',
+                organism_ini_file)
+
     all_genesets = []
 
     species_config_file = SafeConfigParser()
     species_config_file.read(organism_ini_file)
 
     if species_config_file.has_section('GO'):
+        logger.info('Starting to process GO terms for "*.ini" file %s',
+                    organism_ini_file)
         all_go_terms = process_go_terms(organism_ini_file, download_folder)
         all_genesets.extend(all_go_terms)
+        logger.info('Finished processing GO terms for "*.ini" file %s',
+                    organism_ini_file)
 
     if species_config_file.has_section('KEGG'):
+        logger.info('Starting to process KEGG terms for "*.ini" file %s',
+                    organism_ini_file)
         all_kegg_sets = process_kegg_sets(organism_ini_file, download_folder)
         all_genesets.extend(all_kegg_sets)
+        logger.info('Finished processing KEGG terms for "*.ini" file %s',
+                    organism_ini_file)
 
     if species_config_file.has_section('DO'):
+        logger.info('Starting to process DO terms for "*.ini" file %s',
+                    organism_ini_file)
         all_do_terms = process_do_terms(organism_ini_file)
         all_genesets.extend(all_do_terms)
+        logger.info('Finished processing DO terms for "*.ini" file %s',
+                    organism_ini_file)
 
     return all_genesets
 
@@ -99,8 +117,10 @@ def main(ini_file_path):
     if main_config_file.has_option('Tribe parameters', 'PREFER_UPDATE'):
         prefer_update = main_config_file.getboolean('Tribe parameters',
                                                     'PREFER_UPDATE')
+        tribe_url = main_config_file.get('Tribe parameters', 'TRIBE_URL')
     else:
         prefer_update = False
+        tribe_url = False
 
     species_dir = main_config_file.get('species files', 'SPECIES_DIR')
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
@@ -117,14 +137,27 @@ def main(ini_file_path):
             species_file, download_folder, secrets_file)
 
         if process_to == 'Tribe':
-            for geneset in all_org_genesets:
+            if not tribe_url:
+                logger.error('"Tribe parameters" section needs "TRIBE_URL" '
+                             'option to be able to save to Tribe.')
+                sys.exit(1)
+
+            tribe_token = get_oauth_token(tribe_url, secrets_file)
+            changed_genesets = get_changed_genesets(
+                species_file, secrets_file, all_org_genesets)
+
+            logger.info('Starting to save gene sets to Tribe')
+            for geneset in changed_genesets:
                 geneset['public'] = tribe_public
-                load_to_tribe(ini_file_path, geneset,
+                load_to_tribe(ini_file_path, geneset, tribe_token,
                               prefer_update=prefer_update)
+            logger.info('Finished saving gene sets to Tribe')
 
         elif process_to == 'JSON file':
             json_filepath = main_config_file.get('main', 'JSON_FILE')
-            write_json_file(all_org_genesets, json_filepath)
+
+            with open(json_filepath, "w") as outfile:
+                json.dump(all_org_genesets, outfile, indent=2)
 
 
 if __name__ == "__main__":

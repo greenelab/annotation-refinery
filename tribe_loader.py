@@ -1,5 +1,4 @@
 import sys
-import json
 import requests
 from ConfigParser import SafeConfigParser
 
@@ -10,8 +9,49 @@ import logging
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+try:
+    from tribe_client.utils import obtain_token_using_credentials, \
+            create_remote_geneset, create_remote_version, \
+            download_organism_public_genesets
+except ImportError:
+    logger.error('The package "tribe-client" has not been installed in '
+                 'this Python environment. Please pip-install it to'
+                 ' proceed.')
+    sys.exit(1)
 
-def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
+
+def get_oauth_token(tribe_url, secrets_location):
+    secrets_file = SafeConfigParser()
+    secrets_file.read(secrets_location)
+
+    if not secrets_file.has_section('Tribe secrets'):
+        logger.error('Secrets file has no "Tribe secrets" section, which is'
+                     ' required to save the processed genesets to Tribe.')
+        sys.exit(1)
+
+    required_secrets = set(['tribe_id', 'tribe_secret', 'username',
+                            'password'])
+    secrets_set = set(secrets_file.options('Tribe secrets'))
+
+    if not required_secrets.issubset(secrets_set):
+        logger.error('Tribe secrets section must contain TRIBE_ID, '
+                     'TRIBE_SECRET, USERNAME, and PASSWORD to be able to save'
+                     ' processed genesets to Tribe.')
+        sys.exit(1)
+
+    tribe_id = secrets_file.get('Tribe secrets', 'TRIBE_ID')
+    tribe_secret = secrets_file.get('Tribe secrets', 'TRIBE_SECRET')
+    username = secrets_file.get('Tribe secrets', 'USERNAME')
+    password = secrets_file.get('Tribe secrets', 'PASSWORD')
+
+    access_token_url = tribe_url + '/oauth2/token/'
+    access_token = obtain_token_using_credentials(
+        username, password, tribe_id, tribe_secret, access_token_url)
+    return access_token
+
+
+def load_to_tribe(main_config_file, geneset_info, access_token,
+                  prefer_update=False):
     """
     This function takes the passed geneset data (in the geneset_info
     dictionary) and attempts to create a new geneset or version
@@ -81,15 +121,6 @@ def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
                      'be a non-empty list of annotations.')
         return False
 
-    try:
-        from tribe_client.utils import obtain_token_using_credentials, \
-            create_remote_geneset, create_remote_version
-    except ImportError:
-        logger.error('The package "tribe-client" has not been installed in '
-                     'this Python environment. Please pip-install it to'
-                     ' proceed.')
-        sys.exit(1)
-
     mc_file = SafeConfigParser()
     mc_file.read(main_config_file)
 
@@ -104,29 +135,7 @@ def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
     secrets_file = SafeConfigParser()
     secrets_file.read(secrets_location)
 
-    if not secrets_file.has_section('Tribe secrets'):
-        logger.error('Secrets file has no "Tribe secrets" section, which is'
-                     ' required to save the processed genesets to Tribe.')
-        sys.exit(1)
-
-    required_secrets = set(['tribe_id', 'tribe_secret', 'username',
-                            'password'])
-    secrets_set = set(secrets_file.options('Tribe secrets'))
-
-    if not required_secrets.issubset(secrets_set):
-        logger.error('Tribe secrets section must contain TRIBE_ID, '
-                     'TRIBE_SECRET, USERNAME, and PASSWORD to be able to save'
-                     ' processed genesets to Tribe.')
-        sys.exit(1)
-
-    tribe_id = secrets_file.get('Tribe secrets', 'TRIBE_ID')
-    tribe_secret = secrets_file.get('Tribe secrets', 'TRIBE_SECRET')
     username = secrets_file.get('Tribe secrets', 'USERNAME')
-    password = secrets_file.get('Tribe secrets', 'PASSWORD')
-
-    access_token_url = tribe_url + '/oauth2/token/'
-    access_token = obtain_token_using_credentials(
-        username, password, tribe_id, tribe_secret, access_token_url)
 
     if prefer_update:
 
@@ -149,6 +158,9 @@ def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
                 # first version.
                 geneset_info['geneset'] = gs_response['resource_uri']
                 geneset_info['description'] = 'Adding annotations.'
+
+                logger.info('Creating new version for geneset %s',
+                            geneset_info['title'])
                 response = create_remote_version(access_token, geneset_info,
                                                  tribe_url)
                 return response
@@ -184,8 +196,9 @@ def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
                     gene = gene_entrezids[gene][0]
                     pub_set_annotations[gene] = set(publist)
                 else:
-                    logger.warning('No Entrez IDs were found for gene %s',
-                                   gene)
+                    logger.warning('No Entrez IDs were found for gene %s '
+                                   'and cross-reference DB %s.',
+                                   gene, geneset_info['xrdb'])
 
             if pub_set_annotations != old_annotations:
                 # Annotations have changed
@@ -193,6 +206,8 @@ def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
                 geneset_info['parent'] = gs_response['tip']['resource_uri']
                 geneset_info['description'] = 'Updating annotations.'
 
+                logger.info('Creating new version for geneset %s',
+                            geneset_info['title'])
                 response = create_remote_version(access_token, geneset_info,
                                                  tribe_url)
             else:
@@ -210,15 +225,59 @@ def load_to_tribe(main_config_file, geneset_info, prefer_update=False):
         else:
             # No geneset with this geneset 'slug' and creator username exists
             # yet, so create it
+            logger.info('Creating geneset %s', geneset_info['title'])
             response = create_remote_geneset(access_token, geneset_info,
                                              tribe_url)
 
     else:
+        logger.info('Creating geneset %s', geneset_info['title'])
         response = create_remote_geneset(access_token, geneset_info,
                                          tribe_url)
     return response
 
 
-def write_json_file(geneset_info, json_filename):
-    with open(json_filename, "w") as outfile:
-        json.dump(geneset_info, outfile, indent=2)
+def compare_genesets(tribe_genesets, processed_genesets):
+    tribe_geneset_dict = {}
+    proc_geneset_dict = {}
+
+    changed_genesets = []
+    for gs in tribe_genesets:
+        tribe_geneset_dict[gs['slug']] = gs
+    for gs in processed_genesets:
+        proc_geneset_dict[gs['slug']] = gs
+
+    for k, v in proc_geneset_dict:
+        corresponding_tribe_gs = tribe_geneset_dict[k]
+        if v['annotations'] != corresponding_tribe_gs['annotations']:
+            changed_genesets.add(v)
+    return changed_genesets
+
+
+def get_changed_genesets(species_file, secrets_file, processed_genesets):
+    species_fh = SafeConfigParser()
+    species_fh.read(species_file)
+    species_name = species_fh.get('species_info', 'SCIENTIFIC_NAME')
+
+    secrets_fh = SafeConfigParser()
+    secrets_fh.read(secrets_file)
+    creator_username = secrets_fh.get('Tribe secrets', 'USERNAME')
+
+    all_changed_genesets = []
+
+    genesets_by_xrid = {}
+    for geneset in processed_genesets:
+        key = geneset['xrdb']
+        if key in genesets_by_xrid:
+            genesets_by_xrid[key].append(geneset)
+        else:
+            genesets_by_xrid[key] = []
+
+    for k, v in genesets_by_xrid.iteritems():
+        tribe_genesets_by_xrid = download_organism_public_genesets(
+            species_name, creator_username=creator_username,
+            request_params={'xrid': k, 'full_annotations': 'true'}
+        )
+        changed_genesets = compare_genesets(tribe_genesets_by_xrid, v)
+        all_changed_genesets.extend(changed_genesets)
+
+    return changed_genesets
