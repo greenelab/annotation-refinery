@@ -117,9 +117,12 @@ def main(ini_file_path):
     if main_config_file.has_option('Tribe parameters', 'PREFER_UPDATE'):
         prefer_update = main_config_file.getboolean('Tribe parameters',
                                                     'PREFER_UPDATE')
-        tribe_url = main_config_file.get('Tribe parameters', 'TRIBE_URL')
     else:
         prefer_update = False
+
+    if main_config_file.has_option('Tribe parameters', 'TRIBE_URL'):
+        tribe_url = main_config_file.get('Tribe parameters', 'TRIBE_URL')
+    else:
         tribe_url = False
 
     species_dir = main_config_file.get('species files', 'SPECIES_DIR')
