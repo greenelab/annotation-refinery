@@ -9,6 +9,8 @@ import logging
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+# All of these functions depend on the tribe-client package, which must be
+# installed in the same python environment where the functions are run from.
 try:
     from tribe_client.utils import obtain_token_using_credentials, \
             create_remote_geneset, create_remote_version, \
@@ -60,9 +62,6 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
     tribe_secret from the secrets file defined in the main_config_file
     and the Tribe location/url from this same main_config_file.
 
-    *Note: This function depends on the tribe-client package, which must be
-    installed in the same python environment as this function is run from.
-
     Arguments:
     main_config_file -- A string, location of the main INI configuration
     file. This file should include Tribe parameters and the location of
@@ -88,7 +87,11 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
                         5468: [], 6492: []},
 
         'slug': 'doid0014667-homo-sapiens'
-     }
+    }
+
+    access token -- A string. Tribe OAuth2 token returned by the
+    get_oauth_token() function above. This is required to create gene sets in
+    the desired Tribe instance.
 
     prefer_update -- Boolean keyword argument. If False, this function
     will not try to create new versions of already existing genesets - it will
