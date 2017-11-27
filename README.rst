@@ -7,6 +7,18 @@ publicly available annotated sets of genes, such as Gene Ontology and Disease
 Ontology terms.
 
 
+Requirements
+------------
+
+Before you begin, make sure you have the required packages installed in your
+local Python environment.
+
+```shell
+# Run this command from the root directory of this repository, where the
+# "requirements.txt" file is.
+pip install -r requirements.txt
+```
+
 Configuration files
 -------------------
 
