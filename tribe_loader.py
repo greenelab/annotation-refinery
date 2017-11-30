@@ -244,15 +244,59 @@ def compare_genesets(tribe_genesets, processed_genesets):
     proc_geneset_dict = {}
 
     changed_genesets = []
+
+    # We will use the gene set 'slugs' as the identifiers for each gene set
     for gs in tribe_genesets:
         tribe_geneset_dict[gs['slug']] = gs
+
     for gs in processed_genesets:
         proc_geneset_dict[gs['slug']] = gs
 
-    for k, v in proc_geneset_dict:
-        corresponding_tribe_gs = tribe_geneset_dict[k]
-        if v['annotations'] != corresponding_tribe_gs['annotations']:
-            changed_genesets.add(v)
+    changed_ctr = 0
+    unchanged_ctr = 0
+    for k, v in proc_geneset_dict.iteritems():
+        # Get the corresponding tribe gene set using the slug, which
+        # is the key in this proc_geneset_dict.
+        corr_tribe_gs = tribe_geneset_dict[k]
+
+        # Publications must be converted to a set instead of a list, because
+        # the ones in the retrieved gene sets may be the same as the ones in
+        # the processed gene sets, but just in a different order.
+        processed_annotations = {}
+        for gid, pub_list in v['annotations'].iteritems():
+            processed_annotations[gid] = set(pub_list)
+
+        retrieved_annotations = {}
+        for annotation in corr_tribe_gs['tip']['annotations']:
+            gene = annotation['gene']
+            xrdb = v['xrdb']
+
+            # Get desired gene identifier
+            if xrdb == 'Entrez':
+                gene = gene['entrezid']
+            elif xrdb == 'Symbol':
+                gene = gene['systematic_name']
+            else:
+                gene = gene['xrid']
+
+            pubs = set()
+
+            for pub in annotation['pubs']:
+                pubs.add(pub['pmid'])
+
+            retrieved_annotations[gene] = pubs
+
+        if processed_annotations != retrieved_annotations:
+            changed_ctr += 1
+
+            logger.debug('Annotations for gene set with slug %s have changed -'
+                         ' Adding to list of gene set versions to be created.',
+                         corr_tribe_gs['slug'])
+            changed_genesets.append(v)
+        else:
+            unchanged_ctr += 1
+    logger.info('%s gene sets have changed, saving them to Tribe', changed_ctr)
+    logger.info('%s gene sets were unchanged', unchanged_ctr)
     return changed_genesets
 
 
@@ -267,6 +311,8 @@ def get_changed_genesets(species_file, secrets_file, processed_genesets):
 
     all_changed_genesets = []
 
+    # Put all gene sets that have annotations in a common xrid inside
+    # a list in the genesets_by_xrid dictionary.
     genesets_by_xrid = {}
     for geneset in processed_genesets:
         key = geneset['xrdb']
@@ -275,12 +321,24 @@ def get_changed_genesets(species_file, secrets_file, processed_genesets):
         else:
             genesets_by_xrid[key] = []
 
-    for k, v in genesets_by_xrid.iteritems():
-        tribe_genesets_by_xrid = download_organism_public_genesets(
+    logger.info('The processed gene sets contain the following '
+                'cross-reference gene identifiers: %s',
+                genesets_by_xrid.keys())
+
+    for xrid, proc_geneset_list in genesets_by_xrid.iteritems():
+        tribe_geneset_dict = download_organism_public_genesets(
             species_name, creator_username=creator_username,
-            request_params={'xrid': k, 'full_annotations': 'true'}
+            request_params={'xrid': xrid, 'full_annotations': 'true'}
         )
-        changed_genesets = compare_genesets(tribe_genesets_by_xrid, v)
+        tribe_geneset_list = []
+        for k, v in tribe_geneset_dict.iteritems():
+            tribe_geneset_list.extend(v)
+
+        logger.info('%s existing gene sets were retrieved from Tribe',
+                    len(tribe_geneset_list))
+
+        changed_genesets = compare_genesets(tribe_geneset_list,
+                                            proc_geneset_list)
         all_changed_genesets.extend(changed_genesets)
 
     return changed_genesets
