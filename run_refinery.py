@@ -146,14 +146,21 @@ def main(ini_file_path):
                 sys.exit(1)
 
             tribe_token = get_oauth_token(tribe_url, secrets_file)
-            changed_genesets = get_changed_genesets(
-                species_file, secrets_file, all_org_genesets)
 
-            logger.info('Starting to save gene sets to Tribe')
-            if changed_genesets == []:
-                logger.info('Annotations have not changed in any gene sets '
-                            'for species_file %s.', species_file)
-            for geneset in changed_genesets:
+            if prefer_update:
+                genesets_to_save = get_changed_genesets(
+                    species_file, secrets_file, all_org_genesets, tribe_token)
+
+                if genesets_to_save == []:
+                    logger.info('Annotations have not changed in any gene sets'
+                                ' for species_file %s.', species_file)
+            else:
+                genesets_to_save = all_org_genesets
+
+            logger.info('Starting to save %s gene sets to Tribe',
+                        len(genesets_to_save))
+
+            for geneset in genesets_to_save:
                 geneset['public'] = tribe_public
                 load_to_tribe(ini_file_path, geneset, tribe_token,
                               prefer_update=prefer_update)
