@@ -192,6 +192,8 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
 
             pub_set_annotations = {}
             for gene, publist in geneset_info['annotations'].iteritems():
+                # Tribe gene translator returns all search keys as strings
+                gene = str(gene)
                 if gene in gene_entrezids:
                     if len(gene_entrezids[gene]) != 1:
                         logger.warning('There was more than one Entrez ID '
@@ -217,13 +219,14 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
                 # Do not create a new version or geneset
                 logger.info('Geneset with title %s already exists with the '
                             'same annotations in Tribe. Not attempting to '
-                            'save this geneset.', geneset_info['title'])
+                            'save a new geneset nor geneset version.',
+                            geneset_info['title'])
                 response = {}
                 response['content'] = (
                     'There is already a geneset with the slug "{0}" and '
-                    'annotations {1} saved in Tribe. A new geneset has not '
-                    'been saved.').format(geneset_info['slug'],
-                                          geneset_info['annotations'])
+                    'annotations {1} saved in Tribe. Neither a geneset nor '
+                    'a geneset version have been created.').format(
+                        geneset_info['slug'], geneset_info['annotations'])
                 response['status_code'] = 409
         else:
             # No geneset with this geneset 'slug' and creator username exists
@@ -255,9 +258,17 @@ def compare_genesets(tribe_genesets, processed_genesets):
     changed_ctr = 0
     unchanged_ctr = 0
     for k, v in proc_geneset_dict.iteritems():
-        # Get the corresponding tribe gene set using the slug, which
-        # is the key in this proc_geneset_dict.
-        corr_tribe_gs = tribe_geneset_dict[k]
+        # Try to get the corresponding tribe gene set (if it exists) using
+        # the slug, which is the key in this proc_geneset_dict. Otherwise,
+        # add to changed_genesets.
+        try:
+            corr_tribe_gs = tribe_geneset_dict[k]
+        except KeyError:
+            logger.info('New gene set with slug %s is being added.',
+                        v['slug'])
+            changed_genesets.append(v)
+            changed_ctr += 1
+            continue
 
         # Publications must be converted to a set instead of a list, because
         # the ones in the retrieved gene sets may be the same as the ones in
@@ -267,6 +278,14 @@ def compare_genesets(tribe_genesets, processed_genesets):
             processed_annotations[gid] = set(pub_list)
 
         retrieved_annotations = {}
+        if corr_tribe_gs['tip'] is None:
+            logger.info('Gene set with slug %s had no "tip" version. '
+                        'Adding to list of gene set versions to be created.',
+                        v['slug'])
+            changed_genesets.append(v)
+            changed_ctr += 1
+            continue
+
         for annotation in corr_tribe_gs['tip']['annotations']:
             gene = annotation['gene']
             xrdb = v['xrdb']
@@ -287,12 +306,12 @@ def compare_genesets(tribe_genesets, processed_genesets):
             retrieved_annotations[gene] = pubs
 
         if processed_annotations != retrieved_annotations:
-            changed_ctr += 1
-
             logger.debug('Annotations for gene set with slug %s have changed -'
                          ' Adding to list of gene set versions to be created.',
                          corr_tribe_gs['slug'])
             changed_genesets.append(v)
+            changed_ctr += 1
+
         else:
             unchanged_ctr += 1
     logger.info('%s gene sets have changed, saving them to Tribe', changed_ctr)
@@ -300,7 +319,8 @@ def compare_genesets(tribe_genesets, processed_genesets):
     return changed_genesets
 
 
-def get_changed_genesets(species_file, secrets_file, processed_genesets):
+def get_changed_genesets(species_file, secrets_file, processed_genesets,
+                         access_token):
     species_fh = SafeConfigParser()
     species_fh.read(species_file)
     species_name = species_fh.get('species_info', 'SCIENTIFIC_NAME')
@@ -328,7 +348,8 @@ def get_changed_genesets(species_file, secrets_file, processed_genesets):
     for xrid, proc_geneset_list in genesets_by_xrid.iteritems():
         tribe_geneset_dict = download_organism_public_genesets(
             species_name, creator_username=creator_username,
-            request_params={'xrid': xrid, 'full_annotations': 'true'}
+            request_params={'xrid': xrid, 'full_annotations': 'true',
+                            'oauth_consumer_key': access_token}
         )
         tribe_geneset_list = []
         for k, v in tribe_geneset_dict.iteritems():
