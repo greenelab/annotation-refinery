@@ -362,4 +362,4 @@ def get_changed_genesets(species_file, secrets_file, processed_genesets,
                                             proc_geneset_list)
         all_changed_genesets.extend(changed_genesets)
 
-    return changed_genesets
+    return all_changed_genesets
