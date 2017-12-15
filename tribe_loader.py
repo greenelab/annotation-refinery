@@ -12,9 +12,10 @@ logger.addHandler(logging.NullHandler())
 # All of these functions depend on the tribe-client package, which must be
 # installed in the same python environment where the functions are run from.
 try:
-    from tribe_client.utils import obtain_token_using_credentials, \
-            create_remote_geneset, create_remote_version, \
-            download_organism_public_genesets
+    from tribe_client.utils import (
+        obtain_token_using_credentials, create_remote_geneset,
+        create_remote_version, download_organism_public_genesets
+    )
 except ImportError:
     logger.error('The package "tribe-client" has not been installed in '
                  'this Python environment. Please pip-install it to'
@@ -49,11 +50,11 @@ def get_oauth_token(tribe_url, secrets_location):
     access_token_url = tribe_url + '/oauth2/token/'
     access_token = obtain_token_using_credentials(
         username, password, tribe_id, tribe_secret, access_token_url)
-    return access_token
+    return access_token, username
 
 
 def load_to_tribe(main_config_file, geneset_info, access_token,
-                  prefer_update=False):
+                  creator_username, prefer_update=False):
     """
     This function takes the passed geneset data (in the geneset_info
     dictionary) and attempts to create a new geneset or version
@@ -89,9 +90,12 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
         'slug': 'doid0014667-homo-sapiens'
     }
 
-    access token -- A string. Tribe OAuth2 token returned by the
+    access_token -- A string of Tribe OAuth2 token returned by the
     get_oauth_token() function above. This is required to create gene sets in
     the desired Tribe instance.
+
+    creator_username -- A string, the username of the creator of the gene sets
+    (both the ones retrieved from Tribe and the ones about to be saved there).
 
     prefer_update -- Boolean keyword argument. If False, this function
     will not try to create new versions of already existing genesets - it will
@@ -134,15 +138,9 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
 
     tribe_url = mc_file.get('Tribe parameters', 'TRIBE_URL')
 
-    secrets_location = mc_file.get('main', 'SECRETS_FILE')
-    secrets_file = SafeConfigParser()
-    secrets_file.read(secrets_location)
-
-    username = secrets_file.get('Tribe secrets', 'USERNAME')
-
     if prefer_update:
 
-        gs_url = tribe_url + '/api/v1/geneset/' + username + '/' + \
+        gs_url = tribe_url + '/api/v1/geneset/' + creator_username + '/' + \
             geneset_info['slug']
 
         parameters = {'oauth_consumer_key': access_token,
@@ -242,7 +240,31 @@ def load_to_tribe(main_config_file, geneset_info, access_token,
     return response
 
 
-def compare_genesets(tribe_genesets, processed_genesets):
+def get_changed_genesets_by_xrid(tribe_genesets, processed_genesets):
+    """
+    Function that compares a list of processed gene sets to a list of
+    retrieved gene sets from Tribe and returns only processed gene sets
+    that have different annotations from their equivalent Tribe gene
+    sets (meaning they have the same slug).
+
+    Arguments:
+    tribe_genesets -- A list of gene sets that have been retrieved from
+    Tribe from the desired organism, the desired creator, and with
+    annotations in the desired cross-reference gene identifiers.
+
+    processed_genesets -- A list of gene sets, with annotations that have
+    been processed by the annotation refinery. This will have annotations
+    in the same cross-reference identifiers as the tribe_genesets they
+    are being compared to.
+
+    Returns:
+    changed_genesets -- A list of processed gene sets, the annotations of
+    which have changed (compared to the Tribe gene sets). This list also
+    includes gene sets for which a matching slug was not found in Tribe
+    (meaning it is a new gene set). If no annotations have changed in any
+    of the processed gene sets, and there are also no new gene sets, this
+    will just be an empty list.
+    """
     tribe_geneset_dict = {}
     proc_geneset_dict = {}
 
@@ -255,8 +277,6 @@ def compare_genesets(tribe_genesets, processed_genesets):
     for gs in processed_genesets:
         proc_geneset_dict[gs['slug']] = gs
 
-    changed_ctr = 0
-    unchanged_ctr = 0
     for k, v in proc_geneset_dict.iteritems():
         # Try to get the corresponding tribe gene set (if it exists) using
         # the slug, which is the key in this proc_geneset_dict. Otherwise,
@@ -267,7 +287,6 @@ def compare_genesets(tribe_genesets, processed_genesets):
             logger.info('New gene set with slug %s is being added.',
                         v['slug'])
             changed_genesets.append(v)
-            changed_ctr += 1
             continue
 
         # Publications must be converted to a set instead of a list, because
@@ -283,7 +302,6 @@ def compare_genesets(tribe_genesets, processed_genesets):
                         'Adding to list of gene set versions to be created.',
                         v['slug'])
             changed_genesets.append(v)
-            changed_ctr += 1
             continue
 
         for annotation in corr_tribe_gs['tip']['annotations']:
@@ -310,24 +328,50 @@ def compare_genesets(tribe_genesets, processed_genesets):
                          ' Adding to list of gene set versions to be created.',
                          corr_tribe_gs['slug'])
             changed_genesets.append(v)
-            changed_ctr += 1
 
-        else:
-            unchanged_ctr += 1
-    logger.info('%s gene sets have changed, saving them to Tribe', changed_ctr)
-    logger.info('%s gene sets were unchanged', unchanged_ctr)
+    logger.info('%s gene sets have changed, saving them to Tribe',
+                len(changed_genesets))
+    logger.info('%s gene sets were unchanged',
+                len(processed_genesets) - len(changed_genesets))
     return changed_genesets
 
 
-def get_changed_genesets(species_file, secrets_file, processed_genesets,
-                         access_token):
+def get_all_changed_genesets(species_file, processed_genesets,
+                             access_token, creator_username):
+    """
+    Function to retrieve gene sets from Tribe (using the different
+    cross-reference gene identifiers in the processed gene sets), and
+    compare the processed gene sets to them using the
+    'get_changed_genesets_by_xrid' function above. It combines all of
+    the gene sets that have changed (with annotations in the different
+    cross-reference identifiers) into one single list, which it returns.
+
+    Arguments:
+    species_file -- A string, location of the INI configuration
+    file for the organism we want.
+
+    processed_genesets -- A list of all gene sets with annotations that have
+    been processed by the annotation refinery for the desired organism.
+
+    access_token -- A string of Tribe OAuth2 token returned by the
+    get_oauth_token() function above. This is required to create gene sets in
+    the desired Tribe instance.
+
+    creator_username -- A string, the username of the creator of the gene sets
+    (both the ones retrieved from Tribe and the ones about to be saved there).
+
+    Returns:
+    all_changed_genesets -- A list of processed gene sets, the annotations of
+    which have changed (compared to the Tribe gene sets). This list also
+    includes gene sets for which a matching slug was not found in Tribe
+    (meaning it is a new gene set). If no annotations have changed in any
+    of the processed gene sets, and there are also no new gene sets, this
+    will just be an empty list.
+
+    """
     species_fh = SafeConfigParser()
     species_fh.read(species_file)
     species_name = species_fh.get('species_info', 'SCIENTIFIC_NAME')
-
-    secrets_fh = SafeConfigParser()
-    secrets_fh.read(secrets_file)
-    creator_username = secrets_fh.get('Tribe secrets', 'USERNAME')
 
     all_changed_genesets = []
 
@@ -358,8 +402,8 @@ def get_changed_genesets(species_file, secrets_file, processed_genesets,
         logger.info('%s existing gene sets were retrieved from Tribe',
                     len(tribe_geneset_list))
 
-        changed_genesets = compare_genesets(tribe_geneset_list,
-                                            proc_geneset_list)
+        changed_genesets = get_changed_genesets_by_xrid(tribe_geneset_list,
+                                                        proc_geneset_list)
         all_changed_genesets.extend(changed_genesets)
 
     return all_changed_genesets
