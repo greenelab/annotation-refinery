@@ -380,10 +380,9 @@ def get_all_changed_genesets(species_file, processed_genesets,
     genesets_by_xrid = {}
     for geneset in processed_genesets:
         key = geneset['xrdb']
-        if key in genesets_by_xrid:
-            genesets_by_xrid[key].append(geneset)
-        else:
+        if key not in genesets_by_xrid:
             genesets_by_xrid[key] = []
+        genesets_by_xrid[key].append(geneset)
 
     logger.info('The processed gene sets contain the following '
                 'cross-reference gene identifiers: %s',
