@@ -4,9 +4,10 @@ import download_files
 import process_kegg
 import process_go
 import process_do
-import loader
+from tribe_loader import get_oauth_token, load_to_tribe
 
 import logging
+from ConfigParser import SafeConfigParser
 
 
 class DownloadTest(unittest.TestCase):
@@ -466,37 +467,40 @@ class GO_Test(unittest.TestCase):
             if term['title'] == 'GO-BP-0009100:glycoprotein metabolic process':
                 annotations = term['annotations']
 
-        desired_annotations = {
-            'ZDB-GENE-061110-16': [22522421, 22522421],
-            'ZDB-GENE-040315-1': [19125692],
-            'ZDB-GENE-030131-3222': [25609749],
-            'ZDB-GENE-070412-4': [22522421],
-            'ZDB-GENE-050213-1': [21294126],
-            'ZDB-GENE-020419-3': [21294126, 22869369],
-            'ZDB-GENE-030131-3127': [22869369],
-            'ZDB-GENE-121129-1': [22869369],
-            'ZDB-GENE-030131-9631': [16188232],
-            'ZDB-GENE-010102-1': [19211552],
-            'ZDB-GENE-060628-3': [16672343],
-            'ZDB-GENE-030131-5186': [22869369],
-            'ZDB-GENE-070112-1002': [20466645],
-            'ZDB-GENE-011119-1': [21294126],
-            'ZDB-GENE-040630-9': [16156897],
-            'ZDB-GENE-040724-125': [21901110],
-            'ZDB-GENE-030131-4714': [25505245],
-            'ZDB-GENE-121001-5': [23359570],
-            'ZDB-GENE-040801-234': [23768512],
-            'ZDB-GENE-041124-3': [22869369, 15603738, 21294126],
-            'ZDB-GENE-041124-2': [22869369, 15603738],
-            'ZDB-GENE-050522-358': [23453667],
-            'ZDB-GENE-111017-2': [21901110],
-            'ZDB-GENE-030722-6': [22956764],
-            'ZDB-GENE-020419-37': [20226781, 21294126,
-                                   22869369, 20226781],
-            'ZDB-GENE-070410-96': [22522421],
-            'ZDB-GENE-060929-966': [20466645]}
+        retrieved_annotations = {gene: set(annots) for gene, annots
+                                 in annotations.iteritems()}
 
-        self.assertEqual(annotations, desired_annotations)
+        desired_annotations = {
+            'ZDB-GENE-061110-16': set([22522421, 22522421]),
+            'ZDB-GENE-040315-1': set([19125692]),
+            'ZDB-GENE-030131-3222': set([25609749]),
+            'ZDB-GENE-070412-4': set([22522421]),
+            'ZDB-GENE-050213-1': set([21294126]),
+            'ZDB-GENE-020419-3': set([21294126, 22869369]),
+            'ZDB-GENE-030131-3127': set([22869369]),
+            'ZDB-GENE-121129-1': set([22869369]),
+            'ZDB-GENE-030131-9631': set([16188232]),
+            'ZDB-GENE-010102-1': set([19211552]),
+            'ZDB-GENE-060628-3': set([16672343]),
+            'ZDB-GENE-030131-5186': set([22869369]),
+            'ZDB-GENE-070112-1002': set([20466645]),
+            'ZDB-GENE-011119-1': set([21294126]),
+            'ZDB-GENE-040630-9': set([16156897]),
+            'ZDB-GENE-040724-125': set([21901110]),
+            'ZDB-GENE-030131-4714': set([25505245]),
+            'ZDB-GENE-121001-5': set([23359570]),
+            'ZDB-GENE-040801-234': set([23768512]),
+            'ZDB-GENE-041124-3': set([22869369, 15603738, 21294126]),
+            'ZDB-GENE-041124-2': set([22869369, 15603738]),
+            'ZDB-GENE-050522-358': set([23453667]),
+            'ZDB-GENE-111017-2': set([21901110]),
+            'ZDB-GENE-030722-6': set([22956764]),
+            'ZDB-GENE-020419-37': set([20226781, 21294126,
+                                       22869369, 20226781]),
+            'ZDB-GENE-070410-96': set([22522421]),
+            'ZDB-GENE-060929-966': set([20466645])}
+
+        self.assertEqual(retrieved_annotations, desired_annotations)
 
     def testPseudomonasSymbol(self):
         """
@@ -769,14 +773,20 @@ class LoaderTest(unittest.TestCase):
         self.do_terms = process_do.process_do_terms(species_ini_file)
 
         self.main_config_file = 'test_files/test_main_config.ini'
+        mc_file_parser = SafeConfigParser()
+        mc_file_parser.read(self.main_config_file)
+        tribe_url = mc_file_parser.get('Tribe parameters', 'TRIBE_URL')
+        secrets_file = mc_file_parser.get('main', 'SECRETS_FILE')
+
+        self.tribe_token = get_oauth_token(tribe_url, secrets_file)
 
     def tearDown(self):
         """"""
         pass
 
     def testLoadKEGGToTribe(self):
-        geneset_response = loader.load_to_tribe(self.main_config_file,
-                                                self.kegg_sets[0])
+        geneset_response = load_to_tribe(self.main_config_file,
+                                         self.kegg_sets[0], self.tribe_token)
 
         self.assertEqual(
             geneset_response['title'], 'KEGG-Pathway-hsa00010: Glycolysis / '
@@ -784,16 +794,16 @@ class LoaderTest(unittest.TestCase):
         self.assertEqual(geneset_response['tip_item_count'], 10)
 
     def testLoadGOToTribe(self):
-        geneset_response = loader.load_to_tribe(self.main_config_file,
-                                                self.go_terms[0])
+        geneset_response = load_to_tribe(self.main_config_file,
+                                         self.go_terms[0], self.tribe_token)
 
         self.assertEqual(geneset_response['title'],
                          'GO-BP-0000006:la liga')
         self.assertEqual(geneset_response['tip_item_count'], 3)
 
     def testLoadDOToTribe(self):
-        geneset_response = loader.load_to_tribe(self.main_config_file,
-                                                self.do_terms[0])
+        geneset_response = load_to_tribe(self.main_config_file,
+                                         self.do_terms[0], self.tribe_token)
 
         self.assertEqual(geneset_response['title'], 'DO-374:nutrition disease')
         self.assertEqual(geneset_response['tip_item_count'], 6)
@@ -812,9 +822,9 @@ class LoaderTest(unittest.TestCase):
 
         selected_kegg_term = self.kegg_sets[1]
 
-        geneset_response = loader.load_to_tribe(self.main_config_file,
-                                                selected_kegg_term,
-                                                prefer_update=True)
+        geneset_response = load_to_tribe(self.main_config_file,
+                                         selected_kegg_term, self.tribe_token,
+                                         prefer_update=True)
 
         self.assertEqual(
             geneset_response['title'], 'KEGG-Pathway-hsa00020: Citrate cycle '
@@ -827,9 +837,9 @@ class LoaderTest(unittest.TestCase):
             3418: [], 3419: [], 3420: [], 3421: [], 5432: []
         }
 
-        version_response = loader.load_to_tribe(self.main_config_file,
-                                                selected_kegg_term,
-                                                prefer_update=True)
+        version_response = load_to_tribe(self.main_config_file,
+                                         selected_kegg_term, self.tribe_token,
+                                         prefer_update=True)
 
         self.assertEqual(len(version_response['annotations']), 11)
 
@@ -840,8 +850,9 @@ class LoaderTest(unittest.TestCase):
 
         selected_go_term = self.go_terms[1]
 
-        geneset_response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, prefer_update=True)
+        geneset_response = load_to_tribe(
+            self.main_config_file, selected_go_term, self.tribe_token,
+            prefer_update=True)
 
         self.assertEqual(geneset_response['title'],
                          'GO-BP-0000007:european team')
@@ -851,8 +862,9 @@ class LoaderTest(unittest.TestCase):
         selected_go_term['annotations'] = {
             'A0A024R214': [], 'A0A024QZP7': [], 'A0A024R216': []}
 
-        version_response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, prefer_update=True)
+        version_response = load_to_tribe(
+            self.main_config_file, selected_go_term, self.tribe_token,
+            prefer_update=True)
 
         self.assertEqual(len(version_response['annotations']), 3)
 
@@ -863,8 +875,9 @@ class LoaderTest(unittest.TestCase):
 
         selected_do_term = self.do_terms[1]
 
-        geneset_response = loader.load_to_tribe(
-            self.main_config_file, selected_do_term, prefer_update=True)
+        geneset_response = load_to_tribe(
+            self.main_config_file, selected_do_term, self.tribe_token,
+            prefer_update=True)
 
         self.assertEqual(geneset_response['title'],
                          'DO-0014667:disease of metabolism')
@@ -874,8 +887,9 @@ class LoaderTest(unittest.TestCase):
         selected_do_term['annotations'] = {
             4160: [], 8431: [], 51738: [], 5443: [], 6492: [], 4321: []}
 
-        version_response = loader.load_to_tribe(
-            self.main_config_file, selected_do_term, prefer_update=True)
+        version_response = load_to_tribe(
+            self.main_config_file, selected_do_term, self.tribe_token,
+            prefer_update=True)
 
         self.assertEqual(len(version_response['annotations']), 6)
 
@@ -893,16 +907,18 @@ class LoaderTest(unittest.TestCase):
 
         selected_go_term = self.go_terms[2]
 
-        geneset_response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, prefer_update=True)
+        geneset_response = load_to_tribe(
+            self.main_config_file, selected_go_term, self.tribe_token,
+            prefer_update=True)
 
         self.assertEqual(geneset_response['title'],
                          'GO-BP-0000005:premier league')
         self.assertEqual(geneset_response['tip_item_count'], 1)
 
         # Do not change the annotations, just try to save to Tribe again
-        response = loader.load_to_tribe(
-            self.main_config_file, selected_go_term, prefer_update=True)
+        response = load_to_tribe(
+            self.main_config_file, selected_go_term, self.tribe_token,
+            prefer_update=True)
 
         self.assertEqual(response['status_code'], 409)
         self.assertEqual(

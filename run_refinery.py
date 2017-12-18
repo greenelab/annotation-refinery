@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import argparse
 from ConfigParser import SafeConfigParser
 
@@ -7,7 +8,8 @@ from download_files import download_all_files
 from process_kegg import process_kegg_sets
 from process_go import process_go_terms
 from process_do import process_do_terms
-from loader import load_to_tribe, write_json_file
+from tribe_loader import (
+    get_oauth_token, load_to_tribe, get_all_changed_genesets)
 
 # Import and set logger
 import logging
@@ -40,24 +42,35 @@ def process_all_organism_genesets(organism_ini_file, download_folder,
     Python dictionary.
     """
 
+    logger.info('Starting to download all files for organism file %s',
+                organism_ini_file)
     download_all_files(organism_ini_file, download_folder,
                        secrets_location=secrets_file)
+    logger.info('Finished downloading all files for organism file %s',
+                organism_ini_file)
+
     all_genesets = []
 
     species_config_file = SafeConfigParser()
     species_config_file.read(organism_ini_file)
 
-    if species_config_file.has_section('GO'):
-        all_go_terms = process_go_terms(organism_ini_file, download_folder)
-        all_genesets.extend(all_go_terms)
+    annotation_type_dict = {
+        'GO': process_go_terms,
+        'KEGG': process_kegg_sets,
+        'DO': process_do_terms
+    }
 
-    if species_config_file.has_section('KEGG'):
-        all_kegg_sets = process_kegg_sets(organism_ini_file, download_folder)
-        all_genesets.extend(all_kegg_sets)
-
-    if species_config_file.has_section('DO'):
-        all_do_terms = process_do_terms(organism_ini_file)
-        all_genesets.extend(all_do_terms)
+    for annot_type, func_name in annotation_type_dict.iteritems():
+        if species_config_file.has_section(annot_type):
+            logger.info('Starting to process %s terms for %s',
+                        annot_type, organism_ini_file)
+            if annot_type == 'DO':
+                processed_sets = func_name(organism_ini_file)
+            else:
+                processed_sets = func_name(organism_ini_file, download_folder)
+            all_genesets.extend(processed_sets)
+            logger.info('Finished processing %s terms for %s',
+                        annot_type, organism_ini_file)
 
     return all_genesets
 
@@ -102,6 +115,11 @@ def main(ini_file_path):
     else:
         prefer_update = False
 
+    if main_config_file.has_option('Tribe parameters', 'TRIBE_URL'):
+        tribe_url = main_config_file.get('Tribe parameters', 'TRIBE_URL')
+    else:
+        tribe_url = False
+
     species_dir = main_config_file.get('species files', 'SPECIES_DIR')
     species_files = main_config_file.get('species files', 'SPECIES_FILES')
 
@@ -117,14 +135,39 @@ def main(ini_file_path):
             species_file, download_folder, secrets_file)
 
         if process_to == 'Tribe':
-            for geneset in all_org_genesets:
+            if not tribe_url:
+                logger.error('"Tribe parameters" section needs "TRIBE_URL" '
+                             'option to be able to save to Tribe.')
+                sys.exit(1)
+
+            tribe_token, creator_username = get_oauth_token(
+                tribe_url, secrets_file)
+
+            if prefer_update:
+                genesets_to_save = get_all_changed_genesets(
+                    species_file, all_org_genesets, tribe_token,
+                    creator_username)
+
+                if genesets_to_save == []:
+                    logger.info('Annotations have not changed in any gene sets'
+                                ' for species_file %s.', species_file)
+            else:
+                genesets_to_save = all_org_genesets
+
+            logger.info('Starting to save %s gene sets to Tribe',
+                        len(genesets_to_save))
+
+            for geneset in genesets_to_save:
                 geneset['public'] = tribe_public
-                load_to_tribe(ini_file_path, geneset,
-                              prefer_update=prefer_update)
+                load_to_tribe(ini_file_path, geneset, tribe_token,
+                              creator_username, prefer_update=prefer_update)
+            logger.info('Finished saving gene sets to Tribe')
 
         elif process_to == 'JSON file':
             json_filepath = main_config_file.get('main', 'JSON_FILE')
-            write_json_file(all_org_genesets, json_filepath)
+
+            with open(json_filepath, "w") as outfile:
+                json.dump(all_org_genesets, outfile, indent=2)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
 argparse==1.2.1
 requests==2.18.4
-tribe-client>=1.1.9
+tribe-client>=1.1.11
 wsgiref==0.1.2
